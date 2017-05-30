@@ -50,6 +50,7 @@
         android:padding="3dp">
 
         <ScrollView
+            android:id="@+id/consoleScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_span="3"
@@ -116,10 +117,10 @@
             android:textSize="18sp" />
 
         <ImageButton
-            android:id="@+id/refreshDeviceBtn"
+            android:id="@+id/configureBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/stat_notify_sync_noanim" />
+            app:srcCompat="@android:drawable/ic_menu_preferences" />
 
     </TableRow>
 
@@ -134,6 +135,12 @@
             android:layout_span="3"
             android:layout_weight="1"
             android:textAlignment="textEnd" />
+
+        <ImageButton
+            android:id="@+id/refreshDeviceBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@android:drawable/stat_notify_sync_noanim" />
     </TableRow>
 
     <TableRow

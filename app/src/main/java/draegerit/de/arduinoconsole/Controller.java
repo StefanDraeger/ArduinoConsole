@@ -10,40 +10,40 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Handler;
 import android.util.Log;
-import android.util.TimeUtils;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
-import com.hoho.android.usbserial.util.HexDump;
-import com.hoho.android.usbserial.util.SerialInputOutputManager;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import draegerit.de.arduinoconsole.util.EParity;
 import draegerit.de.arduinoconsole.util.MessageHandler;
 import draegerit.de.arduinoconsole.util.UsbDriverAdapter;
 
-public class Controller implements Observer {
+import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.HTTP_ADRESS;
+
+class Controller implements Observer {
 
     private static final String TAG = "ArduinoConsole";
 
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
+    private static final int FIRST_ENTRY = 0;
+    public static final int TIMEOUT_MILLIS = 1000;
+    public static final int DEFAULT_BAUD_POS = 4;
+    public static final int DEFAULT_PARIRTY_POS = 0;
+    public static final int DEFAULT_STOPBITS_POS = 0;
+    public static final int DEFAULT_DATABITS_POS = 3;
 
     private Model model = new Model();
 
@@ -51,27 +51,27 @@ public class Controller implements Observer {
 
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
 
-        public void onReceive(Context context, Intent intent) {
+        public void onReceive(final Context context, final Intent intent) {
             String action = intent.getAction();
             if (ACTION_USB_PERMISSION.equals(action)) {
                 synchronized (this) {
-                    UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+                    UsbDevice device = intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
 
                     if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
                         if (device != null) {
-                            //call method to set up device communication
+                            Log.d(TAG, "call method to set up device communication");
                         }
                     } else {
-                        Log.d("AC", "permission denied for device " + device);
+                        Log.d(TAG, "permission denied for device " + device);
                     }
                 }
             }
         }
     };
 
-    public Controller(MainActivity mainActivity) {
+    Controller(final MainActivity inMainActivity) {
         model.addObserver(this);
-        this.mainActivity = mainActivity;
+        this.mainActivity = inMainActivity;
         model.addObserver(this.mainActivity);
         registerListeners();
         loadUsbDevices();
@@ -81,11 +81,16 @@ public class Controller implements Observer {
         setDefaultValues();
     }
 
+    void unregisterReceiver() {
+        mainActivity.unregisterReceiver(mUsbReceiver);
+    }
+
+
     private void setDefaultValues() {
-        mainActivity.getDeviceBaudSpinner().setSelection(4);
-        mainActivity.getParitySpinner().setSelection(0);
-        mainActivity.getStopbitsSpinner().setSelection(0);
-        mainActivity.getDatabitSpinner().setSelection(3);
+        mainActivity.getDeviceBaudSpinner().setSelection(DEFAULT_BAUD_POS);
+        mainActivity.getParitySpinner().setSelection(DEFAULT_PARIRTY_POS);
+        mainActivity.getStopbitsSpinner().setSelection(DEFAULT_STOPBITS_POS);
+        mainActivity.getDatabitSpinner().setSelection(DEFAULT_DATABITS_POS);
     }
 
     private void findPorts() {
@@ -103,9 +108,7 @@ public class Controller implements Observer {
 
         UsbManager manager = (UsbManager) mainActivity.getSystemService(Context.USB_SERVICE);
         HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
-        Iterator<UsbDevice> deviceIterator = deviceList.values().iterator();
-        while (deviceIterator.hasNext()) {
-            UsbDevice device = deviceIterator.next();
+        for (UsbDevice device : deviceList.values()) {
             deviceUsbList.add(device);
         }
         model.setUsbDevices(deviceUsbList);
@@ -115,75 +118,75 @@ public class Controller implements Observer {
         mainActivity.getDeviceBaudSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 String value = ((TextView) view).getText().toString();
                 int baudrate = Integer.parseInt(value);
                 model.setBaudrate(baudrate);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(final AdapterView<?> parent) {
 
             }
         });
 
         mainActivity.getDriverSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 UsbSerialDriver driver = (UsbSerialDriver) mainActivity.getDriverSpinner().getSelectedItem();
                 model.setDriver(driver);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(final AdapterView<?> parent) {
 
             }
         });
 
         mainActivity.getDatabitSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 String value = ((TextView) view).getText().toString();
                 int databits = Integer.parseInt(value);
                 model.setDatabits(databits);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(final AdapterView<?> parent) {
 
             }
         });
 
         mainActivity.getStopbitsSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 String value = ((TextView) view).getText().toString();
                 int stopbits = Integer.parseInt(value);
                 model.setStopbits(stopbits);
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(final AdapterView<?> parent) {
 
             }
         });
 
         mainActivity.getParitySpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 String value = ((TextView) view).getText().toString();
                 model.setParity(EParity.getByName(value));
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
+            public void onNothingSelected(final AdapterView<?> parent) {
 
             }
         });
 
         mainActivity.getConnectBtn().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 if (!model.isConnected()) {
                     connect();
                 } else {
@@ -194,14 +197,14 @@ public class Controller implements Observer {
 
         this.mainActivity.getClearBtn().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 model.setMessages(new StringBuffer());
             }
         });
 
         this.mainActivity.getRefreshDeviceBtn().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 findPorts();
                 loadUsbDevices();
             }
@@ -209,10 +212,17 @@ public class Controller implements Observer {
 
         this.mainActivity.getHyperlinkTextView().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(final View v) {
                 Intent i = new Intent(Intent.ACTION_VIEW);
-                i.setData(Uri.parse("https://www.draeger-it.blog"));
+                i.setData(Uri.parse(HTTP_ADRESS));
                 mainActivity.startActivity(i);
+            }
+        });
+
+        this.mainActivity.getConfigureBtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+
             }
         });
     }
@@ -237,7 +247,7 @@ public class Controller implements Observer {
     }
 
     @Override
-    public void update(Observable o, Object arg) {
+    public void update(final Observable o, final Object arg) {
         mainActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -262,10 +272,10 @@ public class Controller implements Observer {
             }
         } catch (Exception e) {
             MessageHandler.showErrorMessage(mainActivity, e.getMessage());
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(), e);
         }
 
-        UsbSerialPort port = driver.getPorts().get(0);
+        UsbSerialPort port = driver.getPorts().get(FIRST_ENTRY);
         try {
             port.open(connection);
             model.setConnection(connection);
@@ -281,72 +291,48 @@ public class Controller implements Observer {
 
         } catch (Exception e) {
             MessageHandler.showErrorMessage(mainActivity, e.getMessage());
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(), e);
         }
-    }
-
-    public void unregisterReceiver() {
-        mainActivity.unregisterReceiver(mUsbReceiver);
     }
 
     private class SerialCommunicationAsyncTask extends AsyncTask<Void, Void, Void> {
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(final Void... params) {
             while (model.isConnected()) {
                 try {
                     TimeUnit.SECONDS.sleep(1);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    MessageHandler.showErrorMessage(mainActivity, e.getMessage());
+                    Log.e(TAG, e.getMessage(), e);
                 }
 
                 String value = null;
                 try {
                     value = getValueFromSerialPort();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    MessageHandler.showErrorMessage(mainActivity, e.getMessage());
+                    Log.e(TAG, e.getMessage(), e);
                 }
                 model.addMessage(value);
 
             }
+            return null;
         }
     }
 
-    public String getValueFromSerialPort() throws IOException {
-        byte buffer[] = new byte[16];
-        int numBytesRead = model.getPort().read(buffer, 1000);
+    private String getValueFromSerialPort() throws IOException {
+        byte[] buffer = new byte[16];
+        if (model.getPort() != null) {
+            try {
+                int numBytesRead = model.getPort().read(buffer, TIMEOUT_MILLIS);
+                Log.i(TAG, String.format("Read %d bytes from %s", numBytesRead, model.getPort().getDriver().getDevice().getDeviceName()));
+            } catch (NullPointerException ex) {
+                Log.e(TAG, ex.getMessage(), ex);
+            }
+        }
         return new String(buffer);
     }
 
-    private void readFromUSB() {
-        registerReciever();
-
-        UsbManager manager = (UsbManager) mainActivity.getSystemService(Context.USB_SERVICE);
-        UsbSerialDriver driver = model.getDriver();
-        UsbDeviceConnection connection = null;
-        try {
-            connection = manager.openDevice(driver.getDevice());
-            if (connection == null) {
-                manager.requestPermission(driver.getDevice(), model.getPermissionIntent());
-                return;
-            }
-        } catch (Exception e) {
-            MessageHandler.showErrorMessage(mainActivity, e.getMessage());
-            e.printStackTrace();
-        }
-
-        UsbSerialPort port = driver.getPorts().get(0);
-        try {
-            port.open(connection);
-            port.setParameters(model.getBaudrate(), model.getDatabits(), model.getStopbits(), model.getParity().getValue());
-            model.setPort(port);
-            model.setConnected(true);
-            String value = getValueFromSerialPort();
-            model.addMessage(value);
-        } catch (Exception e) {
-            MessageHandler.showErrorMessage(mainActivity, e.getMessage());
-            e.printStackTrace();
-        }
-    }
 
 }
