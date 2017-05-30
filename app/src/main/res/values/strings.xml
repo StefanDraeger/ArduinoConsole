@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">ArduinoConsole</string>
+    <string name="configuration">Configuration</string>
+    <string name="connect">Connect</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="error_title">Error...</string>
+    <string name="ok">OK</string>
+
+
+    <string-array name="baudarray">
+        <item>300</item>
+        <item>1200</item>
+        <item>2400</item>
+        <item>4800</item>
+        <item>9600</item>
+        <item>19200</item>
+        <item>38400</item>
+        <item>57600</item>
+        <item>74880</item>
+        <item>115200</item>
+        <item>230400</item>
+        <item>250000</item>
+    </string-array>
+
+    <string-array name="databitsarray">
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+    </string-array>
+
+    <string-array name="stopbitsarray">
+        <item>1</item>
+        <item>3</item>
+        <item>2</item>
+    </string-array>
+
+    <string-array name="parityarray">
+        <item>NONE</item>
+        <item>ODD</item>
+        <item>EVEN</item>
+        <item>MARK</item>
+        <item>SPACE</item>
+    </string-array>
+
+</resources>
