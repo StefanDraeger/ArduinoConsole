@@ -2,9 +2,9 @@ package draegerit.de.arduinoconsole;
 
 
 import android.app.PendingIntent;
-import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbDeviceConnection;
 import android.util.Log;
+import android.view.View;
 
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
@@ -15,6 +15,8 @@ import java.util.Observable;
 import draegerit.de.arduinoconsole.util.EParity;
 
 public class Model extends Observable {
+
+    private static final String TAG = "ArduinoConsole";
 
     private int baudrate = 9600;
 
@@ -28,8 +30,6 @@ public class Model extends Observable {
 
     private StringBuffer messages = new StringBuffer();
 
-    private List<UsbDevice> usbDevices;
-
     private List<UsbSerialDriver> usbSerialDrivers;
 
     private boolean isConnected;
@@ -40,9 +40,7 @@ public class Model extends Observable {
 
     private EParity parity = EParity.NONE;
 
-    public Model() {
-
-    }
+    private int configurePaneVisibility = View.GONE;
 
     public List<UsbSerialDriver> getUsbSerialDrivers() {
         return usbSerialDrivers;
@@ -108,14 +106,6 @@ public class Model extends Observable {
         notifyObservers();
     }
 
-    public List<UsbDevice> getUsbDevices() {
-        return usbDevices;
-    }
-
-    public void setUsbDevices(List<UsbDevice> usbDevices) {
-        this.usbDevices = usbDevices;
-    }
-
     public boolean isConnected() {
         return isConnected;
     }
@@ -154,9 +144,16 @@ public class Model extends Observable {
 
     public void addMessage(String message) {
         getMessages().append(message);
-        Log.i("Test",message);
+        Log.i(TAG, message);
         setChanged();
         notifyObservers();
     }
 
+    public int getConfigurePaneVisibility() {
+        return configurePaneVisibility;
+    }
+
+    public void setConfigurePaneVisibility(int configurePaneVisibility) {
+        this.configurePaneVisibility = configurePaneVisibility;
+    }
 }

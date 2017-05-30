@@ -1,15 +1,26 @@
 package draegerit.de.arduinoconsole;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.hardware.usb.UsbDevice;
+import android.hardware.usb.UsbManager;
 import android.media.Image;
+import android.media.RingtoneManager;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
 import android.widget.Spinner;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.util.Observable;
@@ -17,6 +28,8 @@ import java.util.Observer;
 
 import draegerit.de.arduinoconsole.util.HtmlUtil;
 
+import static android.R.color.holo_green_dark;
+import static android.R.color.holo_red_dark;
 import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.HTTP_ADRESS;
 
 /**
@@ -38,6 +51,26 @@ public class MainActivity extends AppCompatActivity implements Observer {
      * Schaltfläche für das Anzeigen / Verstecken der Verbindungsdaten.
      */
     private ImageButton configureBtn;
+
+    /**
+     * Checkbox für das aktivieren / deaktivieren des Autoscroll in der ScrollView der Konsole.
+     */
+    private CheckBox autoScrollCheckbox;
+
+    /**
+     * TableRow für die Konfiguration der Verbindung.
+     */
+    private TableRow config1TblRow;
+
+    /**
+     * TableRow für die Konfiguration der Verbindung.
+     */
+    private TableRow config2TblRow;
+
+    /**
+     * TableRow für die Konfiguration der Verbindung.
+     */
+    private TableRow config3TblRow;
 
     /**
      * Auswahlliste für die Auswahl eines angeschlossenes Gerätes.
@@ -85,6 +118,16 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private TextView hyperlinkTextView;
 
     /**
+     * Eingabefeld für das absenden eines Befehls an den Arduino.
+     */
+    private EditText commandTextView;
+
+    /**
+     * Schaltfläche für das Absenden des eingegebenen Befehls.
+     */
+    private Button sendBtn;
+
+    /**
      * Controller
      **/
     private Controller controller;
@@ -97,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         registerComponents();
         controller = new Controller(this);
 
-
         ActionBar supportActionBar = this.getSupportActionBar();
         if (supportActionBar != null) {
             supportActionBar.setDisplayShowHomeEnabled(true);
@@ -105,13 +147,20 @@ public class MainActivity extends AppCompatActivity implements Observer {
         }
     }
 
+
     /**
      * Erzeugt die Komponenten der View.
      */
     private void registerComponents() {
+        this.commandTextView = (EditText) findViewById(R.id.commandTextView);
+        this.sendBtn = (Button) findViewById(R.id.sendBtn);
         this.consoleTextView = (TextView) findViewById(R.id.consoleTextView);
         this.consoleScrollView = (ScrollView) findViewById(R.id.consoleScrollView);
+        this.autoScrollCheckbox = (CheckBox) findViewById(R.id.autoScrollCheckbox);
         this.configureBtn = (ImageButton) findViewById(R.id.configureBtn);
+        this.config1TblRow = (TableRow) findViewById(R.id.config1TblRow);
+        this.config2TblRow = (TableRow) findViewById(R.id.config2TblRow);
+        this.config3TblRow = (TableRow) findViewById(R.id.config3TblRow);
         this.deviceBaudSpinner = (Spinner) findViewById(R.id.baudSpinner);
         this.connectBtn = (Button) findViewById(R.id.connectBtn);
         this.clearBtn = (ImageButton) findViewById(R.id.clearBtn);
@@ -137,6 +186,23 @@ public class MainActivity extends AppCompatActivity implements Observer {
     protected void onStop() {
         controller.unregisterReceiver();
         super.onStop();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent intent = getIntent();
+        if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)) {
+            UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+        } else if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_DETACHED)) {
+            UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
+        }
     }
 
     /**
@@ -247,6 +313,60 @@ public class MainActivity extends AppCompatActivity implements Observer {
         return configureBtn;
     }
 
+    /**
+     * Liefert die erste Zeile {@link TableRow} für das Konfigurieren der Verbindungsdaten.
+     *
+     * @return {@link TableRow}
+     */
+    public TableRow getConfig1TblRow() {
+        return config1TblRow;
+    }
+
+    /**
+     * Liefert die zweite Zeile {@link TableRow} für das Konfigurieren der Verbindungsdaten.
+     *
+     * @return {@link TableRow}
+     */
+    public TableRow getConfig2TblRow() {
+        return config2TblRow;
+    }
+
+    /**
+     * Liefert die dritte Zeile {@link TableRow} für das Konfigurieren der Verbindungsdaten.
+     *
+     * @return {@link TableRow}
+     */
+    public TableRow getConfig3TblRow() {
+        return config3TblRow;
+    }
+
+    /**
+     * Liefert die {@link CheckBox} für das aktivieren / deaktivieren des Autoscrolls in der Konsole.
+     *
+     * @return {@link CheckBox}
+     */
+    public CheckBox getAutoScrollCheckbox() {
+        return autoScrollCheckbox;
+    }
+
+    /**
+     * Liefert die Schaltfläche {@link Button} für das Absenden eines Befehls an den Arduino.
+     *
+     * @return {@link Button}
+     */
+    public Button getSendBtn() {
+        return sendBtn;
+    }
+
+    /**
+     * Liefert das Eingabefeld {@link EditText} für das eingeben eines Befehls.
+     *
+     * @return {@link EditText}
+     */
+    public EditText getCommandTextView() {
+        return commandTextView;
+    }
+
     @Override
     public void update(final Observable o, final Object arg) {
         runOnUiThread(new Runnable() {
@@ -255,21 +375,32 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 Model model = (Model) o;
                 getConsoleTextView().setText(model.getMessages());
 
-                getConsoleScrollView().post(new Runnable() {
+                if (getAutoScrollCheckbox().isChecked()) {
+                    getConsoleScrollView().post(new Runnable() {
 
-                    @Override
-                    public void run() {
-                        getConsoleScrollView().fullScroll(ScrollView.FOCUS_DOWN);
-                    }
-                });
+                        @Override
+                        public void run() {
+                            getConsoleScrollView().fullScroll(ScrollView.FOCUS_DOWN);
+                        }
+                    });
+                }
 
-                boolean selectionValid = model.getBaudrate() > 0 && model.getDriver() != null;
-                getConnectBtn().setEnabled(selectionValid);
+                getCommandTextView().setEnabled(model.isConnected());
+                getSendBtn().setEnabled(model.isConnected());
 
                 if (model.isConnected()) {
                     getConnectBtn().setText(getResources().getString(R.string.disconnect));
+                    getConnectBtn().setBackgroundColor(getResources().getColor(holo_red_dark));
                 } else {
+                    boolean selectionValid = model.getBaudrate() > 0 && model.getDriver() != null && getDriverSpinner().getSelectedItem() != null;
+                    if (selectionValid) {
+                        getConnectBtn().setBackgroundColor(getResources().getColor(holo_green_dark));
+                    } else {
+                        getConnectBtn().setBackground(getSendBtn().getBackground());
+                    }
+                    getConnectBtn().setEnabled(selectionValid);
                     getConnectBtn().setText(getResources().getString(R.string.connect));
+
                 }
             }
         });

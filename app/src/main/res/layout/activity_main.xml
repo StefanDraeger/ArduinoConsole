@@ -11,7 +11,7 @@
         android:layout_height="wrap_content">
 
         <EditText
-            android:id="@+id/editText"
+            android:id="@+id/commandTextView"
             android:layout_width="252dp"
             android:layout_height="44dp"
             android:layout_alignParentTop="true"
@@ -23,12 +23,12 @@
             tools:layout_editor_absoluteY="15dp" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/sendBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignEnd="@+id/consoleTextView"
-            android:layout_alignTop="@+id/editText"
-            android:layout_toEndOf="@+id/editText"
+            android:layout_alignTop="@+id/commandTextView"
+            android:layout_toEndOf="@+id/commandTextView"
             android:layout_weight="0.33"
             android:text="Send"
             tools:layout_editor_absoluteX="280dp"
@@ -71,7 +71,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_above="@+id/baudSpinner"
-                    android:layout_below="@+id/button"
+                    android:layout_below="@+id/sendBtn"
                     android:layout_centerHorizontal="true"
                     android:gravity="bottom"
                     android:text="TextView"
@@ -87,16 +87,12 @@
         android:layout_height="wrap_content">
 
         <CheckBox
-            android:id="@+id/checkBox"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/consoleTextView"
-            android:layout_span="3"
-            android:layout_weight="1"
-            android:text="automatic line break"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="444dp" />
+            android:id="@+id/autoScrollCheckbox"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0.25"
+            android:text="Autoscroll" />
+
     </TableRow>
 
     <TableRow
@@ -125,8 +121,10 @@
     </TableRow>
 
     <TableRow
+        android:id="@+id/config1TblRow"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:visibility="gone">
 
         <Spinner
             android:id="@+id/driverSpinner"
@@ -144,9 +142,11 @@
     </TableRow>
 
     <TableRow
+        android:id="@+id/config2TblRow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="5dp">
+        android:paddingLeft="5dp"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -257,9 +257,11 @@
     </TableRow>
 
     <TableRow
+        android:id="@+id/config3TblRow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="4dp">
+        android:padding="4dp"
+        android:visibility="gone">
 
         <Button
             android:id="@+id/connectBtn"

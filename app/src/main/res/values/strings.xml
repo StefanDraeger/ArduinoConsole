@@ -5,6 +5,7 @@
     <string name="disconnect">Disconnect</string>
     <string name="error_title">Error...</string>
     <string name="ok">OK</string>
+    <string name="msg_emptycommands">Empty command\'s not allowed.</string>
 
 
     <string-array name="baudarray">

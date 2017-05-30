@@ -20,9 +20,6 @@ import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.concurrent.TimeUnit;
@@ -39,11 +36,11 @@ class Controller implements Observer {
 
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
     private static final int FIRST_ENTRY = 0;
-    public static final int TIMEOUT_MILLIS = 1000;
-    public static final int DEFAULT_BAUD_POS = 4;
-    public static final int DEFAULT_PARIRTY_POS = 0;
-    public static final int DEFAULT_STOPBITS_POS = 0;
-    public static final int DEFAULT_DATABITS_POS = 3;
+    private static final int TIMEOUT_MILLIS = 1000;
+    private static final int DEFAULT_BAUD_POS = 4;
+    private static final int DEFAULT_PARIRTY_POS = 0;
+    private static final int DEFAULT_STOPBITS_POS = 0;
+    private static final int DEFAULT_DATABITS_POS = 3;
 
     private Model model = new Model();
 
@@ -67,6 +64,8 @@ class Controller implements Observer {
                 }
             }
         }
+
+
     };
 
     Controller(final MainActivity inMainActivity) {
@@ -74,18 +73,28 @@ class Controller implements Observer {
         this.mainActivity = inMainActivity;
         model.addObserver(this.mainActivity);
         registerListeners();
-        loadUsbDevices();
         findPorts();
         registerDataAdapter();
 
         setDefaultValues();
     }
 
+    /**
+     * Entfernt den {@link BroadcastReceiver}
+     */
     void unregisterReceiver() {
-        mainActivity.unregisterReceiver(mUsbReceiver);
+        try {
+            mainActivity.unregisterReceiver(mUsbReceiver);
+        } catch (IllegalArgumentException ex) {
+            Log.e(TAG, ex.getMessage(), ex);
+        }
+
     }
 
 
+    /**
+     * Setzt die Default Werte.
+     */
     private void setDefaultValues() {
         mainActivity.getDeviceBaudSpinner().setSelection(DEFAULT_BAUD_POS);
         mainActivity.getParitySpinner().setSelection(DEFAULT_PARIRTY_POS);
@@ -93,25 +102,20 @@ class Controller implements Observer {
         mainActivity.getDatabitSpinner().setSelection(DEFAULT_DATABITS_POS);
     }
 
+    /**
+     * Sucht angegeschlossene Geräte und speichert die Liste im {@link Model}
+     */
     private void findPorts() {
         UsbManager manager = (UsbManager) this.mainActivity.getSystemService(Context.USB_SERVICE);
         model.setUsbSerialDrivers(UsbSerialProber.getDefaultProber().findAllDrivers(manager));
     }
 
+    /**
+     * Erzeugt aus der Liste der Geräte einen Adapter für die Auswahlliste.
+     */
     private void registerDataAdapter() {
         UsbDriverAdapter driverAdapter = new UsbDriverAdapter(this.mainActivity, R.layout.devicespinnerlayout, R.id.deviceName, model.getUsbSerialDrivers());
         this.mainActivity.getDriverSpinner().setAdapter(driverAdapter);
-    }
-
-    private void loadUsbDevices() {
-        List<UsbDevice> deviceUsbList = new ArrayList<>();
-
-        UsbManager manager = (UsbManager) mainActivity.getSystemService(Context.USB_SERVICE);
-        HashMap<String, UsbDevice> deviceList = manager.getDeviceList();
-        for (UsbDevice device : deviceList.values()) {
-            deviceUsbList.add(device);
-        }
-        model.setUsbDevices(deviceUsbList);
     }
 
     private void registerListeners() {
@@ -206,7 +210,6 @@ class Controller implements Observer {
             @Override
             public void onClick(final View v) {
                 findPorts();
-                loadUsbDevices();
             }
         });
 
@@ -222,7 +225,38 @@ class Controller implements Observer {
         this.mainActivity.getConfigureBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
+                int configurePaneVisibility = View.VISIBLE;
+                switch (model.getConfigurePaneVisibility()) {
+                    case View.GONE:
+                        configurePaneVisibility = View.VISIBLE;
+                        break;
+                    case View.VISIBLE:
+                        configurePaneVisibility = View.GONE;
+                        break;
+                }
+                mainActivity.getConfig1TblRow().setVisibility(configurePaneVisibility);
+                mainActivity.getConfig2TblRow().setVisibility(configurePaneVisibility);
+                mainActivity.getConfig3TblRow().setVisibility(configurePaneVisibility);
+                model.setConfigurePaneVisibility(configurePaneVisibility);
 
+            }
+        });
+
+        this.mainActivity.getSendBtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                String command = mainActivity.getCommandTextView().getText().toString();
+                if (command.trim().length() > 0) {
+                    try {
+                        model.getPort().write(command.getBytes(), TIMEOUT_MILLIS);
+                        model.addMessage(String.format("---> %s \r\n", command));
+                    } catch (IOException e) {
+                        MessageHandler.showErrorMessage(mainActivity, e.getMessage());
+                        Log.e(TAG, e.getMessage(), e);
+                    }
+                } else {
+                    MessageHandler.showErrorMessage(mainActivity, mainActivity.getResources().getString(R.string.msg_emptycommands));
+                }
             }
         });
     }
@@ -281,6 +315,7 @@ class Controller implements Observer {
             model.setConnection(connection);
             port.setParameters(model.getBaudrate(), model.getDatabits(), model.getStopbits(), model.getParity().getValue());
             model.setPort(port);
+
             model.setConnected(true);
             mainActivity.runOnUiThread(new Runnable() {
                 @Override
