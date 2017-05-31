@@ -44,4 +44,19 @@
         <item>SPACE</item>
     </string-array>
 
+    <string name="title_activity_impressum">ImpressumActivity</string>
+    <string name="impressum">Impressum</string>
+    <string name="graph">Graph</string>
+
+    <string name="datenschutztext">The use of App "AndroidConsole" by Stefan Draeger Software is possible without declaration of personal
+        Related data. We emphasize that data transfer on Internet  (e.g. through e-mail communication) can have security loopholes.
+        A watertight safeguard to data access through a third party is not possible (or not guaranteed??).
+        Commercials and information material, which are not called up, are herewith prohibited.</string>
+    <string name="buildversion">Build</string>
+    <string name="seriesTxt">Test</string>
+    <string name="chartValueTxt">TextChart</string>
+    <string name="werteText">Wert</string>
+    <string name="datumText">Zeitstempel</string>
+    <string name="chartText">Graph</string>
+
 </resources>

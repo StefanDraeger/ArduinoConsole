@@ -3,6 +3,8 @@
     package="draegerit.de.arduinoconsole">
 
     <uses-feature android:name="android.hardware.usb.host" />
+
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.USB_PERMISSION" />
 
     <application
@@ -18,9 +20,12 @@
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_ATTACHED" />
                 <action android:name="android.hardware.usb.action.USB_DEVICE_DETACHED" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ImpressumActivity" />
+        <activity android:name=".GraphActivity"></activity>
     </application>
 
 </manifest>

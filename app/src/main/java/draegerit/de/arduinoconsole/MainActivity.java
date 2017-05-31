@@ -9,11 +9,14 @@ import android.hardware.usb.UsbDevice;
 import android.hardware.usb.UsbManager;
 import android.media.Image;
 import android.media.RingtoneManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -23,10 +26,16 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ExecutionException;
 
 import draegerit.de.arduinoconsole.util.HtmlUtil;
+import draegerit.de.arduinoconsole.util.Message;
 
 import static android.R.color.holo_green_dark;
 import static android.R.color.holo_red_dark;
@@ -36,6 +45,8 @@ import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.HTTP_ADRESS;
  * Klasse für die View der App.
  */
 public class MainActivity extends AppCompatActivity implements Observer {
+
+    private static final String TAG = "ArduinoConsole";
 
     /**
      * Konsole.
@@ -183,27 +194,34 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent = null;
+        switch (item.getItemId()) {
+            case R.id.configurationItem:
+                break;
+            case R.id.impressumItem:
+                intent = new Intent(this, ImpressumActivity.class);
+                break;
+            case R.id.graphItem:
+                intent = new Intent(this, GraphActivity.class);
+                break;
+            default:
+                throw new IllegalArgumentException("Item with ID [" + item.getItemId() + "] not found!");
+        }
+
+        if (intent != null) {
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
     protected void onStop() {
         controller.unregisterReceiver();
         super.onStop();
     }
 
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Intent intent = getIntent();
-        if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_ATTACHED)) {
-            UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-        } else if (intent.getAction().equals(UsbManager.ACTION_USB_DEVICE_DETACHED)) {
-            UsbDevice device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-        }
-    }
 
     /**
      * Liefert die {@link TextView} für die Konsole.
@@ -368,41 +386,58 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     @Override
-    public void update(final Observable o, final Object arg) {
+    public synchronized void update(final Observable o, final Object arg) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Model model = (Model) o;
-                getConsoleTextView().setText(model.getMessages());
+                try {
+                    Model model = (Model) o;
 
-                if (getAutoScrollCheckbox().isChecked()) {
-                    getConsoleScrollView().post(new Runnable() {
-
-                        @Override
-                        public void run() {
+                    long beforeTimestamp = System.currentTimeMillis();
+                    if (arg instanceof Message) {
+                        Message msg = (Message) arg;
+                        getConsoleTextView().append(msg.getValue());
+                        if(model.isAutoScroll()){
                             getConsoleScrollView().fullScroll(ScrollView.FOCUS_DOWN);
                         }
-                    });
-                }
-
-                getCommandTextView().setEnabled(model.isConnected());
-                getSendBtn().setEnabled(model.isConnected());
-
-                if (model.isConnected()) {
-                    getConnectBtn().setText(getResources().getString(R.string.disconnect));
-                    getConnectBtn().setBackgroundColor(getResources().getColor(holo_red_dark));
-                } else {
-                    boolean selectionValid = model.getBaudrate() > 0 && model.getDriver() != null && getDriverSpinner().getSelectedItem() != null;
-                    if (selectionValid) {
-                        getConnectBtn().setBackgroundColor(getResources().getColor(holo_green_dark));
-                    } else {
-                        getConnectBtn().setBackground(getSendBtn().getBackground());
+                    } else if (arg instanceof String) {
+                        String command = (String) arg;
+                        switch (command) {
+                            case "UpdateUsbDevice":
+                                controller.registerDataAdapter();
+                                break;
+                            case "ChangeConnectionStatus":
+                                updateConnectionStatus(model);
+                                break;
+                        }
                     }
-                    getConnectBtn().setEnabled(selectionValid);
-                    getConnectBtn().setText(getResources().getString(R.string.connect));
+                    long duration = System.currentTimeMillis() - beforeTimestamp;
+                    Log.i(TAG, "duration: --->" + String.valueOf(duration) + " ms");
+                } catch (Exception e)
 
+                {
+                    e.printStackTrace();
                 }
             }
         });
+    }
+
+    private void updateConnectionStatus(Model model) {
+        getCommandTextView().setEnabled(model.isConnected());
+        getSendBtn().setEnabled(model.isConnected());
+
+        if (model.isConnected()) {
+            getConnectBtn().setText(getResources().getString(R.string.disconnect));
+            getConnectBtn().setBackgroundColor(getResources().getColor(holo_red_dark));
+        } else {
+            boolean selectionValid = model.getBaudrate() > 0 && model.getDriver() != null && getDriverSpinner().getSelectedItem() != null;
+            if (selectionValid) {
+                getConnectBtn().setBackgroundColor(getResources().getColor(holo_green_dark));
+            } else {
+                getConnectBtn().setBackground(getSendBtn().getBackground());
+            }
+            getConnectBtn().setEnabled(selectionValid);
+            getConnectBtn().setText(getResources().getString(R.string.connect));
+        }
     }
 }

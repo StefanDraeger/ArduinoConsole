@@ -10,9 +10,12 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
@@ -25,12 +28,13 @@ import java.util.Observer;
 import java.util.concurrent.TimeUnit;
 
 import draegerit.de.arduinoconsole.util.EParity;
+import draegerit.de.arduinoconsole.util.Message;
 import draegerit.de.arduinoconsole.util.MessageHandler;
 import draegerit.de.arduinoconsole.util.UsbDriverAdapter;
 
 import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.HTTP_ADRESS;
 
-class Controller implements Observer {
+class Controller {
 
     private static final String TAG = "ArduinoConsole";
 
@@ -42,9 +46,11 @@ class Controller implements Observer {
     private static final int DEFAULT_STOPBITS_POS = 0;
     private static final int DEFAULT_DATABITS_POS = 3;
 
-    private Model model = new Model();
+    private Model model = Model.getInstance();
 
     private MainActivity mainActivity;
+
+    private Runnable postScrollViewAction;
 
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
 
@@ -69,13 +75,11 @@ class Controller implements Observer {
     };
 
     Controller(final MainActivity inMainActivity) {
-        model.addObserver(this);
         this.mainActivity = inMainActivity;
         model.addObserver(this.mainActivity);
         registerListeners();
         findPorts();
         registerDataAdapter();
-
         setDefaultValues();
     }
 
@@ -86,7 +90,7 @@ class Controller implements Observer {
         try {
             mainActivity.unregisterReceiver(mUsbReceiver);
         } catch (IllegalArgumentException ex) {
-            Log.e(TAG, ex.getMessage(), ex);
+            Log.e(TAG, ex.getMessage());
         }
 
     }
@@ -113,7 +117,7 @@ class Controller implements Observer {
     /**
      * Erzeugt aus der Liste der Geräte einen Adapter für die Auswahlliste.
      */
-    private void registerDataAdapter() {
+    void registerDataAdapter() {
         UsbDriverAdapter driverAdapter = new UsbDriverAdapter(this.mainActivity, R.layout.devicespinnerlayout, R.id.deviceName, model.getUsbSerialDrivers());
         this.mainActivity.getDriverSpinner().setAdapter(driverAdapter);
     }
@@ -202,7 +206,8 @@ class Controller implements Observer {
         this.mainActivity.getClearBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                model.setMessages(new StringBuffer());
+                model.getMessages().clear();
+                mainActivity.getConsoleTextView().setText("");
             }
         });
 
@@ -249,7 +254,7 @@ class Controller implements Observer {
                 if (command.trim().length() > 0) {
                     try {
                         model.getPort().write(command.getBytes(), TIMEOUT_MILLIS);
-                        model.addMessage(String.format("---> %s \r\n", command));
+                        model.addMessage(Message.Type.TO, command);
                     } catch (IOException e) {
                         MessageHandler.showErrorMessage(mainActivity, e.getMessage());
                         Log.e(TAG, e.getMessage(), e);
@@ -259,6 +264,14 @@ class Controller implements Observer {
                 }
             }
         });
+
+        this.mainActivity.getAutoScrollCheckbox().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                model.setAutoScroll(isChecked);
+            }
+        });
+
     }
 
     private void disconnect() {
@@ -279,17 +292,6 @@ class Controller implements Observer {
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         this.mainActivity.registerReceiver(mUsbReceiver, filter);
     }
-
-    @Override
-    public void update(final Observable o, final Object arg) {
-        mainActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                registerDataAdapter();
-            }
-        });
-    }
-
 
     private void connect() {
 
@@ -349,24 +351,32 @@ class Controller implements Observer {
                     MessageHandler.showErrorMessage(mainActivity, e.getMessage());
                     Log.e(TAG, e.getMessage(), e);
                 }
-                model.addMessage(value);
-
+                synchronized (model) {
+                    if (value.trim().length() > 0) {
+                        model.addMessage(Message.Type.FROM, value);
+                    } else {
+                        Log.i(TAG, "No value read!");
+                    }
+                }
             }
             return null;
         }
     }
 
     private String getValueFromSerialPort() throws IOException {
-        byte[] buffer = new byte[16];
+        String result = "";
+        byte[] buffer = new byte[32];
         if (model.getPort() != null) {
             try {
-                int numBytesRead = model.getPort().read(buffer, TIMEOUT_MILLIS);
-                Log.i(TAG, String.format("Read %d bytes from %s", numBytesRead, model.getPort().getDriver().getDevice().getDeviceName()));
+                int readBytes = model.getPort().read(buffer, TIMEOUT_MILLIS);
+                if (readBytes > 0) {
+                    result = new String(buffer);
+                }
             } catch (NullPointerException ex) {
                 Log.e(TAG, ex.getMessage(), ex);
             }
         }
-        return new String(buffer);
+        return result;
     }
 
 

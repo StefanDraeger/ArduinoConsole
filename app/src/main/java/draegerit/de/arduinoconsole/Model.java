@@ -9,10 +9,12 @@ import android.view.View;
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import com.hoho.android.usbserial.driver.UsbSerialPort;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
 import draegerit.de.arduinoconsole.util.EParity;
+import draegerit.de.arduinoconsole.util.Message;
 
 public class Model extends Observable {
 
@@ -28,7 +30,8 @@ public class Model extends Observable {
 
     private PendingIntent permissionIntent;
 
-    private StringBuffer messages = new StringBuffer();
+    private List<Message> messages = new ArrayList<>();
+    //private StringBuffer messages = new StringBuffer();
 
     private List<UsbSerialDriver> usbSerialDrivers;
 
@@ -42,6 +45,21 @@ public class Model extends Observable {
 
     private int configurePaneVisibility = View.GONE;
 
+    public static Model SINGLETON;
+    private boolean autoScroll;
+
+    private Model() {
+
+    }
+
+    public static Model getInstance() {
+        if (SINGLETON == null) {
+            SINGLETON = new Model();
+        }
+        return SINGLETON;
+    }
+
+
     public List<UsbSerialDriver> getUsbSerialDrivers() {
         return usbSerialDrivers;
     }
@@ -49,7 +67,7 @@ public class Model extends Observable {
     public void setUsbSerialDrivers(List<UsbSerialDriver> usbSerialDrivers) {
         this.usbSerialDrivers = usbSerialDrivers;
         setChanged();
-        notifyObservers();
+        notifyObservers("UpdateUsbDevice");
     }
 
     public int getBaudrate() {
@@ -96,11 +114,11 @@ public class Model extends Observable {
         this.permissionIntent = mPermissionIntent;
     }
 
-    public StringBuffer getMessages() {
+    public List<Message> getMessages() {
         return messages;
     }
 
-    public void setMessages(StringBuffer messages) {
+    public void setMessages(List<Message> messages) {
         this.messages = messages;
         setChanged();
         notifyObservers();
@@ -113,7 +131,7 @@ public class Model extends Observable {
     public void setConnected(boolean connected) {
         isConnected = connected;
         setChanged();
-        notifyObservers();
+        notifyObservers("ChangeConnectionStatus");
     }
 
     public int getDatabits() {
@@ -142,11 +160,11 @@ public class Model extends Observable {
         notifyObservers();
     }
 
-    public void addMessage(String message) {
-        getMessages().append(message);
-        Log.i(TAG, message);
+    public void addMessage(Message.Type type, String message) {
+        Message msg = new Message(type, message);
+        getMessages().add(msg);
         setChanged();
-        notifyObservers();
+        notifyObservers(msg);
     }
 
     public int getConfigurePaneVisibility() {
@@ -155,5 +173,13 @@ public class Model extends Observable {
 
     public void setConfigurePaneVisibility(int configurePaneVisibility) {
         this.configurePaneVisibility = configurePaneVisibility;
+    }
+
+    public void setAutoScroll(boolean autoScroll) {
+        this.autoScroll = autoScroll;
+    }
+
+    public boolean isAutoScroll() {
+        return autoScroll;
     }
 }
