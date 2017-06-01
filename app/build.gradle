@@ -54,6 +54,8 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:24.2.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile group: 'com.itextpdf', name: 'itextpdf', version: '5.5.11'
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
     compile 'com.android.support:design:24.2.1'
     testCompile 'junit:junit:4.12'
 

@@ -39,6 +39,8 @@ import draegerit.de.arduinoconsole.util.Message;
 
 import static android.R.color.holo_green_dark;
 import static android.R.color.holo_red_dark;
+import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.ActionCommand.ChangeConnectionStatus;
+import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.ActionCommand.UpdateUsbDevice;
 import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.HTTP_ADRESS;
 
 /**
@@ -156,6 +158,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
             supportActionBar.setDisplayShowHomeEnabled(true);
             supportActionBar.setIcon(R.mipmap.logodraeger);
         }
+
+
     }
 
 
@@ -397,18 +401,20 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     if (arg instanceof Message) {
                         Message msg = (Message) arg;
                         getConsoleTextView().append(msg.getValue());
-                        if(model.isAutoScroll()){
+                        if (model.isAutoScroll()) {
                             getConsoleScrollView().fullScroll(ScrollView.FOCUS_DOWN);
                         }
-                    } else if (arg instanceof String) {
-                        String command = (String) arg;
-                        switch (command) {
-                            case "UpdateUsbDevice":
-                                controller.registerDataAdapter();
-                                break;
-                            case "ChangeConnectionStatus":
-                                updateConnectionStatus(model);
-                                break;
+                    } else if (arg instanceof ArduinoConsoleStatics.ActionCommand) {
+                        ArduinoConsoleStatics.ActionCommand command = (ArduinoConsoleStatics.ActionCommand) arg;
+                        if (controller != null) {
+                            switch (command) {
+                                case UpdateUsbDevice:
+                                    controller.registerDataAdapter();
+                                    break;
+                                case ChangeConnectionStatus:
+                                    updateConnectionStatus(model);
+                                    break;
+                            }
                         }
                     }
                     long duration = System.currentTimeMillis() - beforeTimestamp;
@@ -416,7 +422,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
                 } catch (Exception e)
 
                 {
-                    e.printStackTrace();
+                    Log.e(TAG, e.getMessage(), e);
                 }
             }
         });

@@ -73,7 +73,6 @@
                     android:gravity="bottom"
                     android:padding="4dp"
                     android:paddingTop="6dp"
-                    android:text="TextView"
                     tools:layout_editor_absoluteX="16dp"
                     tools:layout_editor_absoluteY="74dp" />
             </LinearLayout>

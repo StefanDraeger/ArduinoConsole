@@ -13,7 +13,6 @@ import org.afree.chart.renderer.xy.XYItemRenderer;
 import org.afree.chart.renderer.xy.XYLineAndShapeRenderer;
 import org.afree.data.time.Millisecond;
 import org.afree.data.time.RegularTimePeriod;
-import org.afree.data.time.Second;
 import org.afree.data.time.TimeSeries;
 import org.afree.data.time.TimeSeriesCollection;
 import org.afree.data.xy.XYDataset;
@@ -21,13 +20,8 @@ import org.afree.graphics.SolidColor;
 import org.afree.ui.RectangleInsets;
 
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Iterator;
-import java.util.List;
-import java.util.TimeZone;
 
 import draegerit.de.arduinoconsole.R;
-import draegerit.de.arduinoconsole.util.Message;
 
 public class ChartView extends DemoView {
 
@@ -37,13 +31,15 @@ public class ChartView extends DemoView {
 
     private TimeSeries myTimeSerie;
 
+    private TimeSeriesCollection dataset;
+
     private RegularTimePeriod lastMillisecond;
 
     public ChartView(Context context) {
         super(context);
         this.ctx = context;
 
-        XYDataset dataset = getDataset();
+        XYDataset dataset = createDataset();
         AFreeChart chart = createChart(dataset);
         chart.setBackgroundPaintType(new SolidColor(Color.WHITE));
 
@@ -70,11 +66,11 @@ public class ChartView extends DemoView {
         setChart(chart);
     }
 
-    private XYDataset getDataset() {
+    private XYDataset createDataset() {
         String text = getResources().getString(R.string.seriesTxt);
         this.myTimeSerie = new TimeSeries(text);
-        TimeSeriesCollection dataset = new TimeSeriesCollection();
-        dataset.addSeries(myTimeSerie);
+        this.dataset = new TimeSeriesCollection();
+        this.dataset.addSeries(this.myTimeSerie);
         return dataset;
     }
 
@@ -125,5 +121,13 @@ public class ChartView extends DemoView {
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         return true;
+    }
+
+    public void setDataset(TimeSeriesCollection dataset) {
+        this.dataset = dataset;
+    }
+
+    public TimeSeriesCollection getDataset(){
+        return this.dataset;
     }
 }

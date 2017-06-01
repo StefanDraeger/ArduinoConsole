@@ -7,7 +7,7 @@
         app:showAsAction="never" />
     <item
         android:id="@+id/graphItem"
-        android:icon="@mipmap/chart"
+        android:icon="@mipmap/graph"
         android:title="@string/graph"
         app:showAsAction="always" />
     <item

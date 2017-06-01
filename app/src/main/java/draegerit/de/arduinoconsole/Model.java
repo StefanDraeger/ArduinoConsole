@@ -67,7 +67,7 @@ public class Model extends Observable {
     public void setUsbSerialDrivers(List<UsbSerialDriver> usbSerialDrivers) {
         this.usbSerialDrivers = usbSerialDrivers;
         setChanged();
-        notifyObservers("UpdateUsbDevice");
+        notifyObservers(ArduinoConsoleStatics.ActionCommand.UpdateUsbDevice);
     }
 
     public int getBaudrate() {
@@ -131,7 +131,7 @@ public class Model extends Observable {
     public void setConnected(boolean connected) {
         isConnected = connected;
         setChanged();
-        notifyObservers("ChangeConnectionStatus");
+        notifyObservers(ArduinoConsoleStatics.ActionCommand.ChangeConnectionStatus);
     }
 
     public int getDatabits() {

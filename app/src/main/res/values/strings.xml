@@ -5,6 +5,7 @@
     <string name="disconnect">Disconnect</string>
     <string name="error_title">Error...</string>
     <string name="ok">OK</string>
+    <string name="abort">Abort</string>
     <string name="msg_emptycommands">Empty command\'s not allowed.</string>
 
 
@@ -55,8 +56,24 @@
     <string name="buildversion">Build</string>
     <string name="seriesTxt">Test</string>
     <string name="chartValueTxt">TextChart</string>
-    <string name="werteText">Wert</string>
-    <string name="datumText">Zeitstempel</string>
+    <string name="werteText">Value</string>
+    <string name="datumText">Timestamp</string>
     <string name="chartText">Graph</string>
+    <string name="export">Export</string>
+    <string name="exportPdf"><![CDATA[PDF export (data & chart)]]></string>
+    <string name="exportCSV">CSV export (data only)</string>
+    <string name="exportTitle">Choose export type...</string>
+    <string name="filenotfoundmessage">File %s not found!</string>
+    <string name="chartExport">Chart export (chart only)</string>
+    <string name="pdfMetaDataTitle">ArduinoConsole</string>
+    <string name="pdfMetaDataSubject">ArduinoConsole by Draeger-IT.blog</string>
+    <string name="pdfMetaDataAuthor">Stefan Draeger</string>
+    <string name="pdfMetaDataCreator">Stefan Draeger</string>
+    <string name="pdfExportTitle">ArduinoConsole</string>
+    <string name="pdfExportSubTitle">by Draeger-IT.blog</string>
+    <string name="pdfExportValueTableColID">ID</string>
+    <string name="pdfExportValueTableColTimestamp">Timestamp</string>
+    <string name="pdfExportValueTableColValue">Value</string>
+    <string name="pdfExportParameterTableColDescription">Description</string>
 
 </resources>

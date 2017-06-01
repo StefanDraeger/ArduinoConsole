@@ -6,6 +6,7 @@
 
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.USB_PERMISSION" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -25,7 +26,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".ImpressumActivity" />
-        <activity android:name=".GraphActivity"></activity>
+        <activity android:name=".GraphActivity">
+            <intent-filter>
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

@@ -10,12 +10,10 @@ import android.hardware.usb.UsbDeviceConnection;
 import android.hardware.usb.UsbManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CompoundButton;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
@@ -23,8 +21,6 @@ import com.hoho.android.usbserial.driver.UsbSerialPort;
 import com.hoho.android.usbserial.driver.UsbSerialProber;
 
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
 import java.util.concurrent.TimeUnit;
 
 import draegerit.de.arduinoconsole.util.EParity;
@@ -49,8 +45,6 @@ class Controller {
     private Model model = Model.getInstance();
 
     private MainActivity mainActivity;
-
-    private Runnable postScrollViewAction;
 
     private final BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
 
@@ -304,6 +298,7 @@ class Controller {
             connection = manager.openDevice(driver.getDevice());
             if (connection == null) {
                 manager.requestPermission(driver.getDevice(), model.getPermissionIntent());
+                connect();
                 return;
             }
         } catch (Exception e) {
@@ -352,7 +347,7 @@ class Controller {
                     Log.e(TAG, e.getMessage(), e);
                 }
                 synchronized (model) {
-                    if (value.trim().length() > 0) {
+                    if (value != null && value.trim().length() > 0) {
                         model.addMessage(Message.Type.FROM, value);
                     } else {
                         Log.i(TAG, "No value read!");
