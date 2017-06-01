@@ -412,11 +412,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
                                     controller.registerDataAdapter();
                                     break;
                                 case ChangeConnectionStatus:
-                                    updateConnectionStatus(model);
+                                    //updateConnectionStatus(model);
                                     break;
                             }
                         }
                     }
+                    updateConnectionStatus(model);
                     long duration = System.currentTimeMillis() - beforeTimestamp;
                     Log.i(TAG, "duration: --->" + String.valueOf(duration) + " ms");
                 } catch (Exception e)

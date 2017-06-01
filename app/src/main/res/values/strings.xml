@@ -75,5 +75,17 @@
     <string name="pdfExportValueTableColTimestamp">Timestamp</string>
     <string name="pdfExportValueTableColValue">Value</string>
     <string name="pdfExportParameterTableColDescription">Description</string>
+    <string name="pdfExportConnectionParameter">Connection parameter</string>
+    <string name="pdfExportDevice">Device: %s</string>
+    <string name="pdfExportBaudrate">Baudrate: %s</string>
+    <string name="pdfExportDatabits">Databits: %s</string>
+    <string name="pdfExportStopbits">Stopbits: %s</string>
+    <string name="pdfExportParity">Parity: %s</string>
+    <string name="pdfExportChartParameter">Chart parameter</string>
+    <string name="pdfExportChartFrom">from: %s</string>
+    <string name="pdfExportChartTo">to: %s</string>
+    <string name="pdfExportChartMinValue">Min value: %s</string>
+    <string name="pdfExportChartMaxValue">Max value: %s</string>
+    <string name="pdfExportChartAveragePeak">Average peak: %s</string>
 
 </resources>

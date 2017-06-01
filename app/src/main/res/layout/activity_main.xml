@@ -19,6 +19,7 @@
             android:layout_alignStart="@+id/consoleTextView"
             android:layout_weight="0.66"
             android:ems="10"
+            android:enabled="false"
             android:inputType="none"
             tools:layout_editor_absoluteX="16dp"
             tools:layout_editor_absoluteY="15dp" />
@@ -31,6 +32,7 @@
             android:layout_alignTop="@+id/commandTextView"
             android:layout_toEndOf="@+id/commandTextView"
             android:layout_weight="0.33"
+            android:enabled="false"
             android:text="Send"
             tools:layout_editor_absoluteX="280dp"
             tools:layout_editor_absoluteY="16dp" />
@@ -268,6 +270,7 @@
             android:layout_gravity="center_vertical"
             android:layout_span="2"
             android:layout_weight="1"
+            android:enabled="false"
             android:text="Connect" />
     </TableRow>
 

@@ -248,7 +248,7 @@ class Controller {
                 if (command.trim().length() > 0) {
                     try {
                         model.getPort().write(command.getBytes(), TIMEOUT_MILLIS);
-                        model.addMessage(Message.Type.TO, command);
+                        model.addMessage(Message.Type.TO, command + "\r\n");
                     } catch (IOException e) {
                         MessageHandler.showErrorMessage(mainActivity, e.getMessage());
                         Log.e(TAG, e.getMessage(), e);
@@ -298,12 +298,15 @@ class Controller {
             connection = manager.openDevice(driver.getDevice());
             if (connection == null) {
                 manager.requestPermission(driver.getDevice(), model.getPermissionIntent());
-                connect();
                 return;
             }
-        } catch (Exception e) {
+        } catch (IllegalArgumentException e) {
             MessageHandler.showErrorMessage(mainActivity, e.getMessage());
             Log.e(TAG, e.getMessage(), e);
+        }
+
+        if (driver == null) {
+            return;
         }
 
         UsbSerialPort port = driver.getPorts().get(FIRST_ENTRY);
