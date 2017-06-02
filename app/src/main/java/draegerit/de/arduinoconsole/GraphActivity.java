@@ -1,8 +1,11 @@
 package draegerit.de.arduinoconsole;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +15,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
@@ -31,13 +35,24 @@ import draegerit.de.arduinoconsole.export.AbstractExport;
 import draegerit.de.arduinoconsole.export.CSVExport;
 import draegerit.de.arduinoconsole.export.ChartExport;
 import draegerit.de.arduinoconsole.export.PDFExport;
+import draegerit.de.arduinoconsole.util.ChartPreferences;
 import draegerit.de.arduinoconsole.util.Message;
+import draegerit.de.arduinoconsole.util.PreferencesUtil;
+
+import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.TIMEZONE;
 
 public class GraphActivity extends AppCompatActivity implements Observer {
 
     private static final String TAG = "ArduinoConsole";
+    private static final int QUALITY = 100;
+
+
+    private ImageButton graphClearBtn;
+    private ImageButton prefBtn;
 
     private Model model = Model.getInstance();
+
+    private GraphController controller;
 
     private ChartView chartView;
 
@@ -47,17 +62,19 @@ public class GraphActivity extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_graph);
         setTitle(getResources().getString(R.string.graph));
 
+        createComponents();
+
+        this.controller = new GraphController(this);
+        this.controller.registerComponents();
+
         generateChart();
 
-        ImageButton graphClearBtn = (ImageButton) findViewById(R.id.graphClearBtn);
-        graphClearBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                chartView.getDataset().getSeries(0).clear();
-            }
-        });
-
         this.model.addObserver(this);
+    }
+
+    private void createComponents() {
+        this.graphClearBtn = (ImageButton) findViewById(R.id.graphClearBtn);
+        this.prefBtn = (ImageButton) findViewById(R.id.prefBtn);
     }
 
     @Override
@@ -85,11 +102,8 @@ public class GraphActivity extends AppCompatActivity implements Observer {
         return super.onOptionsItemSelected(item);
     }
 
-    private void showExportDialog() {
-        // custom dialog
-        final Dialog dialog = new Dialog(GraphActivity.this);
-        dialog.setContentView(R.layout.exportdialog);
-        dialog.setTitle(getResources().getString(R.string.exportTitle));
+    void showExportDialog() {
+        final Dialog dialog = generateDialog(R.layout.exportdialog, R.string.exportTitle);
 
         final RadioGroup chartExportRadioGroup = (RadioGroup) dialog.findViewById(R.id.chartExportRadioGroup);
 
@@ -102,6 +116,44 @@ public class GraphActivity extends AppCompatActivity implements Observer {
             }
         });
 
+        dialog.show();
+    }
+
+    public void showChartPreferences() {
+        final Dialog dialog = generateDialog(R.layout.graphconfigurationdialog, R.string.chartPreferences);
+
+        final EditText titleEditText = (EditText) dialog.findViewById(R.id.titleEditText);
+        final EditText subTitleEditText = (EditText) dialog.findViewById(R.id.subTitleEditText);
+        final EditText valueAxisEditText = (EditText) dialog.findViewById(R.id.valueAxisEditText);
+        final EditText dateAxisEditText = (EditText) dialog.findViewById(R.id.dateAxisEditText);
+
+        ChartPreferences chartPreferences = PreferencesUtil.getChartPreferences(getApplicationContext());
+        titleEditText.setText(chartPreferences.getTitle());
+        subTitleEditText.setText(chartPreferences.getSubTitle());
+        valueAxisEditText.setText(chartPreferences.getValueAxis());
+        dateAxisEditText.setText(chartPreferences.getDateAxis());
+
+        Button dialogSaveButton = (Button) dialog.findViewById(R.id.dialogButtonSave);
+        dialogSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String title = titleEditText.getText().toString();
+                String subTitle = subTitleEditText.getText().toString();
+                String valueAxis = valueAxisEditText.getText().toString();
+                String dateAxis = dateAxisEditText.getText().toString();
+                ChartPreferences chartPreferences = new ChartPreferences(title, subTitle, valueAxis, dateAxis);
+                PreferencesUtil.storeChartPreferences(getApplicationContext(), chartPreferences);
+                chartView.updateChartPreferences(chartPreferences);
+                dialog.dismiss();
+            }
+        });
+        dialog.show();
+    }
+
+    private Dialog generateDialog(int layout, int titleResId) {
+        final Dialog dialog = new Dialog(GraphActivity.this);
+        dialog.setContentView(layout);
+        dialog.setTitle(getResources().getString(titleResId));
         Button dialogAbortButton = (Button) dialog.findViewById(R.id.dialogButtonAbort);
         dialogAbortButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,7 +162,7 @@ public class GraphActivity extends AppCompatActivity implements Observer {
             }
         });
 
-        dialog.show();
+        return dialog;
     }
 
     private void exportData(RadioGroup chartExportRadioGroup) {
@@ -129,7 +181,40 @@ public class GraphActivity extends AppCompatActivity implements Observer {
                 break;
         }
 
-        export.doExport(getApplicationContext());
+        launchProgressbarWaitDialog(export);
+    }
+
+
+    public void launchProgressbarWaitDialog(AbstractExport export) {
+        String titel = getResources().getString(R.string.graphProgressTitle);
+        String message = getResources().getString(R.string.graphProgressMessage);
+        final ProgressDialog spinnerProgressDialog = ProgressDialog.show(GraphActivity.this, titel, message, true);
+        spinnerProgressDialog.setCancelable(false);
+        spinnerProgressDialog.show();
+        GenerateAndShareAsyncTask task = new GenerateAndShareAsyncTask(spinnerProgressDialog, export);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            task.execute();
+        }
+    }
+
+    private class GenerateAndShareAsyncTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
+        private AbstractExport export;
+
+        public GenerateAndShareAsyncTask(ProgressDialog progressDialog, AbstractExport export) {
+            this.progressDialog = progressDialog;
+            this.export = export;
+        }
+
+        @Override
+        protected Void doInBackground(Void... params) {
+            export.doExport(getApplicationContext());
+            progressDialog.dismiss();
+            return null;
+        }
     }
 
     private File generateChartImage() {
@@ -144,7 +229,7 @@ public class GraphActivity extends AppCompatActivity implements Observer {
             view.setDrawingCacheEnabled(true);
             view.buildDrawingCache();
             Bitmap bmp = view.getDrawingCache();
-            bmp.compress(Bitmap.CompressFormat.PNG, 100, out);
+            bmp.compress(Bitmap.CompressFormat.PNG, QUALITY, out);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -158,6 +243,7 @@ public class GraphActivity extends AppCompatActivity implements Observer {
         }
         return file;
     }
+
 
     @Override
     public void onBackPressed() {
@@ -188,9 +274,20 @@ public class GraphActivity extends AppCompatActivity implements Observer {
 
     private Millisecond formatTimestamp(long timestamp) {
         Calendar cal = Calendar.getInstance();
-        cal.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
+        cal.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
         cal.setTimeInMillis(timestamp);
         return new Millisecond(cal.getTime());
     }
 
+    public ChartView getChartView() {
+        return chartView;
+    }
+
+    public ImageButton getGraphClearBtn() {
+        return graphClearBtn;
+    }
+
+    public ImageButton getPrefBtn() {
+        return prefBtn;
+    }
 }

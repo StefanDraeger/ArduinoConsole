@@ -1,15 +1,6 @@
 package draegerit.de.arduinoconsole;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbManager;
-import android.media.Image;
-import android.media.RingtoneManager;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -26,21 +17,14 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.ExecutionException;
 
 import draegerit.de.arduinoconsole.util.HtmlUtil;
 import draegerit.de.arduinoconsole.util.Message;
 
 import static android.R.color.holo_green_dark;
 import static android.R.color.holo_red_dark;
-import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.ActionCommand.ChangeConnectionStatus;
-import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.ActionCommand.UpdateUsbDevice;
 import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.HTTP_ADRESS;
 
 /**
@@ -141,9 +125,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private Button sendBtn;
 
     /**
-     * Controller
+     * MainController
      **/
-    private Controller controller;
+    private MainController controller;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -151,7 +135,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_main);
 
         registerComponents();
-        controller = new Controller(this);
+        controller = new MainController(this);
 
         ActionBar supportActionBar = this.getSupportActionBar();
         if (supportActionBar != null) {
@@ -201,8 +185,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent = null;
         switch (item.getItemId()) {
-            case R.id.configurationItem:
-                break;
             case R.id.impressumItem:
                 intent = new Intent(this, ImpressumActivity.class);
                 break;
@@ -226,6 +208,64 @@ public class MainActivity extends AppCompatActivity implements Observer {
         super.onStop();
     }
 
+    @Override
+    public synchronized void update(final Observable o, final Object arg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Model model = (Model) o;
+
+                    long beforeTimestamp = System.currentTimeMillis();
+                    if (arg instanceof Message) {
+                        Message msg = (Message) arg;
+                        getConsoleTextView().append(msg.getValue());
+                        if (model.isAutoScroll()) {
+                            getConsoleScrollView().fullScroll(ScrollView.FOCUS_DOWN);
+                        }
+                    } else if (arg instanceof ArduinoConsoleStatics.ActionCommand) {
+                        ArduinoConsoleStatics.ActionCommand command = (ArduinoConsoleStatics.ActionCommand) arg;
+                        if (controller != null) {
+                            switch (command) {
+                                case UpdateUsbDevice:
+                                    controller.registerDataAdapter();
+                                    break;
+                                case ChangeConnectionStatus:
+                                    //updateConnectionStatus(model);
+                                    break;
+                            }
+                        }
+                    }
+                    updateConnectionStatus(model);
+                    long duration = System.currentTimeMillis() - beforeTimestamp;
+                    Log.i(TAG, "duration: --->" + String.valueOf(duration) + " ms");
+                } catch (Exception e)
+
+                {
+                    Log.e(TAG, e.getMessage(), e);
+                }
+            }
+        });
+    }
+
+    private void updateConnectionStatus(Model model) {
+        getCommandTextView().setEnabled(model.isConnected());
+        getSendBtn().setEnabled(model.isConnected());
+
+        if (model.isConnected()) {
+            getConnectBtn().setText(getResources().getString(R.string.disconnect));
+            getConnectBtn().setBackgroundColor(getResources().getColor(holo_red_dark));
+        } else {
+            boolean selectionValid = model.getBaudrate() > 0 && model.getDriver() != null && getDriverSpinner().getSelectedItem() != null;
+            if (selectionValid) {
+                getConnectBtn().setBackgroundColor(getResources().getColor(holo_green_dark));
+            } else {
+                getConnectBtn().setBackground(getSendBtn().getBackground());
+            }
+            getConnectBtn().setEnabled(selectionValid);
+            getConnectBtn().setText(getResources().getString(R.string.connect));
+        }
+    }
 
     /**
      * Liefert die {@link TextView} für die Konsole.
@@ -389,62 +429,5 @@ public class MainActivity extends AppCompatActivity implements Observer {
         return commandTextView;
     }
 
-    @Override
-    public synchronized void update(final Observable o, final Object arg) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Model model = (Model) o;
 
-                    long beforeTimestamp = System.currentTimeMillis();
-                    if (arg instanceof Message) {
-                        Message msg = (Message) arg;
-                        getConsoleTextView().append(msg.getValue());
-                        if (model.isAutoScroll()) {
-                            getConsoleScrollView().fullScroll(ScrollView.FOCUS_DOWN);
-                        }
-                    } else if (arg instanceof ArduinoConsoleStatics.ActionCommand) {
-                        ArduinoConsoleStatics.ActionCommand command = (ArduinoConsoleStatics.ActionCommand) arg;
-                        if (controller != null) {
-                            switch (command) {
-                                case UpdateUsbDevice:
-                                    controller.registerDataAdapter();
-                                    break;
-                                case ChangeConnectionStatus:
-                                    //updateConnectionStatus(model);
-                                    break;
-                            }
-                        }
-                    }
-                    updateConnectionStatus(model);
-                    long duration = System.currentTimeMillis() - beforeTimestamp;
-                    Log.i(TAG, "duration: --->" + String.valueOf(duration) + " ms");
-                } catch (Exception e)
-
-                {
-                    Log.e(TAG, e.getMessage(), e);
-                }
-            }
-        });
-    }
-
-    private void updateConnectionStatus(Model model) {
-        getCommandTextView().setEnabled(model.isConnected());
-        getSendBtn().setEnabled(model.isConnected());
-
-        if (model.isConnected()) {
-            getConnectBtn().setText(getResources().getString(R.string.disconnect));
-            getConnectBtn().setBackgroundColor(getResources().getColor(holo_red_dark));
-        } else {
-            boolean selectionValid = model.getBaudrate() > 0 && model.getDriver() != null && getDriverSpinner().getSelectedItem() != null;
-            if (selectionValid) {
-                getConnectBtn().setBackgroundColor(getResources().getColor(holo_green_dark));
-            } else {
-                getConnectBtn().setBackground(getSendBtn().getBackground());
-            }
-            getConnectBtn().setEnabled(selectionValid);
-            getConnectBtn().setText(getResources().getString(R.string.connect));
-        }
-    }
 }

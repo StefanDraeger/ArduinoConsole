@@ -200,10 +200,14 @@ public class PDFExport extends AbstractExport {
         valueTable.addCell(getTblHeaderCell(this.context.getResources().getString(R.string.pdfExportValueTableColValue), ALIGN_CENTER, PdfPCell.RECTANGLE));
 
         int counter = 1;
+        String value = "";
         for (Message msg : messages) {
-            valueTable.addCell(getTblCell(String.valueOf(counter++), PdfPCell.RECTANGLE));
-            valueTable.addCell(getTblCell(formatTimestamp(msg.getTimestamp()), PdfPCell.RECTANGLE));
-            valueTable.addCell(getTblCell(String.valueOf(msg.getValue()), PdfPCell.RECTANGLE));
+            value = msg.getValue().trim().replaceAll("\r", "").replaceAll("\n", "").replaceAll("[^\\p{Alpha}\\p{Digit}]+", "");
+            if (value.length() > 0) {
+                valueTable.addCell(getTblCell(String.valueOf(counter++), PdfPCell.RECTANGLE));
+                valueTable.addCell(getTblCell(formatTimestamp(msg.getTimestamp()), PdfPCell.RECTANGLE));
+                valueTable.addCell(getTblCell(value, PdfPCell.RECTANGLE));
+            }
         }
 
     }

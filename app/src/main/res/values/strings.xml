@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">ArduinoConsole</string>
-    <string name="configuration">Configuration</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
     <string name="error_title">Error...</string>
@@ -46,7 +45,7 @@
     </string-array>
 
     <string name="title_activity_impressum">ImpressumActivity</string>
-    <string name="impressum">Impressum</string>
+    <string name="impressum">Legal info</string>
     <string name="graph">Graph</string>
 
     <string name="datenschutztext">The use of App "AndroidConsole" by Stefan Draeger Software is possible without declaration of personal
@@ -63,6 +62,7 @@
     <string name="exportPdf"><![CDATA[PDF export (data & chart)]]></string>
     <string name="exportCSV">CSV export (data only)</string>
     <string name="exportTitle">Choose export type...</string>
+    <string name="chartPreferences">Chart preferences...</string>
     <string name="filenotfoundmessage">File %s not found!</string>
     <string name="chartExport">Chart export (chart only)</string>
     <string name="pdfMetaDataTitle">ArduinoConsole</string>
@@ -87,5 +87,12 @@
     <string name="pdfExportChartMinValue">Min value: %s</string>
     <string name="pdfExportChartMaxValue">Max value: %s</string>
     <string name="pdfExportChartAveragePeak">Average peak: %s</string>
+    <string name="save">Save</string>
+    <string name="graphTitle">Title</string>
+    <string name="graphValueAxisLbl">Value axis label</string>
+    <string name="graphDateAxis">Date axis label</string>
+    <string name="chartPrefSubTitle">Subtitle</string>
+    <string name="graphProgressTitle">Please wait...</string>
+    <string name="graphProgressMessage">Generate document.</string>
 
 </resources>

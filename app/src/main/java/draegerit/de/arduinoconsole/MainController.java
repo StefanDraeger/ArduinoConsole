@@ -28,9 +28,10 @@ import draegerit.de.arduinoconsole.util.Message;
 import draegerit.de.arduinoconsole.util.MessageHandler;
 import draegerit.de.arduinoconsole.util.UsbDriverAdapter;
 
+import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.EMPTY;
 import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.HTTP_ADRESS;
 
-class Controller {
+class MainController extends AbstractController{
 
     private static final String TAG = "ArduinoConsole";
 
@@ -68,13 +69,19 @@ class Controller {
 
     };
 
-    Controller(final MainActivity inMainActivity) {
+    MainController(final MainActivity inMainActivity) {
+        super(inMainActivity);
         this.mainActivity = inMainActivity;
         model.addObserver(this.mainActivity);
         registerListeners();
         findPorts();
         registerDataAdapter();
         setDefaultValues();
+    }
+
+    @Override
+    public void registerComponents() {
+
     }
 
     /**
@@ -362,7 +369,7 @@ class Controller {
     }
 
     private String getValueFromSerialPort() throws IOException {
-        String result = "";
+        String result = EMPTY;
         byte[] buffer = new byte[32];
         if (model.getPort() != null) {
             try {

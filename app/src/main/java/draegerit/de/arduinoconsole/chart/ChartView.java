@@ -8,9 +8,12 @@ import android.view.MotionEvent;
 import org.afree.chart.AFreeChart;
 import org.afree.chart.ChartFactory;
 import org.afree.chart.axis.DateAxis;
+import org.afree.chart.axis.ValueAxis;
 import org.afree.chart.plot.XYPlot;
 import org.afree.chart.renderer.xy.XYItemRenderer;
 import org.afree.chart.renderer.xy.XYLineAndShapeRenderer;
+import org.afree.chart.title.TextTitle;
+import org.afree.chart.title.Title;
 import org.afree.data.time.Millisecond;
 import org.afree.data.time.RegularTimePeriod;
 import org.afree.data.time.TimeSeries;
@@ -20,8 +23,12 @@ import org.afree.graphics.SolidColor;
 import org.afree.ui.RectangleInsets;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.List;
 
 import draegerit.de.arduinoconsole.R;
+import draegerit.de.arduinoconsole.util.ChartPreferences;
+import draegerit.de.arduinoconsole.util.PreferencesUtil;
 
 public class ChartView extends DemoView {
 
@@ -34,6 +41,8 @@ public class ChartView extends DemoView {
     private TimeSeriesCollection dataset;
 
     private RegularTimePeriod lastMillisecond;
+
+    private AFreeChart chart;
 
     public ChartView(Context context) {
         super(context);
@@ -67,8 +76,7 @@ public class ChartView extends DemoView {
     }
 
     private XYDataset createDataset() {
-        String text = getResources().getString(R.string.seriesTxt);
-        this.myTimeSerie = new TimeSeries(text);
+        this.myTimeSerie = new TimeSeries("");
         this.dataset = new TimeSeriesCollection();
         this.dataset.addSeries(this.myTimeSerie);
         return dataset;
@@ -106,16 +114,35 @@ public class ChartView extends DemoView {
      * @return The chart.
      */
     private AFreeChart createChart(XYDataset dataset) {
-        AFreeChart chart = ChartFactory.createTimeSeriesChart(
-                ctx.getResources().getString(R.string.chartText),
-                ctx.getResources().getString(R.string.datumText),
-                ctx.getResources().getString(R.string.werteText),
+        ChartPreferences chartPreferences = PreferencesUtil.getChartPreferences(this.ctx);
+        this.chart = ChartFactory.createTimeSeriesChart(
+                chartPreferences.getTitle(),
+                chartPreferences.getDateAxis(),
+                chartPreferences.getValueAxis(),
                 dataset,
                 false,
                 false,
                 false);
-        return chart;
 
+        List<Title> subtitles = new ArrayList<>();
+        subtitles.add(new TextTitle(chartPreferences.getSubTitle()));
+        this.chart.setSubtitles(subtitles);
+
+        return chart;
+    }
+
+    public void updateChartPreferences(ChartPreferences chartPreferences) {
+        this.chart.setTitle(chartPreferences.getTitle());
+        List<Title> subtitles = new ArrayList<>();
+        subtitles.add(new TextTitle(chartPreferences.getSubTitle()));
+        this.chart.setSubtitles(subtitles);
+        XYPlot plot = this.chart.getXYPlot();
+
+        ValueAxis valueAxis = plot.getRangeAxis();
+        valueAxis.setLabel(chartPreferences.getValueAxis());
+
+        ValueAxis domainAxis = plot.getDomainAxis();
+        domainAxis.setLabel(chartPreferences.getDateAxis());
     }
 
     @Override
@@ -123,11 +150,7 @@ public class ChartView extends DemoView {
         return true;
     }
 
-    public void setDataset(TimeSeriesCollection dataset) {
-        this.dataset = dataset;
-    }
-
-    public TimeSeriesCollection getDataset(){
+    public TimeSeriesCollection getDataset() {
         return this.dataset;
     }
 }
