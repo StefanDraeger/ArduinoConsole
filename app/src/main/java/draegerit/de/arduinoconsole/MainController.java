@@ -31,7 +31,7 @@ import draegerit.de.arduinoconsole.util.UsbDriverAdapter;
 import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.EMPTY;
 import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.HTTP_ADRESS;
 
-class MainController extends AbstractController{
+class MainController extends AbstractController {
 
     private static final String TAG = "ArduinoConsole";
 
@@ -128,9 +128,11 @@ class MainController extends AbstractController{
 
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                String value = ((TextView) view).getText().toString();
-                int baudrate = Integer.parseInt(value);
-                model.setBaudrate(baudrate);
+                if (view != null) {
+                    String value = ((TextView) view).getText().toString();
+                    int baudrate = Integer.parseInt(value);
+                    model.setBaudrate(baudrate);
+                }
             }
 
             @Override
@@ -155,9 +157,11 @@ class MainController extends AbstractController{
         mainActivity.getDatabitSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                String value = ((TextView) view).getText().toString();
-                int databits = Integer.parseInt(value);
-                model.setDatabits(databits);
+                if (view != null) {
+                    String value = ((TextView) view).getText().toString();
+                    int databits = Integer.parseInt(value);
+                    model.setDatabits(databits);
+                }
             }
 
             @Override
@@ -169,9 +173,11 @@ class MainController extends AbstractController{
         mainActivity.getStopbitsSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                String value = ((TextView) view).getText().toString();
-                int stopbits = Integer.parseInt(value);
-                model.setStopbits(stopbits);
+                if (view != null) {
+                    String value = ((TextView) view).getText().toString();
+                    int stopbits = Integer.parseInt(value);
+                    model.setStopbits(stopbits);
+                }
             }
 
             @Override
@@ -183,8 +189,10 @@ class MainController extends AbstractController{
         mainActivity.getParitySpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                String value = ((TextView) view).getText().toString();
-                model.setParity(EParity.getByName(value));
+                if (view != null) {
+                    String value = ((TextView) view).getText().toString();
+                    model.setParity(EParity.getByName(value));
+                }
             }
 
             @Override

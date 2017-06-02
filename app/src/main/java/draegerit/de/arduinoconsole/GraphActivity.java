@@ -1,5 +1,6 @@
 package draegerit.de.arduinoconsole;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -9,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -55,6 +57,8 @@ public class GraphActivity extends AppCompatActivity implements Observer {
     private GraphController controller;
 
     private ChartView chartView;
+
+    private Dialog exportDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,20 +107,20 @@ public class GraphActivity extends AppCompatActivity implements Observer {
     }
 
     void showExportDialog() {
-        final Dialog dialog = generateDialog(R.layout.exportdialog, R.string.exportTitle);
+        exportDialog = generateDialog(R.layout.exportdialog, R.string.exportTitle);
 
-        final RadioGroup chartExportRadioGroup = (RadioGroup) dialog.findViewById(R.id.chartExportRadioGroup);
+        final RadioGroup chartExportRadioGroup = (RadioGroup) exportDialog.findViewById(R.id.chartExportRadioGroup);
 
-        Button dialogOkButton = (Button) dialog.findViewById(R.id.dialogButtonOK);
+        Button dialogOkButton = (Button) exportDialog.findViewById(R.id.dialogButtonOK);
         dialogOkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 exportData(chartExportRadioGroup);
-                dialog.dismiss();
+                exportDialog.dismiss();
             }
         });
 
-        dialog.show();
+        exportDialog.show();
     }
 
     public void showChartPreferences() {
@@ -147,13 +151,13 @@ public class GraphActivity extends AppCompatActivity implements Observer {
                 dialog.dismiss();
             }
         });
-        dialog.show();
     }
 
     private Dialog generateDialog(int layout, int titleResId) {
-        final Dialog dialog = new Dialog(GraphActivity.this);
+        final Dialog dialog = new Dialog(new ContextThemeWrapper(GraphActivity.this, android.R.style.Theme_Holo_Light_Dialog));
         dialog.setContentView(layout);
         dialog.setTitle(getResources().getString(titleResId));
+
         Button dialogAbortButton = (Button) dialog.findViewById(R.id.dialogButtonAbort);
         dialogAbortButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,7 +165,6 @@ public class GraphActivity extends AppCompatActivity implements Observer {
                 dialog.dismiss();
             }
         });
-
         return dialog;
     }
 
@@ -186,40 +189,53 @@ public class GraphActivity extends AppCompatActivity implements Observer {
 
 
     public void launchProgressbarWaitDialog(AbstractExport export) {
-        String titel = getResources().getString(R.string.graphProgressTitle);
-        String message = getResources().getString(R.string.graphProgressMessage);
-        final ProgressDialog spinnerProgressDialog = ProgressDialog.show(GraphActivity.this, titel, message, true);
-        spinnerProgressDialog.setCancelable(false);
-        spinnerProgressDialog.show();
-        GenerateAndShareAsyncTask task = new GenerateAndShareAsyncTask(spinnerProgressDialog, export);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        } else {
-            task.execute();
-        }
+        GenerateAndShareAsyncTask task = new GenerateAndShareAsyncTask(export);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     private class GenerateAndShareAsyncTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
         private AbstractExport export;
 
-        public GenerateAndShareAsyncTask(ProgressDialog progressDialog, AbstractExport export) {
-            this.progressDialog = progressDialog;
+        public GenerateAndShareAsyncTask(AbstractExport export) {
             this.export = export;
         }
 
         @Override
         protected Void doInBackground(Void... params) {
             export.doExport(getApplicationContext());
-            progressDialog.dismiss();
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
+            export.startExportIntent(new File(export.getExportFilename()), getApplicationContext());
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            String titel = getResources().getString(R.string.graphProgressTitle);
+            String message = getResources().getString(R.string.graphProgressMessage);
+            progressDialog = new ProgressDialog(GraphActivity.this);
+            progressDialog.setTitle(titel);
+            progressDialog.setMessage(message);
+            progressDialog.setCancelable(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.show();
         }
     }
 
     private File generateChartImage() {
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-        String filename = path.getAbsolutePath() + File.pathSeparator + String.valueOf(System.currentTimeMillis()) + ".png";
+        File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
+        if (!docsFolder.exists()) {
+            docsFolder.mkdir();
+        }
+
+        //File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        String filename = docsFolder.getAbsolutePath() + File.pathSeparator + String.valueOf(System.currentTimeMillis()) + ".png";
 
         File file = new File(filename);
         FileOutputStream out = null;

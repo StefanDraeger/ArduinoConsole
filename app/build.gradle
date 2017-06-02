@@ -23,7 +23,7 @@ android {
     buildToolsVersion "25.0.0"
     defaultConfig {
         applicationId "draegerit.de.arduinoconsole"
-        minSdkVersion 17
+        minSdkVersion 18
         targetSdkVersion 24
         versionName "1.0 " + buildtimestamp
         versionCode code

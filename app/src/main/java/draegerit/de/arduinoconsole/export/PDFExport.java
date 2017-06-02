@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
-import com.itextpdf.awt.geom.CubicCurve2D;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -49,19 +48,20 @@ public class PDFExport extends AbstractExport {
     private Document document;
 
     private Context context;
-    private Object logoImage;
 
     @Override
     public void doExport(Context ctx) {
         this.context = ctx;
-        File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
-        setExportFilename(path.getAbsolutePath() + File.pathSeparator + String.valueOf(System.currentTimeMillis()) + PDF_SUFFIX);
+        File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
+        if (!docsFolder.exists()) {
+          docsFolder.mkdir();
+        }
+        setExportFilename(docsFolder.getAbsolutePath() + File.pathSeparator + String.valueOf(System.currentTimeMillis()) + PDF_SUFFIX);
         try {
             initDocument();
         } catch (Exception e) {
             Log.e(TAG, e.getMessage(), e);
         }
-        startExportIntent(new File(getExportFilename()), ctx);
     }
 
     private void initDocument() throws IOException, DocumentException {
@@ -242,7 +242,4 @@ public class PDFExport extends AbstractExport {
         return MIMETYPE_PDF;
     }
 
-    public Object getLogoImage() {
-        return logoImage;
-    }
 }
