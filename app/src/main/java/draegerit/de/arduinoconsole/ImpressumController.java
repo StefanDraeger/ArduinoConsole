@@ -32,18 +32,18 @@ public class ImpressumController {
 
 
         getImpressumActivity().getPhoneTextView().setText(HtmlUtil.fromHtml(LINK_PHONE));
-        getImpressumActivity().getPhoneTextView().setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(TEL + PHONENUMBER));
-                try {
-                    getImpressumActivity().startActivity(intent);
-                } catch (SecurityException ex) {
-                    Log.e(TAG, ex.getMessage(), ex);
-                }
-            }
+        /**
+         getImpressumActivity().getPhoneTextView().setOnClickListener(new View.OnClickListener() {
+        @Override public void onClick(View v) {
+        Intent intent = new Intent(Intent.ACTION_CALL, Uri.parse(TEL + PHONENUMBER));
+        try {
+        getImpressumActivity().startActivity(intent);
+        } catch (SecurityException ex) {
+        Log.e(TAG, ex.getMessage(), ex);
+        }
+        }
         });
-
+         **/
 
         getImpressumActivity().getEmailTextView().setText(HtmlUtil.fromHtml(EMAIL_ADRESS));
         getImpressumActivity().getEmailTextView().setOnClickListener(new View.OnClickListener() {
