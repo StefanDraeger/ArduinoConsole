@@ -12,6 +12,7 @@ public final class PreferencesUtil {
     private static final String PREFS_NAME = "arduinoConsole";
 
     private static final String CHART_PREF = "chartPref";
+    private static final String USB_CONNECTION_PREF = "usbConnectionPref";
 
     public static final int ZERO = 0;
 
@@ -39,6 +40,36 @@ public final class PreferencesUtil {
         return null;
     }
 
+    public static void storeUSBConnection(Context ctx, USBConfiguration usbConfiguration) {
+        SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
+        SharedPreferences.Editor editor = settings.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(usbConfiguration);
+        editor.putString(USB_CONNECTION_PREF, json);
+        editor.commit();
+    }
+
+    public static USBConfiguration getUSBConnection(Context ctx) {
+        SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
+        String usbConnectionJSON = settings.getString(USB_CONNECTION_PREF, getDefaultUSBConnection());
+        if (!isBlank(usbConnectionJSON)) {
+            Gson gson = new Gson();
+            USBConfiguration usbConfiguration = gson.fromJson(usbConnectionJSON, USBConfiguration.class);
+            return usbConfiguration;
+        }
+        return null;
+    }
+
+    private static String getDefaultUSBConnection() {
+        USBConfiguration usbConfiguration = new USBConfiguration();
+        usbConfiguration.setBaudrate(9600);
+        usbConfiguration.setDataBits(8);
+        usbConfiguration.setStopbits(1);
+        usbConfiguration.setParity(EParity.NONE.getValue());
+        return new Gson().toJson(usbConfiguration);
+    }
+
+
     private static boolean isBlank(String value) {
         return value == null || value.trim().length() == ZERO;
     }
@@ -51,4 +82,5 @@ public final class PreferencesUtil {
         chartPreferences.setSubTitle("");
         return new Gson().toJson(chartPreferences);
     }
+
 }

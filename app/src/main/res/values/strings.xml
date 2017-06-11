@@ -103,5 +103,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="generalTabTitle">General</string>
     <string name="connectionTabTitle">Connection</string>
+    <string name="action_save">Save</string>
+    <string name="save_connection">Save successfull connection settings.</string>
 
 </resources>

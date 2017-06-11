@@ -1,15 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:text="Tab 2"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="4dp">
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_span="2"
+            android:layout_weight="0.10"
+            android:gravity="center_vertical"
+            android:paddingLeft="3dp"
+            android:text="USB Device"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="85dp"
+            android:text="Baudrate"
+            android:textAlignment="textEnd"
+            android:textColor="@android:color/black" />
+
+        <Spinner
+            android:id="@+id/baudSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/consoleTextView"
+            android:layout_alignTop="@+id/checkBox"
+            android:entries="@array/baudarray"
+            android:minWidth="120dp"
+            android:textAlignment="textEnd" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="85dp"
+            android:text="Databits"
+            android:textAlignment="textEnd"
+            android:textColor="@android:color/black" />
+
+        <Spinner
+            android:id="@+id/databitSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/databitsarray"
+            android:minWidth="120dp"
+            android:textAlignment="textEnd" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="85dp"
+            android:text="Stopbits"
+            android:textAlignment="textEnd"
+            android:textColor="@android:color/black" />
+
+        <Spinner
+            android:id="@+id/stopbitsSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/stopbitsarray"
+            android:textAlignment="textEnd"
+            android:minWidth="120dp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minWidth="85dp"
+            android:text="Parity"
+            android:textAlignment="textEnd"
+            android:textColor="@android:color/black" />
+
+        <Spinner
+            android:id="@+id/paritySpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/parityarray"
+            android:textAlignment="textEnd"
+            android:minWidth="120dp" />
+    </TableRow>
+
+</TableLayout>

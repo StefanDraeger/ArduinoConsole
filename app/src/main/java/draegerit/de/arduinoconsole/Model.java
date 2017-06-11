@@ -15,6 +15,7 @@ import java.util.Observable;
 
 import draegerit.de.arduinoconsole.util.EParity;
 import draegerit.de.arduinoconsole.util.Message;
+import draegerit.de.arduinoconsole.util.USBConfiguration;
 
 public class Model extends Observable {
 
@@ -22,11 +23,6 @@ public class Model extends Observable {
      *
      */
     private static final String TAG = "ArduinoConsole";
-
-    /**
-     * Default baudrate.
-     */
-    private int baudrate = 9600;
 
     private UsbSerialDriver driver;
 
@@ -41,12 +37,6 @@ public class Model extends Observable {
     private List<UsbSerialDriver> usbSerialDrivers;
 
     private boolean isConnected;
-
-    private int databits = 8;
-
-    private int stopbits = 1;
-
-    private EParity parity = EParity.NONE;
 
     private int configurePaneVisibility = View.GONE;
 
@@ -73,16 +63,6 @@ public class Model extends Observable {
         this.usbSerialDrivers = usbSerialDrivers;
         setChanged();
         notifyObservers(ArduinoConsoleStatics.ActionCommand.UpdateUsbDevice);
-    }
-
-    public int getBaudrate() {
-        return baudrate;
-    }
-
-    public void setBaudrate(int baudrate) {
-        this.baudrate = baudrate;
-        setChanged();
-        notifyObservers();
     }
 
     public UsbSerialDriver getDriver() {
@@ -134,32 +114,6 @@ public class Model extends Observable {
         notifyObservers(ArduinoConsoleStatics.ActionCommand.ChangeConnectionStatus);
     }
 
-    public int getDatabits() {
-        return databits;
-    }
-
-    public void setDatabits(int databits) {
-        this.databits = databits;
-    }
-
-    public int getStopbits() {
-        return stopbits;
-    }
-
-    public void setStopbits(int stopbits) {
-        this.stopbits = stopbits;
-    }
-
-    public EParity getParity() {
-        return parity;
-    }
-
-    public void setParity(EParity parity) {
-        this.parity = parity;
-        setChanged();
-        notifyObservers();
-    }
-
     public void addMessage(Message.Type type, String message) {
         Message msg = new Message(type, message);
         getMessages().add(msg);
@@ -182,4 +136,5 @@ public class Model extends Observable {
     public boolean isAutoScroll() {
         return autoScroll;
     }
+
 }

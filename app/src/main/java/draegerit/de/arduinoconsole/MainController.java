@@ -26,6 +26,8 @@ import java.util.concurrent.TimeUnit;
 import draegerit.de.arduinoconsole.util.EParity;
 import draegerit.de.arduinoconsole.util.Message;
 import draegerit.de.arduinoconsole.util.MessageHandler;
+import draegerit.de.arduinoconsole.util.PreferencesUtil;
+import draegerit.de.arduinoconsole.util.USBConfiguration;
 import draegerit.de.arduinoconsole.util.UsbDriverAdapter;
 
 import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.EMPTY;
@@ -38,10 +40,6 @@ class MainController extends AbstractController {
     private static final String ACTION_USB_PERMISSION = "com.android.example.USB_PERMISSION";
     private static final int FIRST_ENTRY = 0;
     private static final int TIMEOUT_MILLIS = 1000;
-    private static final int DEFAULT_BAUD_POS = 4;
-    private static final int DEFAULT_PARIRTY_POS = 0;
-    private static final int DEFAULT_STOPBITS_POS = 0;
-    private static final int DEFAULT_DATABITS_POS = 3;
 
     private Model model = Model.getInstance();
 
@@ -76,7 +74,6 @@ class MainController extends AbstractController {
         registerListeners();
         findPorts();
         registerDataAdapter();
-        setDefaultValues();
     }
 
     @Override
@@ -96,17 +93,6 @@ class MainController extends AbstractController {
 
     }
 
-
-    /**
-     * Setzt die Default Werte.
-     */
-    private void setDefaultValues() {
-        mainActivity.getDeviceBaudSpinner().setSelection(DEFAULT_BAUD_POS);
-        mainActivity.getParitySpinner().setSelection(DEFAULT_PARIRTY_POS);
-        mainActivity.getStopbitsSpinner().setSelection(DEFAULT_STOPBITS_POS);
-        mainActivity.getDatabitSpinner().setSelection(DEFAULT_DATABITS_POS);
-    }
-
     /**
      * Sucht angegeschlossene Geräte und speichert die Liste im {@link Model}
      */
@@ -124,75 +110,11 @@ class MainController extends AbstractController {
     }
 
     private void registerListeners() {
-        mainActivity.getDeviceBaudSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                if (view != null) {
-                    String value = ((TextView) view).getText().toString();
-                    int baudrate = Integer.parseInt(value);
-                    model.setBaudrate(baudrate);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> parent) {
-
-            }
-        });
-
         mainActivity.getDriverSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 UsbSerialDriver driver = (UsbSerialDriver) mainActivity.getDriverSpinner().getSelectedItem();
                 model.setDriver(driver);
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> parent) {
-
-            }
-        });
-
-        mainActivity.getDatabitSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                if (view != null) {
-                    String value = ((TextView) view).getText().toString();
-                    int databits = Integer.parseInt(value);
-                    model.setDatabits(databits);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> parent) {
-
-            }
-        });
-
-        mainActivity.getStopbitsSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                if (view != null) {
-                    String value = ((TextView) view).getText().toString();
-                    int stopbits = Integer.parseInt(value);
-                    model.setStopbits(stopbits);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> parent) {
-
-            }
-        });
-
-        mainActivity.getParitySpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                if (view != null) {
-                    String value = ((TextView) view).getText().toString();
-                    model.setParity(EParity.getByName(value));
-                }
             }
 
             @Override
@@ -248,11 +170,8 @@ class MainController extends AbstractController {
                         configurePaneVisibility = View.GONE;
                         break;
                 }
-                mainActivity.getConfig1TblRow().setVisibility(configurePaneVisibility);
-                mainActivity.getConfig2TblRow().setVisibility(configurePaneVisibility);
-                mainActivity.getConfig3TblRow().setVisibility(configurePaneVisibility);
                 model.setConfigurePaneVisibility(configurePaneVisibility);
-
+                mainActivity.getConfig1TblRow().setVisibility(configurePaneVisibility);
             }
         });
 
@@ -328,7 +247,9 @@ class MainController extends AbstractController {
         try {
             port.open(connection);
             model.setConnection(connection);
-            port.setParameters(model.getBaudrate(), model.getDatabits(), model.getStopbits(), model.getParity().getValue());
+
+            USBConfiguration usbConfiguration = PreferencesUtil.getUSBConnection(getActivity().getApplicationContext());
+            port.setParameters(usbConfiguration.getBaudrate(), usbConfiguration.getDataBits(), usbConfiguration.getStopbits(), usbConfiguration.getParity());
             model.setPort(port);
 
             model.setConnected(true);

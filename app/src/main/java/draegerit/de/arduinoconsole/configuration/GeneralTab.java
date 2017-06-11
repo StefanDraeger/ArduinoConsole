@@ -12,8 +12,10 @@ import draegerit.de.arduinoconsole.R;
 
 public class GeneralTab extends Fragment {
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.configuration_tab_general, container, false);
+        View view = inflater.inflate(R.layout.configuration_tab_general, container, false);
+        return view;
     }
 }

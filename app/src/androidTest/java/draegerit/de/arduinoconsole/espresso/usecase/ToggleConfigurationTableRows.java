@@ -38,12 +38,12 @@ public class ToggleConfigurationTableRows {
     public void testTableRowsToggleVisibility() {
         onView(withId(R.id.configureBtn)).perform(click());
         onView(withId(R.id.config1TblRow)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
-        onView(withId(R.id.config2TblRow)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
+    //    onView(withId(R.id.config2TblRow)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
         onView(withId(R.id.config3TblRow)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)));
 
         onView(withId(R.id.configureBtn)).perform(click());
         onView(withId(R.id.config1TblRow)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
-        onView(withId(R.id.config2TblRow)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
+    //    onView(withId(R.id.config2TblRow)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
         onView(withId(R.id.config3TblRow)).check(matches(withEffectiveVisibility(ViewMatchers.Visibility.GONE)));
     }
 }

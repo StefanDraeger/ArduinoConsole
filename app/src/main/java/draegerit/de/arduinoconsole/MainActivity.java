@@ -36,6 +36,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private static final String TAG = "ArduinoConsole";
 
     /**
+     * TableRow für die Konfiguration der Verbindung.
+     */
+    private TableRow config1TblRow;
+
+
+    /**
      * Konsole.
      **/
     private TextView consoleTextView;
@@ -56,44 +62,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private CheckBox autoScrollCheckbox;
 
     /**
-     * TableRow für die Konfiguration der Verbindung.
-     */
-    private TableRow config1TblRow;
-
-    /**
-     * TableRow für die Konfiguration der Verbindung.
-     */
-    private TableRow config2TblRow;
-
-    /**
-     * TableRow für die Konfiguration der Verbindung.
-     */
-    private TableRow config3TblRow;
-
-    /**
      * Auswahlliste für die Auswahl eines angeschlossenes Gerätes.
      **/
     private Spinner driverSpinner;
-
-    /**
-     * Auswahlliste für die Auswahl der Übertragungsgeschwindigkeit.
-     **/
-    private Spinner deviceBaudSpinner;
-
-    /**
-     * Auswahlliste für die Auswahl der Databits.
-     **/
-    private Spinner databitSpinner;
-
-    /**
-     * Auswahlliste für die Auswahl der Stopbits.
-     **/
-    private Spinner stopbitsSpinner;
-
-    /**
-     * Auswahlliste für die Auswahl der Parity.
-     **/
-    private Spinner paritySpinner;
 
     /**
      * Schaltfläche für das Verbinden / trennen der Verbindung zu einem Gerät.
@@ -159,16 +130,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
         this.autoScrollCheckbox = (CheckBox) findViewById(R.id.autoScrollCheckbox);
         this.configureBtn = (ImageButton) findViewById(R.id.configureBtn);
         this.config1TblRow = (TableRow) findViewById(R.id.config1TblRow);
-        this.config2TblRow = (TableRow) findViewById(R.id.config2TblRow);
-        this.config3TblRow = (TableRow) findViewById(R.id.config3TblRow);
-        this.deviceBaudSpinner = (Spinner) findViewById(R.id.baudSpinner);
+
         this.connectBtn = (Button) findViewById(R.id.connectBtn);
         this.clearBtn = (ImageButton) findViewById(R.id.clearBtn);
         this.driverSpinner = (Spinner) findViewById(R.id.driverSpinner);
         this.refreshDeviceBtn = (ImageButton) findViewById(R.id.refreshDeviceBtn);
-        this.databitSpinner = (Spinner) findViewById(R.id.databitSpinner);
-        this.stopbitsSpinner = (Spinner) findViewById(R.id.stopbitsSpinner);
-        this.paritySpinner = (Spinner) findViewById(R.id.paritySpinner);
+
         this.hyperlinkTextView = (TextView) findViewById(R.id.hyperlinkTextView);
         this.hyperlinkTextView.setText(HtmlUtil.fromHtml(HTTP_ADRESS));
 
@@ -272,6 +239,15 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     /**
+     * Liefert die erste Zeile {@link TableRow} für das Konfigurieren der Verbindungsdaten.
+     *
+     * @return {@link TableRow}
+     */
+    public TableRow getConfig1TblRow() {
+        return config1TblRow;
+    }
+
+    /**
      * Liefert die {@link TextView} für die Konsole.
      *
      * @return {@link TextView}
@@ -289,14 +265,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         return driverSpinner;
     }
 
-    /**
-     * Liefert die Auswahlliste {@link Spinner} für die Auswahl der Übertragungsgeschwindigkeit.
-     *
-     * @return {@link Spinner}
-     */
-    public Spinner getDeviceBaudSpinner() {
-        return deviceBaudSpinner;
-    }
 
     /**
      * Liefert die Schaltfläche {@link Button} für das erzeugen / trennen einer Verbindung zu einem angeschlossenen Gerät.
@@ -325,32 +293,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         return refreshDeviceBtn;
     }
 
-    /**
-     * Liefert die Auswahlliste {@link Spinner} für die Databits.
-     *
-     * @return {@link Spinner}
-     */
-    public Spinner getDatabitSpinner() {
-        return databitSpinner;
-    }
-
-    /**
-     * Liefert die Auswahlliste {@link Spinner} für die Stopbits.
-     *
-     * @return {@link Spinner}
-     */
-    public Spinner getStopbitsSpinner() {
-        return stopbitsSpinner;
-    }
-
-    /**
-     * Liefert die Auswahlliste {@link Spinner} für die Parity.
-     *
-     * @return {@link Spinner}
-     */
-    public Spinner getParitySpinner() {
-        return paritySpinner;
-    }
 
     /**
      * Liefert die {@link TextView} für den Hyperlink zur Webseite des Entwicklers.
@@ -377,33 +319,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
      */
     public ImageButton getConfigureBtn() {
         return configureBtn;
-    }
-
-    /**
-     * Liefert die erste Zeile {@link TableRow} für das Konfigurieren der Verbindungsdaten.
-     *
-     * @return {@link TableRow}
-     */
-    public TableRow getConfig1TblRow() {
-        return config1TblRow;
-    }
-
-    /**
-     * Liefert die zweite Zeile {@link TableRow} für das Konfigurieren der Verbindungsdaten.
-     *
-     * @return {@link TableRow}
-     */
-    public TableRow getConfig2TblRow() {
-        return config2TblRow;
-    }
-
-    /**
-     * Liefert die dritte Zeile {@link TableRow} für das Konfigurieren der Verbindungsdaten.
-     *
-     * @return {@link TableRow}
-     */
-    public TableRow getConfig3TblRow() {
-        return config3TblRow;
     }
 
     /**
