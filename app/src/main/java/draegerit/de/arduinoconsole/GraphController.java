@@ -4,7 +4,6 @@ import android.view.View;
 
 public class GraphController extends AbstractController {
 
-
     private GraphActivity graphActivity;
 
     public GraphController(GraphActivity graphActivity) {
