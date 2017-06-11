@@ -7,6 +7,10 @@
         android:title="@string/graph"
         app:showAsAction="always" />
     <item
+        android:id="@+id/configurationItem"
+        android:title="@string/configuration"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/impressumItem"
         android:title="@string/impressum"
         app:showAsAction="never" />

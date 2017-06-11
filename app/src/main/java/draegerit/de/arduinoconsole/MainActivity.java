@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -183,13 +184,16 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = null;
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.impressumItem:
                 intent = new Intent(this, ImpressumActivity.class);
                 break;
             case R.id.graphItem:
                 intent = new Intent(this, GraphActivity.class);
+                break;
+            case R.id.configurationItem:
+                intent = new Intent(this, ConfigurationActivity.class);
                 break;
             default:
                 throw new IllegalArgumentException("Item with ID [" + item.getItemId() + "] not found!");
