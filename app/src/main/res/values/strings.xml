@@ -94,5 +94,7 @@
     <string name="chartPrefSubTitle">Subtitle</string>
     <string name="graphProgressTitle">Please wait...</string>
     <string name="graphProgressMessage">Generate document.</string>
+    <string name="sendBtnTxt">Send</string>
+    <string name="autoscrollChkBoxTxt">Autoscroll</string>
 
 </resources>

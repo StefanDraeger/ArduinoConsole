@@ -33,6 +33,7 @@ import draegerit.de.arduinoconsole.util.Message;
 
 import static com.itextpdf.text.Element.ALIGN_CENTER;
 import static com.itextpdf.text.Element.ALIGN_LEFT;
+import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.LONG_TIMESTAMP_FORMAT;
 
 public class PDFExport extends AbstractExport {
 
@@ -50,11 +51,11 @@ public class PDFExport extends AbstractExport {
     private Context context;
 
     @Override
-    public void doExport(Context ctx) {
+    public void doExport(final Context ctx) {
         this.context = ctx;
         File docsFolder = new File(Environment.getExternalStorageDirectory() + "/Documents");
         if (!docsFolder.exists()) {
-          docsFolder.mkdir();
+            docsFolder.mkdir();
         }
         setExportFilename(docsFolder.getAbsolutePath() + File.pathSeparator + String.valueOf(System.currentTimeMillis()) + PDF_SUFFIX);
         try {
@@ -159,12 +160,12 @@ public class PDFExport extends AbstractExport {
         this.document.add(valueTable);
     }
 
-    private String formatTimestamp(long timestamp) {
-        DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+    private String formatTimestamp(final long timestamp) {
+        DateFormat dateFormat = new SimpleDateFormat(LONG_TIMESTAMP_FORMAT);
         return dateFormat.format(new Date(timestamp));
     }
 
-    private PdfPCell getTblCell(String value, int border) {
+    private PdfPCell getTblCell(final String value, final int border) {
         Phrase phrase = new Phrase(value, this.normal);
         PdfPCell cell = new PdfPCell(phrase);
         cell.setBorder(border);
@@ -172,15 +173,15 @@ public class PDFExport extends AbstractExport {
         return cell;
     }
 
-    private PdfPCell getTblHeaderTitleCell(String value) {
+    private PdfPCell getTblHeaderTitleCell(final String value) {
         return getTblHeaderCustomCell(value, this.titleFont);
     }
 
-    private PdfPCell getTblHeaderSubTitleCell(String value) {
+    private PdfPCell getTblHeaderSubTitleCell(final String value) {
         return getTblHeaderCustomCell(value, this.catFont);
     }
 
-    private PdfPCell getTblHeaderCustomCell(String value, Font font) {
+    private PdfPCell getTblHeaderCustomCell(final String value, final Font font) {
         Phrase phrase = new Phrase(value, font);
         PdfPCell cell = new PdfPCell(phrase);
         cell.setBorder(PdfPCell.NO_BORDER);
@@ -189,12 +190,12 @@ public class PDFExport extends AbstractExport {
     }
 
 
-    private void addParameterTable(PdfPTable parameterTable) {
+    private void addParameterTable(final PdfPTable parameterTable) {
         parameterTable.addCell(getTblHeaderCell("", ALIGN_LEFT, PdfPCell.NO_BORDER));
         parameterTable.addCell(getTblHeaderCell(this.context.getResources().getString(R.string.pdfExportParameterTableColDescription), ALIGN_LEFT, PdfPCell.NO_BORDER));
     }
 
-    private void addValueTable(PdfPTable valueTable, List<Message> messages) {
+    private void addValueTable(final PdfPTable valueTable, final List<Message> messages) {
         valueTable.addCell(getTblHeaderCell(this.context.getResources().getString(R.string.pdfExportValueTableColID), ALIGN_CENTER, PdfPCell.RECTANGLE));
         valueTable.addCell(getTblHeaderCell(this.context.getResources().getString(R.string.pdfExportValueTableColTimestamp), ALIGN_CENTER, PdfPCell.RECTANGLE));
         valueTable.addCell(getTblHeaderCell(this.context.getResources().getString(R.string.pdfExportValueTableColValue), ALIGN_CENTER, PdfPCell.RECTANGLE));
@@ -212,7 +213,7 @@ public class PDFExport extends AbstractExport {
 
     }
 
-    private PdfPCell getTblHeaderCell(String value, int align, int border) {
+    private PdfPCell getTblHeaderCell(final String value, final int align, final int border) {
         Phrase phrase = new Phrase(value, this.smallBold);
         PdfPCell cell = new PdfPCell(phrase);
         cell.setBorder(border);

@@ -18,8 +18,14 @@ import draegerit.de.arduinoconsole.util.Message;
 
 public class Model extends Observable {
 
+    /**
+     *
+     */
     private static final String TAG = "ArduinoConsole";
 
+    /**
+     * Default baudrate.
+     */
     private int baudrate = 9600;
 
     private UsbSerialDriver driver;
@@ -31,7 +37,6 @@ public class Model extends Observable {
     private PendingIntent permissionIntent;
 
     private List<Message> messages = new ArrayList<>();
-    //private StringBuffer messages = new StringBuffer();
 
     private List<UsbSerialDriver> usbSerialDrivers;
 
@@ -118,11 +123,6 @@ public class Model extends Observable {
         return messages;
     }
 
-    public void setMessages(List<Message> messages) {
-        this.messages = messages;
-        setChanged();
-        notifyObservers();
-    }
 
     public boolean isConnected() {
         return isConnected;

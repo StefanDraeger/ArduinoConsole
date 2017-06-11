@@ -19,6 +19,8 @@ public final class ArduinoConsoleStatics {
 
     protected static final String TIMEZONE = "Europe/Berlin";
 
+    public static final String LONG_TIMESTAMP_FORMAT = "yyyy/MM/dd HH:mm:ss";
+
     public enum ActionCommand {
         UpdateUsbDevice, ChangeConnectionStatus;
     }

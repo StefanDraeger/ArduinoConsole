@@ -1,12 +1,10 @@
 package draegerit.de.arduinoconsole;
 
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
@@ -43,25 +41,53 @@ import draegerit.de.arduinoconsole.util.PreferencesUtil;
 
 import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.TIMEZONE;
 
+/**
+ * Klasse zum erzeugen der {@link android.app.Activity} für die Darstellung des Diagramms.
+ */
 public class GraphActivity extends AppCompatActivity implements Observer {
 
+    /**
+     * TAG für die Log Messages.
+     */
     private static final String TAG = "ArduinoConsole";
+
+    /**
+     * Default Wert für die Qualität der Grafik beim exportieren.
+     */
     private static final int QUALITY = 100;
 
-
+    /**
+     * Schaltfläche zum leeren des Diagramms.
+     */
     private ImageButton graphClearBtn;
+
+    /**
+     * Schaltfläche zum konfigurieren des Diagramms.
+     */
     private ImageButton prefBtn;
 
+    /**
+     * Das Model.
+     */
     private Model model = Model.getInstance();
 
+    /**
+     * {@link GraphController} mit den Actionen für die {@link android.app.Activity}
+     */
     private GraphController controller;
 
+    /**
+     * {@link ChartView} für das Diagramm.
+     */
     private ChartView chartView;
 
+    /**
+     * Der Dialog zum exportieren der Daten.
+     */
     private Dialog exportDialog;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_graph);
         setTitle(getResources().getString(R.string.graph));
@@ -89,7 +115,7 @@ public class GraphActivity extends AppCompatActivity implements Observer {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(final MenuItem item) {
         Intent intent = null;
         switch (item.getItemId()) {
             case R.id.exportItem:
@@ -151,9 +177,11 @@ public class GraphActivity extends AppCompatActivity implements Observer {
                 dialog.dismiss();
             }
         });
+
+        dialog.show();
     }
 
-    private Dialog generateDialog(int layout, int titleResId) {
+    private Dialog generateDialog(final int layout, final int titleResId) {
         final Dialog dialog = new Dialog(new ContextThemeWrapper(GraphActivity.this, android.R.style.Theme_Holo_Light_Dialog));
         dialog.setContentView(layout);
         dialog.setTitle(getResources().getString(titleResId));
@@ -168,7 +196,7 @@ public class GraphActivity extends AppCompatActivity implements Observer {
         return dialog;
     }
 
-    private void exportData(RadioGroup chartExportRadioGroup) {
+    private void exportData(final RadioGroup chartExportRadioGroup) {
         AbstractExport export = null;
         switch (chartExportRadioGroup.getCheckedRadioButtonId()) {
             case R.id.csvExportItem:
@@ -188,7 +216,7 @@ public class GraphActivity extends AppCompatActivity implements Observer {
     }
 
 
-    public void launchProgressbarWaitDialog(AbstractExport export) {
+    public void launchProgressbarWaitDialog(final AbstractExport export) {
         GenerateAndShareAsyncTask task = new GenerateAndShareAsyncTask(export);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
@@ -197,18 +225,18 @@ public class GraphActivity extends AppCompatActivity implements Observer {
         private ProgressDialog progressDialog;
         private AbstractExport export;
 
-        public GenerateAndShareAsyncTask(AbstractExport export) {
-            this.export = export;
+        public GenerateAndShareAsyncTask(final AbstractExport inExport) {
+            this.export = inExport;
         }
 
         @Override
-        protected Void doInBackground(Void... params) {
+        protected Void doInBackground(final Void... params) {
             export.doExport(getApplicationContext());
             return null;
         }
 
         @Override
-        protected void onPostExecute(Void aVoid) {
+        protected void onPostExecute(final Void aVoid) {
             super.onPostExecute(aVoid);
             progressDialog.dismiss();
             export.startExportIntent(new File(export.getExportFilename()), getApplicationContext());
@@ -234,7 +262,6 @@ public class GraphActivity extends AppCompatActivity implements Observer {
             docsFolder.mkdir();
         }
 
-        //File path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
         String filename = docsFolder.getAbsolutePath() + File.pathSeparator + String.valueOf(System.currentTimeMillis()) + ".png";
 
         File file = new File(filename);
@@ -274,7 +301,7 @@ public class GraphActivity extends AppCompatActivity implements Observer {
     }
 
     @Override
-    public void update(Observable o, final Object arg) {
+    public void update(final Observable o, final Object arg) {
         if (arg instanceof Message) {
             final Message msg = (Message) arg;
             runOnUiThread(
@@ -288,21 +315,38 @@ public class GraphActivity extends AppCompatActivity implements Observer {
         }
     }
 
-    private Millisecond formatTimestamp(long timestamp) {
+    /**
+     * Formatiert ein Timestamp.
+     * @param timestamp
+     * @return String
+     */
+    private Millisecond formatTimestamp(final long timestamp) {
         Calendar cal = Calendar.getInstance();
         cal.setTimeZone(TimeZone.getTimeZone(TIMEZONE));
         cal.setTimeInMillis(timestamp);
         return new Millisecond(cal.getTime());
     }
 
+    /**
+     * Liefert das Diagramm.
+     * @return ChartView
+     */
     public ChartView getChartView() {
         return chartView;
     }
 
+    /**
+     * Liefert die Schaltfläche für das leeren des Diagramms.
+     * @return ImageButton
+     */
     public ImageButton getGraphClearBtn() {
         return graphClearBtn;
     }
 
+    /**
+     * Liefert die Schaltfläche für die konfiguration des Diagramms.
+     * @return ImageButton
+     */
     public ImageButton getPrefBtn() {
         return prefBtn;
     }

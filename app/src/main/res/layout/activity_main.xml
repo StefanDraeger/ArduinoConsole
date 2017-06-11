@@ -33,7 +33,7 @@
             android:layout_toEndOf="@+id/commandTextView"
             android:layout_weight="0.33"
             android:enabled="false"
-            android:text="Send"
+            android:text="@string/sendBtnTxt"
             tools:layout_editor_absoluteX="280dp"
             tools:layout_editor_absoluteY="16dp" />
 
@@ -91,7 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="0.25"
-            android:text="Autoscroll" />
+            android:text="@string/autoscrollChkBoxTxt" />
 
     </TableRow>
 
