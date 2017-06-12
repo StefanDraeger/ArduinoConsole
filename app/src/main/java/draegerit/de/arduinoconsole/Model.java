@@ -13,16 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
+import draegerit.de.arduinoconsole.connection.AbstractArduinoConnection;
 import draegerit.de.arduinoconsole.util.EParity;
 import draegerit.de.arduinoconsole.util.Message;
 import draegerit.de.arduinoconsole.util.USBConfiguration;
 
 public class Model extends Observable {
-
-    /**
-     *
-     */
-    private static final String TAG = "ArduinoConsole";
 
     private UsbSerialDriver driver;
 
@@ -41,7 +37,10 @@ public class Model extends Observable {
     private int configurePaneVisibility = View.GONE;
 
     public static Model SINGLETON;
+
     private boolean autoScroll;
+
+    private AbstractArduinoConnection arduinoConnection;
 
     private Model() {
 
@@ -103,7 +102,6 @@ public class Model extends Observable {
         return messages;
     }
 
-
     public boolean isConnected() {
         return isConnected;
     }
@@ -137,4 +135,11 @@ public class Model extends Observable {
         return autoScroll;
     }
 
+    public AbstractArduinoConnection getArduinoConnection() {
+        return arduinoConnection;
+    }
+
+    public void setArduinoConnection(AbstractArduinoConnection arduinoConnection) {
+        this.arduinoConnection = arduinoConnection;
+    }
 }

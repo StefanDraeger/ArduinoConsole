@@ -44,6 +44,11 @@
         <item>SPACE</item>
     </string-array>
 
+    <string-array name="connectionarray">
+        <item>USB Serial Connection</item>
+        <item>Bluetooth Connection</item>
+    </string-array>
+
     <string name="title_activity_impressum">ImpressumActivity</string>
     <string name="impressum">Legal info</string>
     <string name="graph">Graph</string>
@@ -105,5 +110,7 @@
     <string name="connectionTabTitle">Connection</string>
     <string name="action_save">Save</string>
     <string name="save_connection">Save successfull connection settings.</string>
+    <string name="device">Device</string>
+    <string name="deviceConnectionTyp">Connectiontype</string>
 
 </resources>

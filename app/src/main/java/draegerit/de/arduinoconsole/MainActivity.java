@@ -23,6 +23,8 @@ import java.util.Observer;
 
 import draegerit.de.arduinoconsole.util.HtmlUtil;
 import draegerit.de.arduinoconsole.util.Message;
+import draegerit.de.arduinoconsole.util.PreferencesUtil;
+import draegerit.de.arduinoconsole.util.USBConfiguration;
 
 import static android.R.color.holo_green_dark;
 import static android.R.color.holo_red_dark;
@@ -40,6 +42,15 @@ public class MainActivity extends AppCompatActivity implements Observer {
      */
     private TableRow config1TblRow;
 
+    /**
+     * TableRow für die Konfiguration der Verbindung.
+     */
+    private TableRow config3TblRow;
+
+    /**
+     * TableRow für die Konfiguration der Verbindung.
+     */
+    private TableRow config2TblRow;
 
     /**
      * Konsole.
@@ -97,6 +108,11 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private Button sendBtn;
 
     /**
+     * Auswahlliste für den Verbindungstyp zum Arduino.
+     */
+    private Spinner deviceConnectionTypeSpinner;
+
+    /**
      * MainController
      **/
     private MainController controller;
@@ -130,6 +146,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
         this.autoScrollCheckbox = (CheckBox) findViewById(R.id.autoScrollCheckbox);
         this.configureBtn = (ImageButton) findViewById(R.id.configureBtn);
         this.config1TblRow = (TableRow) findViewById(R.id.config1TblRow);
+        this.config2TblRow = (TableRow) findViewById(R.id.config2TblRow);
+        this.config3TblRow = (TableRow) findViewById(R.id.config3TblRow);
 
         this.connectBtn = (Button) findViewById(R.id.connectBtn);
         this.clearBtn = (ImageButton) findViewById(R.id.clearBtn);
@@ -138,6 +156,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
         this.hyperlinkTextView = (TextView) findViewById(R.id.hyperlinkTextView);
         this.hyperlinkTextView.setText(HtmlUtil.fromHtml(HTTP_ADRESS));
+
+        this.deviceConnectionTypeSpinner = (Spinner) findViewById(R.id.deviceConnectionTypeSpinner);
 
         this.connectBtn.requestFocus();
     }
@@ -227,7 +247,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
             getConnectBtn().setText(getResources().getString(R.string.disconnect));
             getConnectBtn().setBackgroundColor(getResources().getColor(holo_red_dark));
         } else {
-            boolean selectionValid = model.getBaudrate() > 0 && model.getDriver() != null && getDriverSpinner().getSelectedItem() != null;
+            USBConfiguration usbConfiguration = PreferencesUtil.getUSBConnection(getApplicationContext());
+            boolean selectionValid = usbConfiguration.getBaudrate() > 0 && model.getDriver() != null && getDriverSpinner().getSelectedItem() != null;
             if (selectionValid) {
                 getConnectBtn().setBackgroundColor(getResources().getColor(holo_green_dark));
             } else {
@@ -349,4 +370,27 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
 
+    public TableRow getConfig3TblRow() {
+        return config3TblRow;
+    }
+
+    public void setConfig3TblRow(TableRow config3TblRow) {
+        this.config3TblRow = config3TblRow;
+    }
+
+    public TableRow getConfig2TblRow() {
+        return config2TblRow;
+    }
+
+    public void setConfig2TblRow(TableRow config2TblRow) {
+        this.config2TblRow = config2TblRow;
+    }
+
+    public Spinner getDeviceConnectionTypeSpinner() {
+        return deviceConnectionTypeSpinner;
+    }
+
+    public void setDeviceConnectionTypeSpinner(Spinner deviceConnectionTypeSpinner) {
+        this.deviceConnectionTypeSpinner = deviceConnectionTypeSpinner;
+    }
 }

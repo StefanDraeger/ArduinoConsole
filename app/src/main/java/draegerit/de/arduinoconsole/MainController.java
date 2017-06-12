@@ -23,6 +23,8 @@ import com.hoho.android.usbserial.driver.UsbSerialProber;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import draegerit.de.arduinoconsole.connection.AbstractArduinoConnection;
+import draegerit.de.arduinoconsole.connection.USBConnection;
 import draegerit.de.arduinoconsole.util.EParity;
 import draegerit.de.arduinoconsole.util.Message;
 import draegerit.de.arduinoconsole.util.MessageHandler;
@@ -172,6 +174,8 @@ class MainController extends AbstractController {
                 }
                 model.setConfigurePaneVisibility(configurePaneVisibility);
                 mainActivity.getConfig1TblRow().setVisibility(configurePaneVisibility);
+                mainActivity.getConfig2TblRow().setVisibility(configurePaneVisibility);
+                mainActivity.getConfig3TblRow().setVisibility(configurePaneVisibility);
             }
         });
 
@@ -200,6 +204,25 @@ class MainController extends AbstractController {
             }
         });
 
+        this.mainActivity.getDeviceConnectionTypeSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
+                if (view != null) {
+                    String value = ((TextView) view).getText().toString();
+                    if (value.equalsIgnoreCase("USB Serial Connection")) {
+                        USBConfiguration usbConfiguration = PreferencesUtil.getUSBConnection(mainActivity.getApplicationContext());
+                        model.setArduinoConnection(new USBConnection(usbConfiguration));
+                    } else if (value.equalsIgnoreCase("Bluetooth Connection")) {
+
+                    }
+                }
+            }
+
+            @Override
+            public void onNothingSelected(final AdapterView<?> parent) {
+
+            }
+        });
     }
 
     private void disconnect() {
