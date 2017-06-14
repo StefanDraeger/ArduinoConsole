@@ -8,13 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Spinner;
 
-import draegerit.de.arduinoconsole.Model;
 import draegerit.de.arduinoconsole.R;
 
 
 public class ConnectionTab extends Fragment {
-
-    private Model model = Model.getInstance();
 
     /**
      * Auswahlliste für die Auswahl der Übertragungsgeschwindigkeit.

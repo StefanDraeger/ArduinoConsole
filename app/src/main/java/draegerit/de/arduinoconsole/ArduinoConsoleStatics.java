@@ -9,7 +9,7 @@ public final class ArduinoConsoleStatics {
     protected static final String HTTP_ADRESS = "https://www.draeger-it.blog";
     protected static final String EMAIL_ADRESS = "info@draeger-it.blog";
 
-    protected static final String EMPTY = "";
+    public static final String EMPTY = "";
 
     protected static final String TEXT_PLAIN = "text/plain";
 

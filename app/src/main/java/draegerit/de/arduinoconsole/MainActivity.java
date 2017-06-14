@@ -219,7 +219,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
                         if (controller != null) {
                             switch (command) {
                                 case UpdateUsbDevice:
-                                    controller.registerDataAdapter();
+                                    model.getArduinoConnection().registerDataAdapter();
                                     break;
                                 case ChangeConnectionStatus:
                                     //updateConnectionStatus(model);
@@ -230,9 +230,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     updateConnectionStatus(model);
                     long duration = System.currentTimeMillis() - beforeTimestamp;
                     Log.i(TAG, "duration: --->" + String.valueOf(duration) + " ms");
-                } catch (Exception e)
-
-                {
+                } catch (Exception e){
                     Log.e(TAG, e.getMessage(), e);
                 }
             }
@@ -240,10 +238,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     private void updateConnectionStatus(Model model) {
-        getCommandTextView().setEnabled(model.isConnected());
-        getSendBtn().setEnabled(model.isConnected());
+        getCommandTextView().setEnabled(model.getArduinoConnection().isConnected());
+        getSendBtn().setEnabled(model.getArduinoConnection().isConnected());
 
-        if (model.isConnected()) {
+        if (model.getArduinoConnection().isConnected()) {
             getConnectBtn().setText(getResources().getString(R.string.disconnect));
             getConnectBtn().setBackgroundColor(getResources().getColor(holo_red_dark));
         } else {

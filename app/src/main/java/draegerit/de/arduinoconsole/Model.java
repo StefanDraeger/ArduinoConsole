@@ -1,38 +1,23 @@
 package draegerit.de.arduinoconsole;
 
 
-import android.app.PendingIntent;
-import android.hardware.usb.UsbDeviceConnection;
-import android.util.Log;
 import android.view.View;
-
-import com.hoho.android.usbserial.driver.UsbSerialDriver;
-import com.hoho.android.usbserial.driver.UsbSerialPort;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 
 import draegerit.de.arduinoconsole.connection.AbstractArduinoConnection;
-import draegerit.de.arduinoconsole.util.EParity;
+import draegerit.de.arduinoconsole.util.DriverWrapper;
 import draegerit.de.arduinoconsole.util.Message;
-import draegerit.de.arduinoconsole.util.USBConfiguration;
 
 public class Model extends Observable {
 
-    private UsbSerialDriver driver;
-
-    private UsbSerialPort port;
-
-    private UsbDeviceConnection connection;
-
-    private PendingIntent permissionIntent;
+    private DriverWrapper<?> driver;
 
     private List<Message> messages = new ArrayList<>();
 
-    private List<UsbSerialDriver> usbSerialDrivers;
-
-    private boolean isConnected;
+    private boolean connected;
 
     private int configurePaneVisibility = View.GONE;
 
@@ -53,63 +38,18 @@ public class Model extends Observable {
         return SINGLETON;
     }
 
-
-    public List<UsbSerialDriver> getUsbSerialDrivers() {
-        return usbSerialDrivers;
-    }
-
-    public void setUsbSerialDrivers(List<UsbSerialDriver> usbSerialDrivers) {
-        this.usbSerialDrivers = usbSerialDrivers;
-        setChanged();
-        notifyObservers(ArduinoConsoleStatics.ActionCommand.UpdateUsbDevice);
-    }
-
-    public UsbSerialDriver getDriver() {
+    public DriverWrapper<?> getDriver() {
         return driver;
     }
 
-    public void setDriver(UsbSerialDriver driver) {
+    public void setDriver(DriverWrapper<?> driver) {
         this.driver = driver;
         setChanged();
         notifyObservers();
     }
 
-    public UsbSerialPort getPort() {
-        return port;
-    }
-
-    public void setPort(UsbSerialPort port) {
-        this.port = port;
-    }
-
-    public UsbDeviceConnection getConnection() {
-        return connection;
-    }
-
-    public void setConnection(UsbDeviceConnection connection) {
-        this.connection = connection;
-    }
-
-    public PendingIntent getPermissionIntent() {
-        return permissionIntent;
-    }
-
-    public void setPermissionIntent(PendingIntent mPermissionIntent) {
-        this.permissionIntent = mPermissionIntent;
-    }
-
     public List<Message> getMessages() {
         return messages;
-    }
-
-    public boolean isConnected() {
-        return isConnected;
-    }
-
-    public void setConnected(boolean connected) {
-        isConnected = connected;
-        setChanged();
-        notifyObservers(ArduinoConsoleStatics.ActionCommand.ChangeConnectionStatus);
     }
 
     public void addMessage(Message.Type type, String message) {
@@ -141,5 +81,20 @@ public class Model extends Observable {
 
     public void setArduinoConnection(AbstractArduinoConnection arduinoConnection) {
         this.arduinoConnection = arduinoConnection;
+    }
+
+    public boolean isConnected() {
+        return connected;
+    }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+        setChanged();
+        notifyObservers();
+    }
+
+    public void updateDataAdapter() {
+        setChanged();
+        notifyObservers(ArduinoConsoleStatics.ActionCommand.UpdateUsbDevice);
     }
 }
