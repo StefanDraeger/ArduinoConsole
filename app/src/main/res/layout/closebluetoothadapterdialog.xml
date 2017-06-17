@@ -14,7 +14,7 @@
         android:textColor="@android:color/black" />
 
     <CheckBox
-        android:id="@+id/checkBox2"
+        android:id="@+id/dontShowDialogAgainCheckbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/dont_show_this_dialog" />

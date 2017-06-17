@@ -97,4 +97,9 @@ public class Model extends Observable {
         setChanged();
         notifyObservers(ArduinoConsoleStatics.ActionCommand.UpdateUsbDevice);
     }
+
+    public void updateBluetoothAdapter() {
+        setChanged();
+        notifyObservers(ArduinoConsoleStatics.ActionCommand.UpdateBluetoothAdapter);
+    }
 }

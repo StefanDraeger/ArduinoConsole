@@ -22,7 +22,7 @@ public final class ArduinoConsoleStatics {
     public static final String LONG_TIMESTAMP_FORMAT = "yyyy/MM/dd HH:mm:ss";
 
     public enum ActionCommand {
-        UpdateUsbDevice, ChangeConnectionStatus;
+        UpdateUsbDevice, ChangeConnectionStatus, UpdateBluetoothAdapter;
     }
 
     private ArduinoConsoleStatics() {

@@ -7,15 +7,13 @@ import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.hoho.android.usbserial.driver.UsbSerialDriver;
-
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import draegerit.de.arduinoconsole.MainActivity;
 import draegerit.de.arduinoconsole.R;
-import draegerit.de.arduinoconsole.connection.bluetooth.ConnectionAsyncTask;
 import draegerit.de.arduinoconsole.util.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.DriverAdapter;
 import draegerit.de.arduinoconsole.util.DriverWrapper;
@@ -62,33 +60,21 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
 
     @Override
     public void disconnect() {
-
+        if (model.isConnected()) {
+            try {
+                this.socket.close();
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+                e.printStackTrace();
+            }
+            setConnected(false);
+        }
     }
 
     @Override
     public void connect() {
-
-        getActivity().runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    BluetoothDevice device = (BluetoothDevice) model.getDriver().getDriver();
-                    socket = new ConnectionAsyncTask(device, getActivity()).execute(null, null, null).get();
-                    if (socket != null && socket.isConnected()) {
-                        //setStatus(ConnectionStatus.Connected);
-                        //connectionThread = new ConnectionThread(this, this.socket);
-                        //connectionThread.start();
-                    } else {
-                        //setStatus(ConnectionStatus.ConnectionFailed);
-                    }
-                } catch (Exception e) {
-                    Log.e(TAG, e.getMessage());
-                    e.printStackTrace();
-                }
-            }
-        });
-
-
+        BluetoothDevice device = (BluetoothDevice) model.getDriver().getDriver();
+        activity.getBluetoothSocket(device);
     }
 
     @Override
@@ -120,5 +106,21 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
 
     private Set<BluetoothDevice> findPairedBluetoothDevices() {
         return mBluetoothAdapter.getBondedDevices();
+    }
+
+    public void setSocket(BluetoothSocket socket) {
+        this.socket = socket;
+        model.updateBluetoothAdapter();
+    }
+
+    public void postConnect() {
+        boolean isConnected = socket != null && socket.isConnected();
+        setConnected(isConnected);
+        if (isConnected) {
+            //connectionThread = new ConnectionThread(this, this.socket);
+            //connectionThread.start();
+        } else {
+            //setStatus(ConnectionStatus.ConnectionFailed);
+        }
     }
 }

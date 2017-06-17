@@ -1,8 +1,12 @@
 package draegerit.de.arduinoconsole;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
@@ -21,12 +26,18 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.UUID;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executor;
 
-import draegerit.de.arduinoconsole.util.ChartPreferences;
+import draegerit.de.arduinoconsole.connection.BluetoothConnection;
+import draegerit.de.arduinoconsole.util.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.HtmlUtil;
 import draegerit.de.arduinoconsole.util.Message;
+import draegerit.de.arduinoconsole.util.MessageHandler;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
 import draegerit.de.arduinoconsole.util.USBConfiguration;
 
@@ -228,6 +239,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
                                 case ChangeConnectionStatus:
                                     //updateConnectionStatus(model);
                                     break;
+                                case UpdateBluetoothAdapter:
+                                    ((BluetoothConnection) model.getArduinoConnection()).postConnect();
+                                    break;
                             }
                         }
                     }
@@ -418,7 +432,78 @@ public class MainActivity extends AppCompatActivity implements Observer {
             }
         });
 
+        final CheckBox dontShowDialogAgainCheckbox = (CheckBox) dialog.findViewById(R.id.dontShowDialogAgainCheckbox);
+        dontShowDialogAgainCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                BluetoothConfiguration bluetoothConfiguration = PreferencesUtil.getBluetoothConfiguration(getApplicationContext());
+                bluetoothConfiguration.setShowCloseConnectionDialog(!dontShowDialogAgainCheckbox.isChecked());
+                PreferencesUtil.storeBluetoothConfiguration(getApplicationContext(), bluetoothConfiguration);
+            }
+        });
+
         dialog.show();
     }
 
+    public BluetoothSocket getBluetoothSocket(BluetoothDevice device) {
+        BluetoothSocket socket = null;
+        try {
+            ConnectionAsyncTask task = new ConnectionAsyncTask(device);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return socket;
+    }
+
+    private class ConnectionAsyncTask extends AsyncTask<Void, Void, BluetoothSocket> {
+
+        //Die eindeutige ID darf nicht geändert werden.
+        //TODO: Warum?
+        public static final String DEFAULT_UUID = "00001101-0000-1000-8000-00805F9B34FB";
+
+        private ProgressDialog progressDialog;
+
+        private BluetoothSocket bluetoothSocket;
+        private final BluetoothDevice bluetoothDevice;
+
+        private Model model = Model.getInstance();
+
+
+        public ConnectionAsyncTask(BluetoothDevice device) {
+            this.bluetoothDevice = device;
+        }
+
+        @Override
+        protected BluetoothSocket doInBackground(Void... params) {
+            try {
+                bluetoothSocket = this.bluetoothDevice.createRfcommSocketToServiceRecord(UUID.fromString(DEFAULT_UUID));
+                if (bluetoothSocket != null) {
+                    bluetoothSocket.connect();
+                }
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+            }
+            return bluetoothSocket;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setTitle(getString(R.string.msg_title_create_connection));
+            progressDialog.setMessage(getString(R.string.msg_msg_create_connection, bluetoothDevice.getName()));
+            progressDialog.setCancelable(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(BluetoothSocket socket) {
+            super.onPostExecute(socket);
+            progressDialog.dismiss();
+            ((BluetoothConnection) model.getArduinoConnection()).setSocket(bluetoothSocket);
+        }
+    }
 }
