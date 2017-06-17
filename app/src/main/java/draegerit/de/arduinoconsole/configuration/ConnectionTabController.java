@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import draegerit.de.arduinoconsole.R;
+import draegerit.de.arduinoconsole.util.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.EParity;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
 import draegerit.de.arduinoconsole.util.USBConfiguration;
@@ -18,12 +19,12 @@ public class ConnectionTabController {
 
     private ConnectionTab connectionTab;
 
-    public ConnectionTabController(ConnectionTab connectionTab){
+    public ConnectionTabController(ConnectionTab connectionTab) {
         this.connectionTab = connectionTab;
     }
 
     public void registerListeners() {
-      this.connectionTab.getDeviceBaudSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.connectionTab.getDeviceBaudSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
@@ -95,16 +96,21 @@ public class ConnectionTabController {
         EParity eParity = EParity.getByName(this.connectionTab.getParitySpinner().getSelectedItem().toString());
         int parity = eParity.getValue();
         USBConfiguration usbConfiguration = new USBConfiguration(baudrate, databits, stopbits, parity);
-        PreferencesUtil.storeUSBConnection(ctx, usbConfiguration);
+        PreferencesUtil.storeUSBConfiguration(ctx, usbConfiguration);
 
-        Toast.makeText(ctx,ctx.getString(R.string.save_connection), Toast.LENGTH_LONG).show();
+        boolean showCloseBluetoothConnectionDialog = this.connectionTab.getCloseBluetoothConnectionCheckbox().isChecked();
+
+        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(showCloseBluetoothConnectionDialog);
+        PreferencesUtil.storeBluetoothConfiguration(ctx, bluetoothConfiguration);
+
+        Toast.makeText(ctx, ctx.getString(R.string.save_connection), Toast.LENGTH_LONG).show();
     }
 
     /**
      * Setzt die Default Werte.
      */
     public void setDefaultValues(Context ctx) {
-        USBConfiguration usbConfiguration = PreferencesUtil.getUSBConnection(ctx);
+        USBConfiguration usbConfiguration = PreferencesUtil.getUSBConfiguration(ctx);
 
         this.connectionTab.getDeviceBaudSpinner().setSelection(getPositionForValue(this.connectionTab.getDeviceBaudSpinner(), usbConfiguration.getBaudrate()));
         this.connectionTab.getDatabitSpinner().setSelection(getPositionForValue(this.connectionTab.getDatabitSpinner(), usbConfiguration.getDataBits()));
@@ -114,6 +120,10 @@ public class ConnectionTabController {
         EParity parity = EParity.getByValue(usbConfiguration.getParity());
         int spinnerPosition = adapter.getPosition(parity.name());
         this.connectionTab.getParitySpinner().setSelection(spinnerPosition);
+
+        BluetoothConfiguration bluetoothConfiguration = PreferencesUtil.getBluetoothConfiguration(ctx);
+        this.connectionTab.getCloseBluetoothConnectionCheckbox().setChecked(bluetoothConfiguration.isShowCloseConnectionDialog());
+
     }
 
     private int getPositionForValue(Spinner spinner, int value) {

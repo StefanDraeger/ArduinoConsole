@@ -1,5 +1,6 @@
 package draegerit.de.arduinoconsole.util;
 
+import android.bluetooth.BluetoothDevice;
 import android.content.Context;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
@@ -43,7 +44,7 @@ public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
                 name = ((UsbSerialDriver) device.getDriver()).getDevice().getDeviceName();
                 break;
             case BLUETOOTH:
-                name = "";
+                name = ((BluetoothDevice) device.getDriver()).getName();
                 break;
         }
         deviceName.setText(name);

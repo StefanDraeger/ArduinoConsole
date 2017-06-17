@@ -49,6 +49,12 @@
         <item>Bluetooth Connection</item>
     </string-array>
 
+    <string-array name="bluetoothtypearray">
+        <item>HC-05</item>
+        <item>HC-06</item>
+        <item>HM-10</item>
+    </string-array>
+
     <string name="title_activity_impressum">ImpressumActivity</string>
     <string name="impressum">Legal info</string>
     <string name="graph">Graph</string>
@@ -112,5 +118,15 @@
     <string name="save_connection">Save successfull connection settings.</string>
     <string name="device">Device</string>
     <string name="deviceConnectionTyp">Connectiontype</string>
+    <string name="msg_no_driver_found">No driver with name %1$s not found.</string>
+    <string name="usbserialdevice">USB Serial Device</string>
+    <string name="bluetoothdevice">Bluetooth Device</string>
+    <string name="type">Type</string>
+    <string name="msg_no_bluetooth_support">No Bluetooth support!</string>
+    <string name="txtAskForCloseBluetoothConnection">Show dialog for closing Bluetooth Connection if not in use by application.</string>
+    <string name="msg_close_bluetooth_connection">Disable Bluetoothadapter?</string>
+    <string name="dont_show_this_dialog">Don\'t show this dialog anymore.</string>
+    <string name="bluetoothadapter_not_in_use">Bluetoothadapter not in use, please disable Bluetoothadapter.</string>
+    <string name="disable">Disable</string>
 
 </resources>

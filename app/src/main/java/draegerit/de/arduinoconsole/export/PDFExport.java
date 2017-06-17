@@ -147,7 +147,7 @@ public class PDFExport extends AbstractExport {
         if (model.getArduinoConnection() != null) {
             if (model.getArduinoConnection() instanceof USBConnection) {
                 USBConnection connection = (USBConnection) model.getArduinoConnection();
-                USBConfiguration usbConfiguration = PreferencesUtil.getUSBConnection(this.context);
+                USBConfiguration usbConfiguration = PreferencesUtil.getUSBConfiguration(this.context);
                 headerTable.addCell(getTblHeaderCell(this.context.getResources().getString(R.string.pdfExportConnectionParameter), ALIGN_LEFT, PdfPCell.NO_BORDER));
                 headerTable.addCell(getTblCell(this.context.getResources().getString(R.string.pdfExportDevice, connection.getPort().getDriver().getDevice().getDeviceName()), PdfPCell.NO_BORDER));
                 headerTable.addCell(getTblCell(this.context.getResources().getString(R.string.pdfExportBaudrate, String.valueOf(usbConfiguration.getBaudrate())), PdfPCell.NO_BORDER));

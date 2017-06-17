@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Spinner;
 
 import draegerit.de.arduinoconsole.R;
@@ -33,6 +34,11 @@ public class ConnectionTab extends Fragment {
      **/
     private Spinner paritySpinner;
 
+    /**
+     * Checkbox für das Anzeigen des Dialoges zum schließen einer nicht benötigten Bluetoothverbindung.
+     */
+    private CheckBox closeBluetoothConnectionCheckbox;
+
     private View view;
 
     private ConnectionTabController connectionTabController;
@@ -55,6 +61,8 @@ public class ConnectionTab extends Fragment {
         this.databitSpinner = (Spinner) this.view.findViewById(R.id.databitSpinner);
         this.stopbitsSpinner = (Spinner) this.view.findViewById(R.id.stopbitsSpinner);
         this.paritySpinner = (Spinner) this.view.findViewById(R.id.paritySpinner);
+
+        this.closeBluetoothConnectionCheckbox = (CheckBox) this.view.findViewById(R.id.closeBluetoothConnectionCheckbox);
     }
 
     public void save() {
@@ -97,4 +105,11 @@ public class ConnectionTab extends Fragment {
         return paritySpinner;
     }
 
+    public CheckBox getCloseBluetoothConnectionCheckbox() {
+        return closeBluetoothConnectionCheckbox;
+    }
+
+    public void setCloseBluetoothConnectionCheckbox(CheckBox closeBluetoothConnectionCheckbox) {
+        this.closeBluetoothConnectionCheckbox = closeBluetoothConnectionCheckbox;
+    }
 }

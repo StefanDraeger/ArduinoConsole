@@ -1,14 +1,17 @@
 package draegerit.de.arduinoconsole;
 
+import android.app.Dialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -21,6 +24,7 @@ import android.widget.TextView;
 import java.util.Observable;
 import java.util.Observer;
 
+import draegerit.de.arduinoconsole.util.ChartPreferences;
 import draegerit.de.arduinoconsole.util.HtmlUtil;
 import draegerit.de.arduinoconsole.util.Message;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
@@ -230,7 +234,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     updateConnectionStatus(model);
                     long duration = System.currentTimeMillis() - beforeTimestamp;
                     Log.i(TAG, "duration: --->" + String.valueOf(duration) + " ms");
-                } catch (Exception e){
+                } catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
                 }
             }
@@ -245,7 +249,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             getConnectBtn().setText(getResources().getString(R.string.disconnect));
             getConnectBtn().setBackgroundColor(getResources().getColor(holo_red_dark));
         } else {
-            USBConfiguration usbConfiguration = PreferencesUtil.getUSBConnection(getApplicationContext());
+            USBConfiguration usbConfiguration = PreferencesUtil.getUSBConfiguration(getApplicationContext());
             boolean selectionValid = usbConfiguration.getBaudrate() > 0 && model.getDriver() != null && getDriverSpinner().getSelectedItem() != null;
             if (selectionValid) {
                 getConnectBtn().setBackgroundColor(getResources().getColor(holo_green_dark));
@@ -391,4 +395,30 @@ public class MainActivity extends AppCompatActivity implements Observer {
     public void setDeviceConnectionTypeSpinner(Spinner deviceConnectionTypeSpinner) {
         this.deviceConnectionTypeSpinner = deviceConnectionTypeSpinner;
     }
+
+    public void showCloseBluetoothConnectionDialog(final BluetoothAdapter mBluetoothAdapter) {
+        final Dialog dialog = new Dialog(new ContextThemeWrapper(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog));
+        dialog.setContentView(R.layout.closebluetoothadapterdialog);
+        dialog.setTitle(getResources().getString(R.string.msg_close_bluetooth_connection));
+
+        Button dialogAbortButton = (Button) dialog.findViewById(R.id.dialogButtonAbort);
+        dialogAbortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        Button dialogDisableButton = (Button) dialog.findViewById(R.id.dialogButtonDisable);
+        dialogDisableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBluetoothAdapter.disable();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
 }

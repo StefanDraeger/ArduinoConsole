@@ -1,6 +1,5 @@
 package draegerit.de.arduinoconsole.connection;
 
-import android.app.Activity;
 import android.content.BroadcastReceiver;
 
 import draegerit.de.arduinoconsole.MainActivity;
@@ -8,15 +7,18 @@ import draegerit.de.arduinoconsole.Model;
 
 public abstract class AbstractArduinoConnection<T> {
 
-    private T configuration;
+    protected T configuration;
 
-    private MainActivity activity;
+    protected MainActivity activity;
 
     private boolean connected;
 
     protected BroadcastReceiver broadcastReceiver;
 
-    protected  Model model = Model.getInstance();
+    protected Model model = Model.getInstance();
+
+    public AbstractArduinoConnection() {
+    }
 
     public AbstractArduinoConnection(T configuration, MainActivity activity) {
         this.configuration = configuration;

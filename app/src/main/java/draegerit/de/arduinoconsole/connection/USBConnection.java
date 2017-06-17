@@ -82,7 +82,9 @@ public class USBConnection extends AbstractArduinoConnection<USBConfiguration> {
         }
 
         setConnected(false);
-        getConnection().close();
+        if (getConnection() != null) {
+            getConnection().close();
+        }
     }
 
     public UsbSerialPort getPort() {
@@ -100,12 +102,26 @@ public class USBConnection extends AbstractArduinoConnection<USBConfiguration> {
         UsbManager manager = (UsbManager) getActivity().getSystemService(Context.USB_SERVICE);
         UsbDeviceConnection connection = null;
         UsbSerialDriver driver = (UsbSerialDriver) model.getDriver().getDriver();
+
         try {
-            setConnected(false);
-            connection = manager.openDevice(driver.getDevice());
-            setConnected(true);
+            UsbDevice device = driver.getDevice();
+
+            boolean findDriver = false;
+            for (UsbSerialDriver usbSerialDriver : findUsbSerialDriver()) {
+                if (usbSerialDriver.getDevice().getDeviceName().equalsIgnoreCase(device.getDeviceName())) {
+                    findDriver = true;
+                    break;
+                }
+            }
+            if(!findDriver){
+                MessageHandler.showErrorMessage(getActivity(), getActivity().getResources().getString(R.string.msg_no_driver_found, device.getDeviceName()));
+                setConnected(false);
+                return;
+            }
+
+            connection = manager.openDevice(device);
             if (connection == null) {
-                manager.requestPermission(driver.getDevice(), getPermissionIntent());
+                manager.requestPermission(device, getPermissionIntent());
                 return;
             }
         } catch (Exception e) {
@@ -122,7 +138,7 @@ public class USBConnection extends AbstractArduinoConnection<USBConfiguration> {
             port.open(connection);
             setConnection(connection);
 
-            USBConfiguration usbConfiguration = PreferencesUtil.getUSBConnection(getActivity().getApplicationContext());
+            USBConfiguration usbConfiguration = PreferencesUtil.getUSBConfiguration(getActivity().getApplicationContext());
             port.setParameters(usbConfiguration.getBaudrate(), usbConfiguration.getDataBits(), usbConfiguration.getStopbits(), usbConfiguration.getParity());
             setPort(port);
 
@@ -194,8 +210,12 @@ public class USBConnection extends AbstractArduinoConnection<USBConfiguration> {
      * Sucht angegeschlossene Geräte und speichert die Liste im {@link Model}
      */
     private void findPorts() {
+        setUsbSerialDrivers(findUsbSerialDriver());
+    }
+
+    private List<UsbSerialDriver> findUsbSerialDriver() {
         UsbManager manager = (UsbManager) getActivity().getSystemService(Context.USB_SERVICE);
-        setUsbSerialDrivers(UsbSerialProber.getDefaultProber().findAllDrivers(manager));
+        return UsbSerialProber.getDefaultProber().findAllDrivers(manager);
     }
 
     public PendingIntent getPermissionIntent() {

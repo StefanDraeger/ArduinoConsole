@@ -17,7 +17,7 @@
             android:layout_weight="0.10"
             android:gravity="center_vertical"
             android:paddingLeft="3dp"
-            android:text="USB Device"
+            android:text="@string/usbserialdevice"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
 
@@ -111,6 +111,59 @@
             android:entries="@array/parityarray"
             android:textAlignment="textEnd"
             android:minWidth="120dp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_span="2"
+            android:layout_weight="0.10"
+            android:gravity="center_vertical"
+            android:paddingLeft="3dp"
+            android:text="@string/bluetoothdevice"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <TextView
+            android:id="@+id/textView23"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/type"
+            android:textAlignment="textEnd"
+            android:textColor="@android:color/black" />
+
+        <Spinner
+            android:id="@+id/spinner"
+            android:layout_width="match_parent"
+            android:entries="@array/bluetoothtypearray"
+            android:textAlignment="textEnd"
+            android:layout_height="wrap_content" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="3dp"
+        android:paddingLeft="6dp">
+
+        <CheckBox
+            android:id="@+id/closeBluetoothConnectionCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_span="2"
+            android:layout_weight="0.10"
+            android:text="@string/txtAskForCloseBluetoothConnection" />
     </TableRow>
 
 </TableLayout>
