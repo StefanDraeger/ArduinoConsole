@@ -60,7 +60,7 @@ public final class PreferencesUtil {
         store(ctx, json, BLUETOOTH_CONFIGURATION_PREF);
     }
 
-    public static BluetoothConfiguration getBluetoothConfiguration(Context ctx){
+    public static BluetoothConfiguration getBluetoothConfiguration(Context ctx) {
         SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
         String usbConnectionJSON = settings.getString(BLUETOOTH_CONFIGURATION_PREF, getDefaultBluetoothConfiguration());
         if (!isBlank(usbConnectionJSON)) {
@@ -94,7 +94,7 @@ public final class PreferencesUtil {
     }
 
     private static String getDefaultBluetoothConfiguration() {
-        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(true);
+        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(true, true);
         return new Gson().toJson(bluetoothConfiguration);
     }
 

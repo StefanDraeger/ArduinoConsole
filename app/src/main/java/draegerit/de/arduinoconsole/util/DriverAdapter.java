@@ -47,7 +47,13 @@ public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
                 name = ((BluetoothDevice) device.getDriver()).getName();
                 break;
         }
+
+        if (!device.isBonded()) {
+            name = name.concat(context.getString(R.string.not_bounded));
+            deviceName.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
+        }
         deviceName.setText(name);
+
 
         return layout;
     }

@@ -99,8 +99,9 @@ public class ConnectionTabController {
         PreferencesUtil.storeUSBConfiguration(ctx, usbConfiguration);
 
         boolean showCloseBluetoothConnectionDialog = this.connectionTab.getCloseBluetoothConnectionCheckbox().isChecked();
+        boolean showSearchNewDevicesDialog = this.connectionTab.getShowSearchNewDevicesChkBox().isChecked();
 
-        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(showCloseBluetoothConnectionDialog);
+        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(showCloseBluetoothConnectionDialog, showSearchNewDevicesDialog);
         PreferencesUtil.storeBluetoothConfiguration(ctx, bluetoothConfiguration);
 
         Toast.makeText(ctx, ctx.getString(R.string.save_connection), Toast.LENGTH_LONG).show();
@@ -123,7 +124,7 @@ public class ConnectionTabController {
 
         BluetoothConfiguration bluetoothConfiguration = PreferencesUtil.getBluetoothConfiguration(ctx);
         this.connectionTab.getCloseBluetoothConnectionCheckbox().setChecked(bluetoothConfiguration.isShowCloseConnectionDialog());
-
+        this.connectionTab.getShowSearchNewDevicesChkBox().setChecked(bluetoothConfiguration.isShowSearchNewDevicesDialog());
     }
 
     private int getPositionForValue(Spinner spinner, int value) {

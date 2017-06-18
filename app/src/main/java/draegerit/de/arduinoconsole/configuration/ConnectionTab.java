@@ -39,6 +39,11 @@ public class ConnectionTab extends Fragment {
      */
     private CheckBox closeBluetoothConnectionCheckbox;
 
+    /**
+     * Checkbox für das Anzeigen des Dialoges zum suchen neuer Geräte.
+     */
+    private CheckBox showSearchNewDevicesChkBox;
+
     private View view;
 
     private ConnectionTabController connectionTabController;
@@ -63,6 +68,7 @@ public class ConnectionTab extends Fragment {
         this.paritySpinner = (Spinner) this.view.findViewById(R.id.paritySpinner);
 
         this.closeBluetoothConnectionCheckbox = (CheckBox) this.view.findViewById(R.id.closeBluetoothConnectionCheckbox);
+        this.showSearchNewDevicesChkBox = (CheckBox) this.view.findViewById(R.id.showSearchNewDevicesChkBox);
     }
 
     public void save() {
@@ -111,5 +117,13 @@ public class ConnectionTab extends Fragment {
 
     public void setCloseBluetoothConnectionCheckbox(CheckBox closeBluetoothConnectionCheckbox) {
         this.closeBluetoothConnectionCheckbox = closeBluetoothConnectionCheckbox;
+    }
+
+    public CheckBox getShowSearchNewDevicesChkBox() {
+        return showSearchNewDevicesChkBox;
+    }
+
+    public void setShowSearchNewDevicesChkBox(CheckBox showSearchNewDevicesChkBox) {
+        this.showSearchNewDevicesChkBox = showSearchNewDevicesChkBox;
     }
 }

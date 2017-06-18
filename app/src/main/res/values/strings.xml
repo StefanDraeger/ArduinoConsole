@@ -130,5 +130,15 @@
     <string name="disable">Disable</string>
     <string name="msg_title_create_connection">Create connection...</string>
     <string name="msg_msg_create_connection">Please wait while create Bluetoothconnection to %1$s</string>
+    <string name="msg_search_new_devices">Search new devices?</string>
+    <string name="msg_searchdevicesquestion">Whould you search for new devices?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="show_search_new_devices_dialog">Show search new devices dialog.</string>
+    <string name="bluetooth_off">Bluetoothadapter state is off</string>
+    <string name="bluetooth_on">Bluetoothadapter state is on</string>
+    <string name="bluetooth_turning_on">Bluetoothadapter is in state enable</string>
+    <string name="bluetooth_turning_off">Bluetoothadapter state is disable</string>
+    <string name="not_bounded"> (not bounded)</string>
 
 </resources>

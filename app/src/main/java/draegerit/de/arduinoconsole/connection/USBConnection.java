@@ -48,8 +48,6 @@ public class USBConnection extends AbstractArduinoConnection<USBConfiguration> {
 
     private UsbDeviceConnection connection;
 
-    private UsbSerialDriver driver;
-
     private UsbSerialPort port;
 
     public USBConnection(USBConfiguration configuration, MainActivity activity) {
@@ -175,6 +173,7 @@ public class USBConnection extends AbstractArduinoConnection<USBConfiguration> {
         setPermissionIntent(mPermissionIntent);
         IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
         getActivity().registerReceiver(broadcastReceiver, filter);
+        setReciverIsRegistered(true);
     }
 
     @Override

@@ -6,8 +6,11 @@ public class BluetoothConfiguration {
 
     private boolean showCloseConnectionDialog;
 
-    public BluetoothConfiguration(boolean showCloseConnectionDialog) {
+    private boolean showSearchNewDevicesDialog;
+
+    public BluetoothConfiguration(boolean showCloseConnectionDialog, boolean showSearchNewDevicesDialog) {
         this.showCloseConnectionDialog = showCloseConnectionDialog;
+        this.showSearchNewDevicesDialog = showSearchNewDevicesDialog;
     }
 
     public boolean isShowCloseConnectionDialog() {
@@ -16,5 +19,13 @@ public class BluetoothConfiguration {
 
     public void setShowCloseConnectionDialog(boolean showCloseConnectionDialog) {
         this.showCloseConnectionDialog = showCloseConnectionDialog;
+    }
+
+    public boolean isShowSearchNewDevicesDialog() {
+        return showSearchNewDevicesDialog;
+    }
+
+    public void setShowSearchNewDevicesDialog(boolean showSearchNewDevicesDialog) {
+        this.showSearchNewDevicesDialog = showSearchNewDevicesDialog;
     }
 }

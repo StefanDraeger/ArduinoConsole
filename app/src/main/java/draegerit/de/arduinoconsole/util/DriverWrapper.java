@@ -2,6 +2,14 @@ package draegerit.de.arduinoconsole.util;
 
 public class DriverWrapper<T> {
 
+    public boolean isBonded() {
+        return bonded;
+    }
+
+    public void setBonded(boolean bonded) {
+        this.bonded = bonded;
+    }
+
     public enum DriverType {
         USB, BLUETOOTH;
     }
@@ -9,6 +17,8 @@ public class DriverWrapper<T> {
     private T driver;
 
     private DriverType type;
+
+    private boolean bonded = true;
 
     public DriverWrapper(T driver, DriverType type) {
         this.driver = driver;

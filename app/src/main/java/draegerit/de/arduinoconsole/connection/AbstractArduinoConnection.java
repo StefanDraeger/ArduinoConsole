@@ -13,6 +13,8 @@ public abstract class AbstractArduinoConnection<T> {
 
     private boolean connected;
 
+    private boolean reciverIsRegistered;
+
     protected BroadcastReceiver broadcastReceiver;
 
     protected Model model = Model.getInstance();
@@ -73,5 +75,12 @@ public abstract class AbstractArduinoConnection<T> {
         this.configuration = configuration;
     }
 
+    public boolean isReciverIsRegistered() {
+        return reciverIsRegistered;
+    }
+
+    public void setReciverIsRegistered(boolean reciverIsRegistered) {
+        this.reciverIsRegistered = reciverIsRegistered;
+    }
 }
 

@@ -456,6 +456,42 @@ public class MainActivity extends AppCompatActivity implements Observer {
         return socket;
     }
 
+    public void searchNewDevices() {
+        final Dialog dialog = new Dialog(new ContextThemeWrapper(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog));
+        dialog.setContentView(R.layout.searchnewdevicesquestiondialog);
+        dialog.setTitle(getResources().getString(R.string.msg_search_new_devices));
+
+        Button yesButton = (Button) dialog.findViewById(R.id.yesButton);
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Model model = Model.getInstance();
+                ((BluetoothConnection) model.getArduinoConnection()).findUnPairedBluetoothDevices();
+                dialog.dismiss();
+            }
+        });
+
+        Button noButton = (Button) dialog.findViewById(R.id.noButton);
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        final CheckBox dontShowSearchNewDevicesChkBox = (CheckBox) dialog.findViewById(R.id.dontShowSearchNewDevicesChkBox);
+        dontShowSearchNewDevicesChkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                BluetoothConfiguration bluetoothConfiguration = PreferencesUtil.getBluetoothConfiguration(getApplicationContext());
+                bluetoothConfiguration.setShowSearchNewDevicesDialog(!dontShowSearchNewDevicesChkBox.isChecked());
+                PreferencesUtil.storeBluetoothConfiguration(getApplicationContext(), bluetoothConfiguration);
+            }
+        });
+
+        dialog.show();
+    }
+
     private class ConnectionAsyncTask extends AsyncTask<Void, Void, BluetoothSocket> {
 
         //Die eindeutige ID darf nicht geändert werden.

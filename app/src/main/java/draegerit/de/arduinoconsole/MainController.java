@@ -156,6 +156,15 @@ class MainController extends AbstractController {
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 if (view != null) {
                     String value = ((TextView) view).getText().toString();
+                    BroadcastReceiver receiver = model.getArduinoConnection().getBroadcastReceiver();
+                    if (receiver != null && model.getArduinoConnection().isReciverIsRegistered()) {
+                        try {
+                            mainActivity.unregisterReceiver(receiver);
+                        } catch (IllegalArgumentException ex) {
+                            Log.e(TAG, ex.getMessage());
+                        }
+                    }
+                    //TODO: Die Texte müssen durch Konstanten ausgestausch werden!
                     if (value.equalsIgnoreCase("USB Serial Connection")) {
                         USBConfiguration usbConfiguration = PreferencesUtil.getUSBConfiguration(mainActivity.getApplicationContext());
                         model.setArduinoConnection(new USBConnection(usbConfiguration, mainActivity));
@@ -163,6 +172,10 @@ class MainController extends AbstractController {
                     } else if (value.equalsIgnoreCase("Bluetooth Connection")) {
                         BluetoothConfiguration bluetoothConfiguration = PreferencesUtil.getBluetoothConfiguration(mainActivity.getApplicationContext());
                         model.setArduinoConnection(new BluetoothConnection(bluetoothConfiguration, mainActivity));
+
+                        if (bluetoothConfiguration.isShowSearchNewDevicesDialog()) {
+                            mainActivity.searchNewDevices();
+                        }
                     }
                     model.updateDataAdapter();
                 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_margin="15dp"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textView24"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:text="@string/msg_searchdevicesquestion"
+        android:textColor="@android:color/black" />
+
+    <CheckBox
+        android:id="@+id/dontShowSearchNewDevicesChkBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/dont_show_this_dialog" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/yesButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:text="@string/yes" />
+
+        <Button
+            android:id="@+id/noButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no" />
+
+    </LinearLayout>
+
+</LinearLayout>
