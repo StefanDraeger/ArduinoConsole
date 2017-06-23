@@ -49,6 +49,9 @@
         <item>Bluetooth Connection</item>
     </string-array>
 
+    <string name="usb_serial_connection">USB Serial Connection</string>
+    <string name="bluetooth_connection">Bluetooth Connection</string>
+
     <string-array name="bluetoothtypearray">
         <item>HC-05</item>
         <item>HC-06</item>
@@ -140,5 +143,7 @@
     <string name="bluetooth_turning_on">Bluetoothadapter is in state enable</string>
     <string name="bluetooth_turning_off">Bluetoothadapter state is disable</string>
     <string name="not_bounded"> (not bounded)</string>
+    <string name="screen">Screen</string>
+    <string name="stay_awake_while_connected">Device is aktiv  while connected to arduino.</string>
 
 </resources>

@@ -1,23 +1,18 @@
 package draegerit.de.arduinoconsole;
 
-import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import draegerit.de.arduinoconsole.connection.BluetoothConnection;
 import draegerit.de.arduinoconsole.connection.USBConnection;
 import draegerit.de.arduinoconsole.util.BluetoothConfiguration;
-import draegerit.de.arduinoconsole.util.ChartPreferences;
 import draegerit.de.arduinoconsole.util.DriverWrapper;
 import draegerit.de.arduinoconsole.util.MessageHandler;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
@@ -164,12 +159,12 @@ class MainController extends AbstractController {
                             Log.e(TAG, ex.getMessage());
                         }
                     }
-                    //TODO: Die Texte müssen durch Konstanten ausgestausch werden!
-                    if (value.equalsIgnoreCase("USB Serial Connection")) {
+
+                    if (value.equalsIgnoreCase(mainActivity.getResources().getString(R.string.usb_serial_connection))) {
                         USBConfiguration usbConfiguration = PreferencesUtil.getUSBConfiguration(mainActivity.getApplicationContext());
                         model.setArduinoConnection(new USBConnection(usbConfiguration, mainActivity));
                         checkBluetoothConnection();
-                    } else if (value.equalsIgnoreCase("Bluetooth Connection")) {
+                    } else if (value.equalsIgnoreCase(mainActivity.getResources().getString(R.string.bluetooth_connection))) {
                         BluetoothConfiguration bluetoothConfiguration = PreferencesUtil.getBluetoothConfiguration(mainActivity.getApplicationContext());
                         model.setArduinoConnection(new BluetoothConnection(bluetoothConfiguration, mainActivity));
 
@@ -201,11 +196,13 @@ class MainController extends AbstractController {
     private void disconnect() {
         if (model.getArduinoConnection().isConnected()) {
             model.getArduinoConnection().disconnect();
+            mainActivity.releaseWakeLock();
         }
     }
 
     private void connect() {
         model.getArduinoConnection().connect();
+        mainActivity.setWakeLock();
     }
 
 

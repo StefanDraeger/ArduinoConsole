@@ -96,6 +96,9 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     private void save() {
         switch (selectedItemId) {
+            case 0:
+                generalTab.save();
+                break;
             case 1:
                 connectionTab.save();
                 break;

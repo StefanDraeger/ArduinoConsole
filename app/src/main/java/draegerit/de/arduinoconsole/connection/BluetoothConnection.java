@@ -18,6 +18,7 @@ import java.util.Set;
 
 import draegerit.de.arduinoconsole.MainActivity;
 import draegerit.de.arduinoconsole.R;
+import draegerit.de.arduinoconsole.connection.thread.ConnectionThread;
 import draegerit.de.arduinoconsole.util.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.DriverAdapter;
 import draegerit.de.arduinoconsole.util.DriverWrapper;
@@ -34,6 +35,8 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
     private BluetoothSocket socket;
 
     private List<DriverWrapper> drivers;
+
+    private ConnectionThread connectionThread;
 
     public BluetoothConnection(BluetoothConfiguration configuration, MainActivity activity) {
         this.configuration = configuration;
@@ -69,6 +72,7 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
     public void disconnect() {
         if (model.isConnected()) {
             try {
+                this.connectionThread.setRunThread(false);
                 this.socket.close();
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage());
@@ -202,10 +206,10 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
         boolean isConnected = socket != null && socket.isConnected();
         setConnected(isConnected);
         if (isConnected) {
-            //connectionThread = new ConnectionThread(this, this.socket);
-            //connectionThread.start();
+            this.connectionThread = new ConnectionThread(this.socket);
+            this.connectionThread.start();
         } else {
-            //setStatus(ConnectionStatus.ConnectionFailed);
+
         }
     }
 }

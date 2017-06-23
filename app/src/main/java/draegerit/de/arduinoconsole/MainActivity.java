@@ -5,9 +5,11 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
@@ -35,6 +37,7 @@ import java.util.concurrent.Executor;
 
 import draegerit.de.arduinoconsole.connection.BluetoothConnection;
 import draegerit.de.arduinoconsole.util.BluetoothConfiguration;
+import draegerit.de.arduinoconsole.util.GeneralConfiguration;
 import draegerit.de.arduinoconsole.util.HtmlUtil;
 import draegerit.de.arduinoconsole.util.Message;
 import draegerit.de.arduinoconsole.util.MessageHandler;
@@ -51,6 +54,11 @@ import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.HTTP_ADRESS;
 public class MainActivity extends AppCompatActivity implements Observer {
 
     private static final String TAG = "ArduinoConsole";
+
+    /**
+     *
+     */
+    protected PowerManager.WakeLock mWakeLock;
 
     /**
      * TableRow für die Konfiguration der Verbindung.
@@ -541,5 +549,32 @@ public class MainActivity extends AppCompatActivity implements Observer {
             progressDialog.dismiss();
             ((BluetoothConnection) model.getArduinoConnection()).setSocket(bluetoothSocket);
         }
+    }
+
+    public void setWakeLock() {
+        GeneralConfiguration generalConfiguration = PreferencesUtil.getGeneralConfiguration(getApplicationContext());
+        if (generalConfiguration.isStayAwakeWhileConnected()) {
+            final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, TAG);
+            this.mWakeLock.acquire();
+        } else {
+            releaseWakeLock();
+        }
+    }
+
+    public void releaseWakeLock() {
+        try {
+            if (this.mWakeLock != null) {
+                this.mWakeLock.release();
+            }
+        } catch (RuntimeException ex) {
+            Log.e(TAG, ex.getMessage());
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        releaseWakeLock();
+        super.onDestroy();
     }
 }

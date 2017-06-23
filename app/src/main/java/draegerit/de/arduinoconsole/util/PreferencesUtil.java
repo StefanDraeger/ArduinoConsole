@@ -14,6 +14,7 @@ public final class PreferencesUtil {
     private static final String CHART_PREF = "chartPref";
     private static final String USB_CONFIGURATION_PREF = "usbConfigurationPref";
     private static final String BLUETOOTH_CONFIGURATION_PREF = "bluetoothConfigurationPref";
+    private static final String GENERAL_CONFIGURATION_PREF = "generalConfigurationPref";
 
     public static final int ZERO = 0;
 
@@ -60,6 +61,12 @@ public final class PreferencesUtil {
         store(ctx, json, BLUETOOTH_CONFIGURATION_PREF);
     }
 
+    public static void storeGeneralConfiguration(Context ctx,GeneralConfiguration generalConfiguration) {
+        Gson gson = new Gson();
+        String json = gson.toJson(generalConfiguration);
+        store(ctx, json, GENERAL_CONFIGURATION_PREF);
+    }
+
     public static BluetoothConfiguration getBluetoothConfiguration(Context ctx) {
         SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
         String usbConnectionJSON = settings.getString(BLUETOOTH_CONFIGURATION_PREF, getDefaultBluetoothConfiguration());
@@ -67,6 +74,18 @@ public final class PreferencesUtil {
             Gson gson = new Gson();
             BluetoothConfiguration bluetoothConfiguration = gson.fromJson(usbConnectionJSON, BluetoothConfiguration.class);
             return bluetoothConfiguration;
+        }
+        return null;
+    }
+
+
+    public static GeneralConfiguration getGeneralConfiguration(Context ctx) {
+        SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
+        String generalConfigurationJSON = settings.getString(GENERAL_CONFIGURATION_PREF, getDefaultGeneralConfiguration());
+        if (!isBlank(generalConfigurationJSON)) {
+            Gson gson = new Gson();
+            GeneralConfiguration generalConfiguration = gson.fromJson(generalConfigurationJSON, GeneralConfiguration.class);
+            return generalConfiguration;
         }
         return null;
     }
@@ -98,6 +117,11 @@ public final class PreferencesUtil {
         return new Gson().toJson(bluetoothConfiguration);
     }
 
+    private static String getDefaultGeneralConfiguration() {
+        GeneralConfiguration generalConfiguration = new GeneralConfiguration(true);
+        return new Gson().toJson(generalConfiguration);
+    }
+
     private static boolean store(Context ctx, String json, String key) {
         SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
         SharedPreferences.Editor editor = settings.edit();
@@ -109,4 +133,5 @@ public final class PreferencesUtil {
         SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
         return settings.getString(key, defaultJson);
     }
+
 }
