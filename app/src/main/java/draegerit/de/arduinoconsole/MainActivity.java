@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -32,10 +33,10 @@ import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Executor;
 
+import draegerit.de.arduinoconsole.connection.AbstractBluetoothConnection;
 import draegerit.de.arduinoconsole.connection.BluetoothConnection;
+import draegerit.de.arduinoconsole.connection.BluetoothLEConnection;
 import draegerit.de.arduinoconsole.util.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.GeneralConfiguration;
 import draegerit.de.arduinoconsole.util.HtmlUtil;
@@ -474,7 +475,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
             @Override
             public void onClick(View v) {
                 Model model = Model.getInstance();
-                ((BluetoothConnection) model.getArduinoConnection()).findUnPairedBluetoothDevices();
+                ((AbstractBluetoothConnection) model.getArduinoConnection()).findUnPairedBluetoothDevices();
                 dialog.dismiss();
             }
         });
@@ -498,6 +499,40 @@ public class MainActivity extends AppCompatActivity implements Observer {
         });
 
         dialog.show();
+    }
+
+    public void findNonBondedBluetoothLEDevices(final BluetoothLEConnection bluetoothLEConnection) {
+        final long SCAN_PERIOD = 10000;
+
+        final BluetoothAdapter.LeScanCallback mLeScanCallback =
+                new BluetoothAdapter.LeScanCallback() {
+                    @Override
+                    public void onLeScan(final BluetoothDevice device, int rssi,
+                                         byte[] scanRecord) {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                bluetoothLEConnection.getBluetoothDevices().add(device);
+                            }
+                        });
+                    }
+                };
+
+        Handler mHandler = new Handler();
+
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                bluetoothLEConnection.getBluetoothAdapter().stopLeScan(mLeScanCallback);
+            }
+        }, SCAN_PERIOD);
+
+
+        bluetoothLEConnection.getBluetoothAdapter().startLeScan(mLeScanCallback);
+    }
+
+    public void showConnectionError(String name) {
+        MessageHandler.showErrorMessage(this, getResources().getString(R.string.connection_error, name));
     }
 
     private class ConnectionAsyncTask extends AsyncTask<Void, Void, BluetoothSocket> {

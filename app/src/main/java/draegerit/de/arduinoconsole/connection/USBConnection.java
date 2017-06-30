@@ -64,7 +64,7 @@ public class USBConnection extends AbstractArduinoConnection<USBConfiguration> {
             drivers.add(new DriverWrapper(driver, DriverWrapper.DriverType.USB));
         }
 
-        DriverAdapter driverAdapter = new DriverAdapter(this.getActivity(), R.layout.devicespinnerlayout, R.id.deviceName, drivers, UsbSerialDriver.class);
+        DriverAdapter driverAdapter = new DriverAdapter(this.getActivity(), R.layout.devicespinnerlayout, R.id.deviceName, drivers);
         this.getActivity().getDriverSpinner().setAdapter(driverAdapter);
     }
 

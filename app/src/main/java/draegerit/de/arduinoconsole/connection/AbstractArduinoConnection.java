@@ -7,6 +7,8 @@ import draegerit.de.arduinoconsole.Model;
 
 public abstract class AbstractArduinoConnection<T> {
 
+    protected static final String TAG = "ArduinoConsole";
+
     protected T configuration;
 
     protected MainActivity activity;

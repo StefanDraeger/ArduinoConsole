@@ -47,10 +47,12 @@
     <string-array name="connectionarray">
         <item>USB Serial Connection</item>
         <item>Bluetooth Connection</item>
+        <!-- item>Bluetooth LE Connection</item -->
     </string-array>
 
     <string name="usb_serial_connection">USB Serial Connection</string>
     <string name="bluetooth_connection">Bluetooth Connection</string>
+    <string name="bluetoothle_connection">Bluetooth LE Connection</string>
 
     <string-array name="bluetoothtypearray">
         <item>HC-05</item>
@@ -145,5 +147,5 @@
     <string name="not_bounded"> (not bounded)</string>
     <string name="screen">Screen</string>
     <string name="stay_awake_while_connected">Device is aktiv  while connected to arduino.</string>
-
+    <string name="connection_error">Can\'t create connection to device %1$s.</string>
 </resources>

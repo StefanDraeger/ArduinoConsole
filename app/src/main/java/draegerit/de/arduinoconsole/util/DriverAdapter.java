@@ -1,7 +1,9 @@
 package draegerit.de.arduinoconsole.util;
 
+import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
+import android.media.Image;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.hoho.android.usbserial.driver.UsbSerialDriver;
@@ -23,13 +26,10 @@ public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
 
     private Context context;
 
-    private Class<?> deviceClazz;
-
-    public DriverAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<DriverWrapper> devices, Class<?> deviceClazz) {
+    public DriverAdapter(@NonNull Context context, @LayoutRes int resource, @IdRes int textViewResourceId, @NonNull List<DriverWrapper> devices) {
         super(context, resource, textViewResourceId, devices);
         this.devices = devices;
         this.context = context;
-        this.deviceClazz = deviceClazz;
     }
 
     public View getCustomView(int position, View convertView, ViewGroup parent) {
@@ -37,16 +37,26 @@ public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
         View layout = inflater.inflate(R.layout.devicespinnerlayout, parent, false);
 
         TextView deviceName = (TextView) layout.findViewById(R.id.deviceName);
+
+        ImageView deviceTypeImage = (ImageView) layout.findViewById(R.id.deviceTypeImage);
+
+        TextView adressTextView = (TextView) layout.findViewById(R.id.adressTextView);
+
         DriverWrapper device = devices.get(position);
         String name = "";
         switch (device.getType()) {
             case USB:
                 name = ((UsbSerialDriver) device.getDriver()).getDevice().getDeviceName();
+                adressTextView.setVisibility(View.GONE);
                 break;
             case BLUETOOTH:
-                name = ((BluetoothDevice) device.getDriver()).getName();
+                BluetoothDevice bluetoothDevice = (BluetoothDevice) device.getDriver();
+                name = bluetoothDevice.getName();
+                adressTextView.setText(bluetoothDevice.getAddress());
                 break;
         }
+
+        setDeviceTypeImage(device, deviceTypeImage);
 
         if (!device.isBonded()) {
             name = name.concat(context.getString(R.string.not_bounded));
@@ -56,6 +66,25 @@ public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
 
 
         return layout;
+    }
+
+    private void setDeviceTypeImage(DriverWrapper driverWrapper, ImageView imageView) {
+        switch (driverWrapper.getType()) {
+            case USB:
+                imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.usb));
+                break;
+            case BLUETOOTH:
+                BluetoothDevice bluetoothDevice = (BluetoothDevice) driverWrapper.getDriver();
+                int deviceClass = bluetoothDevice.getBluetoothClass().getDeviceClass();
+                if (deviceClass < BluetoothClass.Device.Major.PHONE) {
+                    imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.computer));
+                } else if (deviceClass > BluetoothClass.Device.Major.PHONE && deviceClass < BluetoothClass.Device.Major.NETWORKING) {
+                    imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.phone));
+                } else if (deviceClass > BluetoothClass.Device.Major.NETWORKING && deviceClass < BluetoothClass.Device.Major.UNCATEGORIZED) {
+                    imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.chip));
+                }
+                break;
+        }
     }
 
     @Override
