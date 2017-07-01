@@ -11,36 +11,62 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import draegerit.de.arduinoconsole.MainActivity;
 import draegerit.de.arduinoconsole.R;
+import draegerit.de.arduinoconsole.connection.task.CommunicationWriteAsyncTask;
 import draegerit.de.arduinoconsole.connection.thread.ConnectionThread;
 import draegerit.de.arduinoconsole.util.BluetoothConfiguration;
+import draegerit.de.arduinoconsole.util.DriverAdapter;
 import draegerit.de.arduinoconsole.util.DriverWrapper;
+import draegerit.de.arduinoconsole.util.Message;
 
 
-public class BluetoothConnection extends AbstractBluetoothConnection {
+public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConfiguration> {
+
+    private static final String TAG = "ArduinoConsole";
+
+    private BluetoothAdapter mBluetoothAdapter;
+
+    private List<BluetoothDevice> bluetoothDevices;
 
     private BluetoothSocket socket;
+
+    private List<DriverWrapper> drivers;
 
     private ConnectionThread connectionThread;
 
     public BluetoothConnection(BluetoothConfiguration configuration, MainActivity activity) {
-        super(configuration, activity);
-        createBroadcastReciver();
+        this.configuration = configuration;
+        this.activity = activity;
+        init();
+        registerDataAdapter();
     }
 
-    protected void init() {
-        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (bluetoothAdapter == null) {
+    private void init() {
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter == null) {
             Toast.makeText(getActivity().getApplicationContext(), getActivity().getString(R.string.msg_no_bluetooth_support), Toast.LENGTH_LONG);
         }
-        if (!bluetoothAdapter.isEnabled()) {
+        if (!mBluetoothAdapter.isEnabled()) {
             Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
             getActivity().startActivityForResult(enableBtIntent, 0);
         }
 
+
+        createBroadcastReciver();
+    }
+
+    @Override
+    public void registerDataAdapter() {
+        this.drivers = new ArrayList<>();
+        for (BluetoothDevice device : findBluetoothDevices()) {
+            this.drivers.add(new DriverWrapper(device, DriverWrapper.DriverType.BLUETOOTH));
+        }
+        updateDataAdapter(null);
     }
 
     @Override
@@ -65,7 +91,19 @@ public class BluetoothConnection extends AbstractBluetoothConnection {
 
     @Override
     public void sendCommand(String command) {
-
+        command = command.concat("\r\n");
+        try {
+            Boolean sendWithoutException = new CommunicationWriteAsyncTask(socket).execute(command.getBytes()).get();
+            if (sendWithoutException == null || !sendWithoutException) {
+//                successfullTransferd = false;
+            } else {
+//                successfullTransferd = true;
+            }
+            model.addMessage(Message.Type.TO, command);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -132,9 +170,44 @@ public class BluetoothConnection extends AbstractBluetoothConnection {
         };
     }
 
+    private void updateDataAdapter(DriverWrapper unpairedDevice) {
+        List<DriverWrapper> driver = new ArrayList<>();
+        driver.addAll(this.drivers);
+        if (unpairedDevice != null) {
+            boolean isDuplicate = false;
+            for (DriverWrapper wrapper : driver) {
+                if (((BluetoothDevice) wrapper.getDriver()).getAddress().equalsIgnoreCase(((BluetoothDevice) unpairedDevice.getDriver()).getAddress())) {
+                    isDuplicate = true;
+                    Log.d(TAG, "Find duplicate Bluetoothdevice. ---->" + ((BluetoothDevice) unpairedDevice.getDriver()).getName());
+                }
+            }
+            if (!isDuplicate) {
+                driver.add(unpairedDevice);
+            }
+        }
+        DriverAdapter driverAdapter = new DriverAdapter(this.getActivity(), R.layout.devicespinnerlayout, R.id.deviceName, driver);
+        this.getActivity().getDriverSpinner().setAdapter(driverAdapter);
+    }
+
+    @Override
+    public void refresh() {
+        findBluetoothDevices();
+        model.updateDataAdapter();
+    }
+
+    private List<BluetoothDevice> findBluetoothDevices() {
+        this.bluetoothDevices = new ArrayList<>();
+        this.bluetoothDevices.addAll(findPairedBluetoothDevices());
+        return this.bluetoothDevices;
+    }
+
+    private Set<BluetoothDevice> findPairedBluetoothDevices() {
+        return mBluetoothAdapter.getBondedDevices();
+    }
+
     public void findUnPairedBluetoothDevices() {
         registerReciever();
-        bluetoothAdapter.startDiscovery();
+        mBluetoothAdapter.startDiscovery();
     }
 
     public void setSocket(BluetoothSocket socket) {
@@ -146,10 +219,15 @@ public class BluetoothConnection extends AbstractBluetoothConnection {
         boolean isConnected = socket != null && socket.isConnected();
         setConnected(isConnected);
         if (isConnected) {
+            sendCommand("Hello");
+
             this.connectionThread = new ConnectionThread(this.socket);
             this.connectionThread.start();
+
         } else {
-getActivity().showConnectionError(socket.getRemoteDevice().getName());
+
         }
     }
+
+
 }

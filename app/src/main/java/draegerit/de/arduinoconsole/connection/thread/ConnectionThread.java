@@ -11,6 +11,8 @@ import java.io.InputStreamReader;
 import draegerit.de.arduinoconsole.Model;
 import draegerit.de.arduinoconsole.util.Message;
 
+import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.EMPTY;
+
 
 public class ConnectionThread extends Thread {
 
@@ -35,52 +37,24 @@ public class ConnectionThread extends Thread {
 
     @Override
     public void run() {
-
-        InputStreamReader inputStreamReader = null;
-        BufferedReader bufferedReader = null;
-
-        if (inputStreamReader == null || bufferedReader == null) {
-            inputStreamReader = new InputStreamReader(getConnectedInputStream());
-            bufferedReader = new BufferedReader(inputStreamReader);
-        }
-
         while (isRunThread() && (this.connectedBluetoothSocket != null && this.connectedBluetoothSocket.isConnected())) {
             try {
-                final StringBuilder sb = new StringBuilder();
-                sb.append(bufferedReader.readLine());
-                sb.append("\r\n");
-                Log.i(TAG, sb.toString());
+                InputStreamReader inputStreamReader = new InputStreamReader(this.connectedBluetoothSocket.getInputStream());
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-                model.addMessage(Message.Type.FROM, sb.toString());
+                final StringBuilder sb = new StringBuilder();
+                String line = null;
+                while (!(line = bufferedReader.readLine()).equalsIgnoreCase(EMPTY)) {
+                    sb.append(line);
+                    sb.append("\r\n");
+                    Log.i(TAG, sb.toString());
+                    model.addMessage(Message.Type.FROM, sb.toString());
+                }
             } catch (Exception e) {
                 setRunThread(false);
                 Log.e(TAG, e.getMessage());
             }
         }
-        if (bufferedReader != null) {
-            try {
-                bufferedReader.close();
-            } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
-            }
-        }
-
-        if (inputStreamReader != null) {
-            try {
-                inputStreamReader.close();
-            } catch (IOException e) {
-                Log.e(TAG, e.getMessage());
-            }
-        }
-
-    }
-
-    private BluetoothSocket getConnectedBluetoothSocket() {
-        return connectedBluetoothSocket;
-    }
-
-    private InputStream getConnectedInputStream() {
-        return connectedInputStream;
     }
 
     private void setConnectedInputStream(InputStream connectedInputStream) {

@@ -25,13 +25,14 @@
 
         <Button
             android:id="@+id/sendBtn"
+            style="@style/Widget.AppCompat.Button.Small"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignEnd="@+id/consoleTextView"
             android:layout_alignTop="@+id/commandTextView"
             android:layout_toEndOf="@+id/commandTextView"
             android:layout_weight="0.33"
-            android:enabled="false"
+            android:clickable="false"
             android:text="@string/sendBtnTxt"
             tools:layout_editor_absoluteX="280dp"
             tools:layout_editor_absoluteY="16dp" />
@@ -66,7 +67,7 @@
 
                 <TextView
                     android:id="@+id/consoleTextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_above="@+id/baudSpinner"
                     android:layout_below="@+id/sendBtn"

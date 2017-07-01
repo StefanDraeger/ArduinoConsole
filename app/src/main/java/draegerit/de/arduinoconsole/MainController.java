@@ -10,9 +10,7 @@ import android.widget.AdapterView;
 import android.widget.CompoundButton;
 import android.widget.TextView;
 
-import draegerit.de.arduinoconsole.connection.AbstractArduinoConnection;
 import draegerit.de.arduinoconsole.connection.BluetoothConnection;
-import draegerit.de.arduinoconsole.connection.BluetoothLEConnection;
 import draegerit.de.arduinoconsole.connection.USBConnection;
 import draegerit.de.arduinoconsole.util.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.DriverWrapper;
@@ -166,16 +164,9 @@ class MainController extends AbstractController {
                         USBConfiguration usbConfiguration = PreferencesUtil.getUSBConfiguration(mainActivity.getApplicationContext());
                         model.setArduinoConnection(new USBConnection(usbConfiguration, mainActivity));
                         checkBluetoothConnection();
-                    } else {
+                    } else if (value.equalsIgnoreCase(mainActivity.getResources().getString(R.string.bluetooth_connection))) {
                         BluetoothConfiguration bluetoothConfiguration = PreferencesUtil.getBluetoothConfiguration(mainActivity.getApplicationContext());
-                        AbstractArduinoConnection connection = null;
-                        if (value.equalsIgnoreCase(mainActivity.getResources().getString(R.string.bluetooth_connection))) {
-                            connection = new BluetoothConnection(bluetoothConfiguration, mainActivity);
-                        } else if (value.equalsIgnoreCase(mainActivity.getResources().getString(R.string.bluetoothle_connection))) {
-                            connection = new BluetoothLEConnection(bluetoothConfiguration, mainActivity);
-                        }
-
-                        model.setArduinoConnection(connection);
+                        model.setArduinoConnection(new BluetoothConnection(bluetoothConfiguration, mainActivity));
 
                         if (bluetoothConfiguration.isShowSearchNewDevicesDialog()) {
                             mainActivity.searchNewDevices();

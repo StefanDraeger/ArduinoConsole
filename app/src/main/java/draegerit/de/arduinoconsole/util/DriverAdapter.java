@@ -62,10 +62,17 @@ public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
             name = name.concat(context.getString(R.string.not_bounded));
             deviceName.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
         }
+
+        name = clearName(name);
+
         deviceName.setText(name);
 
 
         return layout;
+    }
+
+    private String clearName(String name) {
+        return name.replaceAll("\n", "");
     }
 
     private void setDeviceTypeImage(DriverWrapper driverWrapper, ImageView imageView) {
@@ -75,13 +82,15 @@ public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
                 break;
             case BLUETOOTH:
                 BluetoothDevice bluetoothDevice = (BluetoothDevice) driverWrapper.getDriver();
-                int deviceClass = bluetoothDevice.getBluetoothClass().getDeviceClass();
-                if (deviceClass < BluetoothClass.Device.Major.PHONE) {
-                    imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.computer));
-                } else if (deviceClass > BluetoothClass.Device.Major.PHONE && deviceClass < BluetoothClass.Device.Major.NETWORKING) {
-                    imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.phone));
-                } else if (deviceClass > BluetoothClass.Device.Major.NETWORKING && deviceClass < BluetoothClass.Device.Major.UNCATEGORIZED) {
-                    imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.chip));
+                if (bluetoothDevice != null && bluetoothDevice.getBluetoothClass() != null) {
+                    int deviceClass = bluetoothDevice.getBluetoothClass().getDeviceClass();
+                    if (deviceClass < BluetoothClass.Device.Major.PHONE) {
+                        imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.computer));
+                    } else if (deviceClass > BluetoothClass.Device.Major.PHONE && deviceClass < BluetoothClass.Device.Major.NETWORKING) {
+                        imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.phone));
+                    } else if (deviceClass > BluetoothClass.Device.Major.NETWORKING && deviceClass < BluetoothClass.Device.Major.UNCATEGORIZED) {
+                        imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.chip));
+                    }
                 }
                 break;
         }
