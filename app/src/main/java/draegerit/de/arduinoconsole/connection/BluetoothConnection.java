@@ -113,6 +113,7 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
         filter.addAction(BluetoothDevice.ACTION_FOUND);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_STARTED);
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        filter.addAction(BluetoothAdapter.ACTION_CONNECTION_STATE_CHANGED);
 
         getActivity().registerReceiver(broadcastReceiver, filter);
         setReciverIsRegistered(true);
@@ -142,6 +143,9 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
                         break;
                     case BluetoothAdapter.STATE_TURNING_OFF:
                         showToast(R.string.bluetooth_turning_off);
+                        break;
+                    case BluetoothAdapter.STATE_DISCONNECTED:
+                        showToast(R.string.bluetooth_connection_lost);
                         break;
                 }
             }

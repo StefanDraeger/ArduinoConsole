@@ -23,11 +23,13 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioGroup;
 import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.io.File;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -37,6 +39,10 @@ import java.util.Observer;
 import java.util.UUID;
 
 import draegerit.de.arduinoconsole.connection.BluetoothConnection;
+import draegerit.de.arduinoconsole.export.AbstractExport;
+import draegerit.de.arduinoconsole.export.CSVExport;
+import draegerit.de.arduinoconsole.export.ChartExport;
+import draegerit.de.arduinoconsole.export.PDFExport;
 import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.GeneralConfiguration;
 import draegerit.de.arduinoconsole.util.HtmlUtil;
@@ -195,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent;
+        Intent intent = null;
         switch (item.getItemId()) {
             case R.id.impressumItem:
                 intent = new Intent(this, ImpressumActivity.class);
@@ -206,6 +212,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
             case R.id.configurationItem:
                 intent = new Intent(this, ConfigurationActivity.class);
                 break;
+            case R.id.exportItem:
+                showExportDialog();
+                break;
             default:
                 throw new IllegalArgumentException("Item with ID [" + item.getItemId() + "] not found!");
         }
@@ -215,6 +224,93 @@ public class MainActivity extends AppCompatActivity implements Observer {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    void showExportDialog() {
+        final Dialog exportDialog = generateDialog(R.layout.exportterminaldialog, R.string.exportTitle);
+
+        final RadioGroup terminalExportRadioGroup = (RadioGroup) exportDialog.findViewById(R.id.terminalExportRadioGroup);
+
+        Button dialogOkButton = (Button) exportDialog.findViewById(R.id.dialogButtonOK);
+        dialogOkButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                exportData(terminalExportRadioGroup);
+                exportDialog.dismiss();
+            }
+        });
+
+        exportDialog.show();
+    }
+
+    private void exportData(RadioGroup terminalExportRadioGroup) {
+        AbstractExport export = null;
+        switch (terminalExportRadioGroup.getCheckedRadioButtonId()) {
+            case R.id.terminalAsciiExportItem:
+                break;
+            case R.id.terminalCsvExportItem:
+                break;
+            case R.id.terminalPdfExportItem:
+                break;
+        }
+
+        launchProgressbarWaitDialog(export);
+    }
+
+    private void launchProgressbarWaitDialog(AbstractExport export) {
+        GenerateAndShareAsyncTask task = new GenerateAndShareAsyncTask(export);
+        task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+    }
+
+    private  class GenerateAndShareAsyncTask extends AsyncTask<Void, Void, Void> {
+        private ProgressDialog progressDialog;
+        private AbstractExport export;
+
+        public GenerateAndShareAsyncTask(final AbstractExport inExport) {
+            this.export = inExport;
+        }
+
+        @Override
+        protected Void doInBackground(final Void... params) {
+            export.doExport(getApplicationContext());
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(final Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
+            export.startExportIntent(new File(export.getExportFilename()), getApplicationContext());
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            String titel = getResources().getString(R.string.graphProgressTitle);
+            String message = getResources().getString(R.string.graphProgressMessage);
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setTitle(titel);
+            progressDialog.setMessage(message);
+            progressDialog.setCancelable(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.show();
+        }
+    }
+
+
+    private Dialog generateDialog(final int layout, final int titleResId) {
+        final Dialog dialog = new Dialog(new ContextThemeWrapper(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog));
+        dialog.setContentView(layout);
+        dialog.setTitle(getResources().getString(titleResId));
+
+        Button dialogAbortButton = (Button) dialog.findViewById(R.id.dialogButtonAbort);
+        dialogAbortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+        return dialog;
     }
 
     @Override

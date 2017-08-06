@@ -21,7 +21,8 @@ public final class PreferencesUtil {
     private static final String GENERAL_CONFIGURATION_PREF = "generalConfigurationPref";
     private static final String TERMINAL_CONFIGURATION_PREF = "terminalConfigurationPref";
 
-    public static final int ZERO = 0;
+    private static final int ZERO = 0;
+    private static final String EMPTY = "";
 
     private PreferencesUtil() {
 
@@ -36,16 +37,13 @@ public final class PreferencesUtil {
     public static ChartPreferences getChartPreferences(Context ctx) {
         String chartPrefJson = get(ctx, CHART_PREF, getDefaultchartPreferences(ctx));
         if (!isBlank(chartPrefJson)) {
-            Gson gson = new Gson();
-            ChartPreferences chartPref = gson.fromJson(chartPrefJson, ChartPreferences.class);
-            return chartPref;
+            return new Gson().fromJson(chartPrefJson, ChartPreferences.class);
         }
         return null;
     }
 
     public static void storeUSBConfiguration(Context ctx, USBConfiguration usbConfiguration) {
-        Gson gson = new Gson();
-        String json = gson.toJson(usbConfiguration);
+        String json = new Gson().toJson(usbConfiguration);
         store(ctx, json, USB_CONFIGURATION_PREF);
     }
 
@@ -53,28 +51,23 @@ public final class PreferencesUtil {
         SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
         String usbConnectionJSON = settings.getString(USB_CONFIGURATION_PREF, getDefaultUSBConnection());
         if (!isBlank(usbConnectionJSON)) {
-            Gson gson = new Gson();
-            USBConfiguration usbConfiguration = gson.fromJson(usbConnectionJSON, USBConfiguration.class);
-            return usbConfiguration;
+            return new Gson().fromJson(usbConnectionJSON, USBConfiguration.class);
         }
         return null;
     }
 
     public static void storeBluetoothConfiguration(Context ctx, BluetoothConfiguration bluetoothConfiguration) {
-        Gson gson = new Gson();
-        String json = gson.toJson(bluetoothConfiguration);
+        String json = new Gson().toJson(bluetoothConfiguration);
         store(ctx, json, BLUETOOTH_CONFIGURATION_PREF);
     }
 
     public static void storeGeneralConfiguration(Context ctx, GeneralConfiguration generalConfiguration) {
-        Gson gson = new Gson();
-        String json = gson.toJson(generalConfiguration);
+        String json = new Gson().toJson(generalConfiguration);
         store(ctx, json, GENERAL_CONFIGURATION_PREF);
     }
 
     public static void storeTerminalConfiguration(Context ctx, TerminalConfiguration terminalConfiguration) {
-        Gson gson = new Gson();
-        String json = gson.toJson(terminalConfiguration);
+        String json = new Gson().toJson(terminalConfiguration);
         store(ctx, json, TERMINAL_CONFIGURATION_PREF);
     }
 
@@ -82,9 +75,7 @@ public final class PreferencesUtil {
         SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
         String usbConnectionJSON = settings.getString(BLUETOOTH_CONFIGURATION_PREF, getDefaultBluetoothConfiguration());
         if (!isBlank(usbConnectionJSON)) {
-            Gson gson = new Gson();
-            BluetoothConfiguration bluetoothConfiguration = gson.fromJson(usbConnectionJSON, BluetoothConfiguration.class);
-            return bluetoothConfiguration;
+            return  new Gson().fromJson(usbConnectionJSON, BluetoothConfiguration.class);
         }
         return null;
     }
@@ -94,9 +85,7 @@ public final class PreferencesUtil {
         SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
         String generalConfigurationJSON = settings.getString(GENERAL_CONFIGURATION_PREF, getDefaultGeneralConfiguration());
         if (!isBlank(generalConfigurationJSON)) {
-            Gson gson = new Gson();
-            GeneralConfiguration generalConfiguration = gson.fromJson(generalConfigurationJSON, GeneralConfiguration.class);
-            return generalConfiguration;
+            return new Gson().fromJson(generalConfigurationJSON, GeneralConfiguration.class);
         }
         return null;
     }
@@ -105,14 +94,10 @@ public final class PreferencesUtil {
         SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
         String terminalConfigurationJSON = settings.getString(TERMINAL_CONFIGURATION_PREF, getDefaultTerminalConfiguration());
         if (!isBlank(terminalConfigurationJSON)) {
-            Gson gson = new Gson();
-            TerminalConfiguration terminalConfiguration = gson.fromJson(terminalConfigurationJSON, TerminalConfiguration.class);
-            return terminalConfiguration;
+            return new Gson().fromJson(terminalConfigurationJSON, TerminalConfiguration.class);
         }
         return null;
     }
-
-
 
     private static String getDefaultUSBConnection() {
         USBConfiguration usbConfiguration = new USBConfiguration();
@@ -132,7 +117,7 @@ public final class PreferencesUtil {
         chartPreferences.setTitle(ctx.getResources().getString(R.string.chartText));
         chartPreferences.setValueAxis(ctx.getResources().getString(R.string.werteText));
         chartPreferences.setDateAxis(ctx.getResources().getString(R.string.datumText));
-        chartPreferences.setSubTitle("");
+        chartPreferences.setSubTitle(EMPTY);
         return new Gson().toJson(chartPreferences);
     }
 

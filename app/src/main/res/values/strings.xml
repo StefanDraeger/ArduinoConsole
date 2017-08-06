@@ -151,6 +151,7 @@
     <string name="bluetooth_on">Bluetoothadapter state is on</string>
     <string name="bluetooth_turning_on">Bluetoothadapter is in state enable</string>
     <string name="bluetooth_turning_off">Bluetoothadapter state is disable</string>
+    <string name="bluetooth_connection_lost">Connection lost!</string>
     <string name="not_bounded"> (not bounded)</string>
     <string name="screen">Screen</string>
     <string name="stay_awake_while_connected">Device is aktiv  while connected to arduino.</string>
@@ -162,5 +163,8 @@
     <string name="displayTimestampLbl">display Timestamp</string>
     <string name="timestampFormatLbl">Timestampformat</string>
     <string name="exampleLbl">Example</string>
+    <string name="exportTerminalPdf">PDF export</string>
+    <string name="ASCIITerminalExport">ASCII export</string>
+    <string name="CSVExport">CSV export</string>
 
 </resources>

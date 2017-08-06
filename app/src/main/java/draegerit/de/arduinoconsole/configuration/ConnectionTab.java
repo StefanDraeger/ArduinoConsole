@@ -121,17 +121,8 @@ public class ConnectionTab extends Fragment {
     public CheckBox getCloseBluetoothConnectionCheckbox() {
         return closeBluetoothConnectionCheckbox;
     }
-
-    public void setCloseBluetoothConnectionCheckbox(CheckBox closeBluetoothConnectionCheckbox) {
-        this.closeBluetoothConnectionCheckbox = closeBluetoothConnectionCheckbox;
-    }
-
     public CheckBox getShowSearchNewDevicesChkBox() {
         return showSearchNewDevicesChkBox;
-    }
-
-    public void setShowSearchNewDevicesChkBox(CheckBox showSearchNewDevicesChkBox) {
-        this.showSearchNewDevicesChkBox = showSearchNewDevicesChkBox;
     }
 
     public CheckBox getSendGreetingsChkBox() {

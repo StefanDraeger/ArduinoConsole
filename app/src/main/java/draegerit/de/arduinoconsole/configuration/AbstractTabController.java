@@ -4,18 +4,16 @@ package draegerit.de.arduinoconsole.configuration;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
-public abstract class AbstractTabController {
+abstract class AbstractTabController {
 
-    protected int getPositionForValue(Spinner spinner, int value) {
+    int getPositionForValue(Spinner spinner, int value) {
         ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
         String valueStr = String.valueOf(value);
-        int spinnerPosition = adapter.getPosition(valueStr);
-        return spinnerPosition;
+        return adapter.getPosition(valueStr);
     }
 
-    protected int getPositionForValue(Spinner spinner, String value) {
+    int getPositionForValue(Spinner spinner, String value) {
         ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
-        int spinnerPosition = adapter.getPosition(value);
-        return spinnerPosition;
+        return adapter.getPosition(value);
     }
 }

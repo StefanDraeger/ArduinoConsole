@@ -215,7 +215,6 @@ public class GraphActivity extends AppCompatActivity implements Observer {
         launchProgressbarWaitDialog(export);
     }
 
-//Test
     public void launchProgressbarWaitDialog(final AbstractExport export) {
         GenerateAndShareAsyncTask task = new GenerateAndShareAsyncTask(export);
         task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);

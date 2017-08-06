@@ -7,6 +7,11 @@
         android:title="@string/graph"
         app:showAsAction="always" />
     <item
+        android:id="@+id/exportItem"
+        android:title="@string/export"
+        android:icon="@mipmap/download"
+        app:showAsAction="always"/>
+    <item
         android:id="@+id/configurationItem"
         android:title="@string/configuration"
         android:icon="@android:drawable/ic_menu_preferences"
