@@ -29,7 +29,10 @@ import java.util.List;
 
 import draegerit.de.arduinoconsole.Model;
 import draegerit.de.arduinoconsole.R;
+import draegerit.de.arduinoconsole.connection.USBConnection;
 import draegerit.de.arduinoconsole.util.Message;
+import draegerit.de.arduinoconsole.util.PreferencesUtil;
+import draegerit.de.arduinoconsole.util.configuration.USBConfiguration;
 
 import static com.itextpdf.text.Element.ALIGN_CENTER;
 import static com.itextpdf.text.Element.ALIGN_LEFT;
@@ -141,13 +144,17 @@ public class PDFExport extends AbstractExport {
             headerTable.addCell(getTblHeaderSubTitleCell("     "));
         }
 
-        if (model.getPort() != null) {
-            headerTable.addCell(getTblHeaderCell(this.context.getResources().getString(R.string.pdfExportConnectionParameter), ALIGN_LEFT, PdfPCell.NO_BORDER));
-            headerTable.addCell(getTblCell(this.context.getResources().getString(R.string.pdfExportDevice, model.getPort().getDriver().getDevice().getDeviceName()), PdfPCell.NO_BORDER));
-            headerTable.addCell(getTblCell(this.context.getResources().getString(R.string.pdfExportBaudrate, String.valueOf(model.getBaudrate())), PdfPCell.NO_BORDER));
-            headerTable.addCell(getTblCell(this.context.getResources().getString(R.string.pdfExportDatabits, String.valueOf(model.getDatabits())), PdfPCell.NO_BORDER));
-            headerTable.addCell(getTblCell(this.context.getResources().getString(R.string.pdfExportStopbits, String.valueOf(model.getStopbits())), PdfPCell.NO_BORDER));
-            headerTable.addCell(getTblCell(this.context.getResources().getString(R.string.pdfExportParity, String.valueOf(model.getParity())), PdfPCell.NO_BORDER));
+        if (model.getArduinoConnection() != null) {
+            if (model.getArduinoConnection() instanceof USBConnection) {
+                USBConnection connection = (USBConnection) model.getArduinoConnection();
+                USBConfiguration usbConfiguration = PreferencesUtil.getUSBConfiguration(this.context);
+                headerTable.addCell(getTblHeaderCell(this.context.getResources().getString(R.string.pdfExportConnectionParameter), ALIGN_LEFT, PdfPCell.NO_BORDER));
+                headerTable.addCell(getTblCell(this.context.getResources().getString(R.string.pdfExportDevice, connection.getPort().getDriver().getDevice().getDeviceName()), PdfPCell.NO_BORDER));
+                headerTable.addCell(getTblCell(this.context.getResources().getString(R.string.pdfExportBaudrate, String.valueOf(usbConfiguration.getBaudrate())), PdfPCell.NO_BORDER));
+                headerTable.addCell(getTblCell(this.context.getResources().getString(R.string.pdfExportDatabits, String.valueOf(usbConfiguration.getDataBits())), PdfPCell.NO_BORDER));
+                headerTable.addCell(getTblCell(this.context.getResources().getString(R.string.pdfExportStopbits, String.valueOf(usbConfiguration.getStopbits())), PdfPCell.NO_BORDER));
+                headerTable.addCell(getTblCell(this.context.getResources().getString(R.string.pdfExportParity, String.valueOf(usbConfiguration.getParity())), PdfPCell.NO_BORDER));
+            }
         }
 
         this.document.add(headerTable);

@@ -1,15 +1,26 @@
 package draegerit.de.arduinoconsole;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothSocket;
+import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PowerManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ContextThemeWrapper;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ScrollView;
@@ -17,11 +28,22 @@ import android.widget.Spinner;
 import android.widget.TableRow;
 import android.widget.TextView;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.UUID;
 
+import draegerit.de.arduinoconsole.connection.BluetoothConnection;
+import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.GeneralConfiguration;
 import draegerit.de.arduinoconsole.util.HtmlUtil;
 import draegerit.de.arduinoconsole.util.Message;
+import draegerit.de.arduinoconsole.util.MessageHandler;
+import draegerit.de.arduinoconsole.util.PreferencesUtil;
+import draegerit.de.arduinoconsole.util.configuration.TerminalConfiguration;
 
 import static android.R.color.holo_green_dark;
 import static android.R.color.holo_red_dark;
@@ -33,6 +55,26 @@ import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.HTTP_ADRESS;
 public class MainActivity extends AppCompatActivity implements Observer {
 
     private static final String TAG = "ArduinoConsole";
+
+    /**
+     *
+     */
+    protected PowerManager.WakeLock mWakeLock;
+
+    /**
+     * TableRow für die Konfiguration der Verbindung.
+     */
+    private TableRow config1TblRow;
+
+    /**
+     * TableRow für die Konfiguration der Verbindung.
+     */
+    private TableRow config3TblRow;
+
+    /**
+     * TableRow für die Konfiguration der Verbindung.
+     */
+    private TableRow config2TblRow;
 
     /**
      * Konsole.
@@ -55,44 +97,9 @@ public class MainActivity extends AppCompatActivity implements Observer {
     private CheckBox autoScrollCheckbox;
 
     /**
-     * TableRow für die Konfiguration der Verbindung.
-     */
-    private TableRow config1TblRow;
-
-    /**
-     * TableRow für die Konfiguration der Verbindung.
-     */
-    private TableRow config2TblRow;
-
-    /**
-     * TableRow für die Konfiguration der Verbindung.
-     */
-    private TableRow config3TblRow;
-
-    /**
      * Auswahlliste für die Auswahl eines angeschlossenes Gerätes.
      **/
     private Spinner driverSpinner;
-
-    /**
-     * Auswahlliste für die Auswahl der Übertragungsgeschwindigkeit.
-     **/
-    private Spinner deviceBaudSpinner;
-
-    /**
-     * Auswahlliste für die Auswahl der Databits.
-     **/
-    private Spinner databitSpinner;
-
-    /**
-     * Auswahlliste für die Auswahl der Stopbits.
-     **/
-    private Spinner stopbitsSpinner;
-
-    /**
-     * Auswahlliste für die Auswahl der Parity.
-     **/
-    private Spinner paritySpinner;
 
     /**
      * Schaltfläche für das Verbinden / trennen der Verbindung zu einem Gerät.
@@ -122,7 +129,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
     /**
      * Schaltfläche für das Absenden des eingegebenen Befehls.
      */
-    private Button sendBtn;
+    private ImageButton sendBtn;
+
+    /**
+     * Auswahlliste für den Verbindungstyp zum Arduino.
+     */
+    private Spinner deviceConnectionTypeSpinner;
 
     /**
      * MainController
@@ -152,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
      */
     private void registerComponents() {
         this.commandTextView = (EditText) findViewById(R.id.commandTextView);
-        this.sendBtn = (Button) findViewById(R.id.sendBtn);
+        this.sendBtn = (ImageButton) findViewById(R.id.sendBtn);
         this.consoleTextView = (TextView) findViewById(R.id.consoleTextView);
         this.consoleScrollView = (ScrollView) findViewById(R.id.consoleScrollView);
         this.autoScrollCheckbox = (CheckBox) findViewById(R.id.autoScrollCheckbox);
@@ -160,16 +172,16 @@ public class MainActivity extends AppCompatActivity implements Observer {
         this.config1TblRow = (TableRow) findViewById(R.id.config1TblRow);
         this.config2TblRow = (TableRow) findViewById(R.id.config2TblRow);
         this.config3TblRow = (TableRow) findViewById(R.id.config3TblRow);
-        this.deviceBaudSpinner = (Spinner) findViewById(R.id.baudSpinner);
+
         this.connectBtn = (Button) findViewById(R.id.connectBtn);
         this.clearBtn = (ImageButton) findViewById(R.id.clearBtn);
         this.driverSpinner = (Spinner) findViewById(R.id.driverSpinner);
         this.refreshDeviceBtn = (ImageButton) findViewById(R.id.refreshDeviceBtn);
-        this.databitSpinner = (Spinner) findViewById(R.id.databitSpinner);
-        this.stopbitsSpinner = (Spinner) findViewById(R.id.stopbitsSpinner);
-        this.paritySpinner = (Spinner) findViewById(R.id.paritySpinner);
+
         this.hyperlinkTextView = (TextView) findViewById(R.id.hyperlinkTextView);
         this.hyperlinkTextView.setText(HtmlUtil.fromHtml(HTTP_ADRESS));
+
+        this.deviceConnectionTypeSpinner = (Spinner) findViewById(R.id.deviceConnectionTypeSpinner);
 
         this.connectBtn.requestFocus();
     }
@@ -183,13 +195,16 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        Intent intent = null;
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.impressumItem:
                 intent = new Intent(this, ImpressumActivity.class);
                 break;
             case R.id.graphItem:
                 intent = new Intent(this, GraphActivity.class);
+                break;
+            case R.id.configurationItem:
+                intent = new Intent(this, ConfigurationActivity.class);
                 break;
             default:
                 throw new IllegalArgumentException("Item with ID [" + item.getItemId() + "] not found!");
@@ -210,6 +225,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     @Override
     public synchronized void update(final Observable o, final Object arg) {
+        final TerminalConfiguration terminalConfiguration = PreferencesUtil.getTerminalConfiguration(getApplicationContext());
+        final DateFormat dateFormat = new SimpleDateFormat(terminalConfiguration.getMessageDateFormat());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -219,6 +236,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     long beforeTimestamp = System.currentTimeMillis();
                     if (arg instanceof Message) {
                         Message msg = (Message) arg;
+                        if (terminalConfiguration.isShowTimestampsBeforeMessageText()) {
+                            getConsoleTextView().append(dateFormat.format(new Date(msg.getTimestamp())));
+                            getConsoleTextView().append(" - ");
+                        }
                         getConsoleTextView().append(msg.getValue());
                         if (model.isAutoScroll()) {
                             getConsoleScrollView().fullScroll(ScrollView.FOCUS_DOWN);
@@ -228,10 +249,13 @@ public class MainActivity extends AppCompatActivity implements Observer {
                         if (controller != null) {
                             switch (command) {
                                 case UpdateUsbDevice:
-                                    controller.registerDataAdapter();
+                                    model.getArduinoConnection().registerDataAdapter();
                                     break;
                                 case ChangeConnectionStatus:
                                     //updateConnectionStatus(model);
+                                    break;
+                                case UpdateBluetoothAdapter:
+                                    ((BluetoothConnection) model.getArduinoConnection()).postConnect();
                                     break;
                             }
                         }
@@ -239,9 +263,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     updateConnectionStatus(model);
                     long duration = System.currentTimeMillis() - beforeTimestamp;
                     Log.i(TAG, "duration: --->" + String.valueOf(duration) + " ms");
-                } catch (Exception e)
-
-                {
+                } catch (Exception e) {
                     Log.e(TAG, e.getMessage(), e);
                 }
             }
@@ -249,14 +271,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     private void updateConnectionStatus(Model model) {
-        getCommandTextView().setEnabled(model.isConnected());
-        getSendBtn().setEnabled(model.isConnected());
-
-        if (model.isConnected()) {
+        boolean isConnected = model.getArduinoConnection().isConnected();
+        if (isConnected) {
             getConnectBtn().setText(getResources().getString(R.string.disconnect));
             getConnectBtn().setBackgroundColor(getResources().getColor(holo_red_dark));
         } else {
-            boolean selectionValid = model.getBaudrate() > 0 && model.getDriver() != null && getDriverSpinner().getSelectedItem() != null;
+            boolean selectionValid = model.getArduinoConnection().settingsValid();
             if (selectionValid) {
                 getConnectBtn().setBackgroundColor(getResources().getColor(holo_green_dark));
             } else {
@@ -265,6 +285,15 @@ public class MainActivity extends AppCompatActivity implements Observer {
             getConnectBtn().setEnabled(selectionValid);
             getConnectBtn().setText(getResources().getString(R.string.connect));
         }
+    }
+
+    /**
+     * Liefert die erste Zeile {@link TableRow} für das Konfigurieren der Verbindungsdaten.
+     *
+     * @return {@link TableRow}
+     */
+    public TableRow getConfig1TblRow() {
+        return config1TblRow;
     }
 
     /**
@@ -285,14 +314,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         return driverSpinner;
     }
 
-    /**
-     * Liefert die Auswahlliste {@link Spinner} für die Auswahl der Übertragungsgeschwindigkeit.
-     *
-     * @return {@link Spinner}
-     */
-    public Spinner getDeviceBaudSpinner() {
-        return deviceBaudSpinner;
-    }
 
     /**
      * Liefert die Schaltfläche {@link Button} für das erzeugen / trennen einer Verbindung zu einem angeschlossenen Gerät.
@@ -321,32 +342,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
         return refreshDeviceBtn;
     }
 
-    /**
-     * Liefert die Auswahlliste {@link Spinner} für die Databits.
-     *
-     * @return {@link Spinner}
-     */
-    public Spinner getDatabitSpinner() {
-        return databitSpinner;
-    }
-
-    /**
-     * Liefert die Auswahlliste {@link Spinner} für die Stopbits.
-     *
-     * @return {@link Spinner}
-     */
-    public Spinner getStopbitsSpinner() {
-        return stopbitsSpinner;
-    }
-
-    /**
-     * Liefert die Auswahlliste {@link Spinner} für die Parity.
-     *
-     * @return {@link Spinner}
-     */
-    public Spinner getParitySpinner() {
-        return paritySpinner;
-    }
 
     /**
      * Liefert die {@link TextView} für den Hyperlink zur Webseite des Entwicklers.
@@ -376,33 +371,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     /**
-     * Liefert die erste Zeile {@link TableRow} für das Konfigurieren der Verbindungsdaten.
-     *
-     * @return {@link TableRow}
-     */
-    public TableRow getConfig1TblRow() {
-        return config1TblRow;
-    }
-
-    /**
-     * Liefert die zweite Zeile {@link TableRow} für das Konfigurieren der Verbindungsdaten.
-     *
-     * @return {@link TableRow}
-     */
-    public TableRow getConfig2TblRow() {
-        return config2TblRow;
-    }
-
-    /**
-     * Liefert die dritte Zeile {@link TableRow} für das Konfigurieren der Verbindungsdaten.
-     *
-     * @return {@link TableRow}
-     */
-    public TableRow getConfig3TblRow() {
-        return config3TblRow;
-    }
-
-    /**
      * Liefert die {@link CheckBox} für das aktivieren / deaktivieren des Autoscrolls in der Konsole.
      *
      * @return {@link CheckBox}
@@ -416,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
      *
      * @return {@link Button}
      */
-    public Button getSendBtn() {
+    public ImageButton getSendBtn() {
         return sendBtn;
     }
 
@@ -430,4 +398,191 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
 
+    public TableRow getConfig3TblRow() {
+        return config3TblRow;
+    }
+
+    public void setConfig3TblRow(TableRow config3TblRow) {
+        this.config3TblRow = config3TblRow;
+    }
+
+    public TableRow getConfig2TblRow() {
+        return config2TblRow;
+    }
+
+    public void setConfig2TblRow(TableRow config2TblRow) {
+        this.config2TblRow = config2TblRow;
+    }
+
+    public Spinner getDeviceConnectionTypeSpinner() {
+        return deviceConnectionTypeSpinner;
+    }
+
+    public void setDeviceConnectionTypeSpinner(Spinner deviceConnectionTypeSpinner) {
+        this.deviceConnectionTypeSpinner = deviceConnectionTypeSpinner;
+    }
+
+    public void showCloseBluetoothConnectionDialog(final BluetoothAdapter mBluetoothAdapter) {
+        final Dialog dialog = new Dialog(new ContextThemeWrapper(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog));
+        dialog.setContentView(R.layout.closebluetoothadapterdialog);
+        dialog.setTitle(getResources().getString(R.string.msg_close_bluetooth_connection));
+
+        Button dialogAbortButton = (Button) dialog.findViewById(R.id.dialogButtonAbort);
+        dialogAbortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        Button dialogDisableButton = (Button) dialog.findViewById(R.id.dialogButtonDisable);
+        dialogDisableButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBluetoothAdapter.disable();
+                dialog.dismiss();
+            }
+        });
+
+        final CheckBox dontShowDialogAgainCheckbox = (CheckBox) dialog.findViewById(R.id.dontShowDialogAgainCheckbox);
+        dontShowDialogAgainCheckbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                BluetoothConfiguration bluetoothConfiguration = PreferencesUtil.getBluetoothConfiguration(getApplicationContext());
+                bluetoothConfiguration.setShowCloseConnectionDialog(!dontShowDialogAgainCheckbox.isChecked());
+                PreferencesUtil.storeBluetoothConfiguration(getApplicationContext(), bluetoothConfiguration);
+            }
+        });
+
+        dialog.show();
+    }
+
+    public BluetoothSocket getBluetoothSocket(BluetoothDevice device) {
+        BluetoothSocket socket = null;
+        try {
+            ConnectionAsyncTask task = new ConnectionAsyncTask(device);
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } catch (Exception e) {
+            Log.e(TAG, e.getMessage());
+        }
+        return socket;
+    }
+
+    public void searchNewDevices() {
+        final Dialog dialog = new Dialog(new ContextThemeWrapper(MainActivity.this, android.R.style.Theme_Holo_Light_Dialog));
+        dialog.setContentView(R.layout.searchnewdevicesquestiondialog);
+        dialog.setTitle(getResources().getString(R.string.msg_search_new_devices));
+
+        Button yesButton = (Button) dialog.findViewById(R.id.yesButton);
+        yesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Model model = Model.getInstance();
+                ((BluetoothConnection) model.getArduinoConnection()).findUnPairedBluetoothDevices();
+                dialog.dismiss();
+            }
+        });
+
+        Button noButton = (Button) dialog.findViewById(R.id.noButton);
+        noButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        final CheckBox dontShowSearchNewDevicesChkBox = (CheckBox) dialog.findViewById(R.id.dontShowSearchNewDevicesChkBox);
+        dontShowSearchNewDevicesChkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                BluetoothConfiguration bluetoothConfiguration = PreferencesUtil.getBluetoothConfiguration(getApplicationContext());
+                bluetoothConfiguration.setShowSearchNewDevicesDialog(!dontShowSearchNewDevicesChkBox.isChecked());
+                PreferencesUtil.storeBluetoothConfiguration(getApplicationContext(), bluetoothConfiguration);
+            }
+        });
+
+        dialog.show();
+    }
+
+    public void showConnectionError(String name) {
+        MessageHandler.showErrorMessage(this, getResources().getString(R.string.connection_error, name));
+    }
+
+    private class ConnectionAsyncTask extends AsyncTask<Void, Void, BluetoothSocket> {
+
+        //Die eindeutige ID darf nicht geändert werden.
+        //TODO: Warum?
+        public static final String DEFAULT_UUID = "00001101-0000-1000-8000-00805F9B34FB";
+
+        private ProgressDialog progressDialog;
+
+        private BluetoothSocket bluetoothSocket;
+        private final BluetoothDevice bluetoothDevice;
+
+        private Model model = Model.getInstance();
+
+
+        public ConnectionAsyncTask(BluetoothDevice device) {
+            this.bluetoothDevice = device;
+        }
+
+        @Override
+        protected BluetoothSocket doInBackground(Void... params) {
+            try {
+                bluetoothSocket = this.bluetoothDevice.createRfcommSocketToServiceRecord(UUID.fromString(DEFAULT_UUID));
+                if (bluetoothSocket != null) {
+                    bluetoothSocket.connect();
+                }
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage());
+            }
+            return bluetoothSocket;
+        }
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(MainActivity.this);
+            progressDialog.setTitle(getString(R.string.msg_title_create_connection));
+            progressDialog.setMessage(getString(R.string.msg_msg_create_connection, bluetoothDevice.getName()));
+            progressDialog.setCancelable(false);
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.show();
+        }
+
+        @Override
+        protected void onPostExecute(BluetoothSocket socket) {
+            super.onPostExecute(socket);
+            progressDialog.dismiss();
+            ((BluetoothConnection) model.getArduinoConnection()).setSocket(bluetoothSocket);
+        }
+    }
+
+    public void setWakeLock() {
+        GeneralConfiguration generalConfiguration = PreferencesUtil.getGeneralConfiguration(getApplicationContext());
+        if (generalConfiguration.isStayAwakeWhileConnected()) {
+            final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, TAG);
+            this.mWakeLock.acquire();
+        } else {
+            releaseWakeLock();
+        }
+    }
+
+    public void releaseWakeLock() {
+        try {
+            if (this.mWakeLock != null) {
+                this.mWakeLock.release();
+            }
+        } catch (RuntimeException ex) {
+            Log.e(TAG, ex.getMessage());
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        releaseWakeLock();
+        super.onDestroy();
+    }
 }

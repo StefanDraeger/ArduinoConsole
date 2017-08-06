@@ -23,4 +23,15 @@ public enum EParity {
         }
         return parity;
     }
+
+    public static EParity getByValue(int value) {
+        EParity parity = null;
+        for (EParity p : values()) {
+            if (p.getValue() == value) {
+                parity = p;
+                break;
+            }
+        }
+        return parity;
+    }
 }

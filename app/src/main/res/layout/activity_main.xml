@@ -4,43 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:keepScreenOn="true"
     tools:context="draegerit.de.arduinoconsole.MainActivity">
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <EditText
             android:id="@+id/commandTextView"
-            android:layout_width="252dp"
-            android:layout_height="44dp"
-            android:layout_alignParentTop="true"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignStart="@+id/consoleTextView"
-            android:layout_weight="0.66"
-            android:ems="10"
-            android:enabled="false"
-            android:inputType="none"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="15dp" />
+            android:layout_weight="0.85"
+            android:elevation="1dp"
+            android:inputType="none" />
 
-        <Button
+        <ImageButton
             android:id="@+id/sendBtn"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignEnd="@+id/consoleTextView"
-            android:layout_alignTop="@+id/commandTextView"
-            android:layout_toEndOf="@+id/commandTextView"
-            android:layout_weight="0.33"
-            android:enabled="false"
-            android:text="@string/sendBtnTxt"
-            tools:layout_editor_absoluteX="280dp"
-            tools:layout_editor_absoluteY="16dp" />
+            android:clickable="false"
+            android:maxHeight="30dp"
+            android:minHeight="30dp"
+            app:srcCompat="@android:drawable/ic_menu_send" />
 
         <ImageButton
             android:id="@+id/clearBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxHeight="30dp"
+            android:minHeight="30dp"
             app:srcCompat="@android:drawable/ic_menu_delete" />
 
     </TableRow>
@@ -67,7 +60,7 @@
 
                 <TextView
                     android:id="@+id/consoleTextView"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_above="@+id/baudSpinner"
                     android:layout_below="@+id/sendBtn"
@@ -108,7 +101,7 @@
             android:layout_weight="0.10"
             android:gravity="center_vertical"
             android:paddingLeft="3dp"
-            android:text="USB Device"
+            android:text="@string/device"
             android:textColor="@android:color/black"
             android:textSize="18sp" />
 
@@ -117,6 +110,42 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@android:drawable/ic_menu_preferences" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/config2TblRow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_span="3"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView21"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:paddingLeft="3dp"
+                android:text="@string/deviceConnectionTyp"
+                android:textColor="@android:color/black" />
+
+            <Spinner
+                android:id="@+id/deviceConnectionTypeSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:addStatesFromChildren="false"
+                android:entries="@array/connectionarray"
+                android:minWidth="120dp"
+                android:paddingLeft="3dp"
+                android:textAlignment="textEnd" />
+        </LinearLayout>
 
     </TableRow>
 
@@ -139,121 +168,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:srcCompat="@android:drawable/stat_notify_sync_noanim" />
-    </TableRow>
-
-    <TableRow
-        android:id="@+id/config2TblRow"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingLeft="5dp"
-        android:visibility="gone">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_span="3"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="left"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="85dp"
-                    android:text="Baudrate"
-                    android:textAlignment="textEnd"
-                    android:textColor="@android:color/black" />
-
-                <Spinner
-                    android:id="@+id/baudSpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/consoleTextView"
-                    android:layout_alignTop="@+id/checkBox"
-                    android:entries="@array/baudarray"
-                    android:minWidth="120dp"
-                    android:textAlignment="textEnd"
-                    tools:layout_editor_absoluteX="198dp"
-                    tools:layout_editor_absoluteY="444dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="85dp"
-                    android:text="Databits"
-                    android:textAlignment="textEnd"
-                    android:textColor="@android:color/black" />
-
-                <Spinner
-                    android:id="@+id/databitSpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/databitsarray"
-                    android:minWidth="120dp"
-                    android:textAlignment="textEnd" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="85dp"
-                    android:text="Stopbits"
-                    android:textAlignment="textEnd"
-                    android:textColor="@android:color/black" />
-
-                <Spinner
-                    android:id="@+id/stopbitsSpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/stopbitsarray"
-                    android:minWidth="120dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/textView5"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:minWidth="85dp"
-                    android:text="Parity"
-                    android:textAlignment="textEnd"
-                    android:textColor="@android:color/black" />
-
-                <Spinner
-                    android:id="@+id/paritySpinner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:entries="@array/parityarray"
-                    android:minWidth="120dp" />
-            </LinearLayout>
-
-        </LinearLayout>
-
     </TableRow>
 
     <TableRow
