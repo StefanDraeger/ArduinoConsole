@@ -10,7 +10,7 @@
         android:id="@+id/configurationItem"
         android:title="@string/configuration"
         android:icon="@android:drawable/ic_menu_preferences"
-        app:showAsAction="ifRoom" />
+        app:showAsAction="never" />
     <item
         android:id="@+id/impressumItem"
         android:title="@string/impressum"

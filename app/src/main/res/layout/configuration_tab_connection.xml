@@ -42,6 +42,7 @@
             android:layout_height="wrap_content"
             android:layout_alignEnd="@+id/consoleTextView"
             android:layout_alignTop="@+id/checkBox"
+            android:layout_marginLeft="10dp"
             android:entries="@array/baudarray"
             android:minWidth="120dp"
             android:textAlignment="textEnd" />
@@ -64,6 +65,7 @@
             android:id="@+id/databitSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:entries="@array/databitsarray"
             android:minWidth="120dp"
             android:textAlignment="textEnd" />
@@ -86,9 +88,10 @@
             android:id="@+id/stopbitsSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:entries="@array/stopbitsarray"
-            android:textAlignment="textEnd"
-            android:minWidth="120dp" />
+            android:minWidth="120dp"
+            android:textAlignment="textEnd" />
     </TableRow>
 
     <TableRow
@@ -108,9 +111,10 @@
             android:id="@+id/paritySpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
             android:entries="@array/parityarray"
-            android:textAlignment="textEnd"
-            android:minWidth="120dp" />
+            android:minWidth="120dp"
+            android:textAlignment="textEnd" />
     </TableRow>
 
     <TableRow
@@ -215,12 +219,12 @@
             android:textColor="@android:color/black" />
 
         <EditText
-            android:id="@+id/editText"
-            android:layout_width="wrap_content"
+            android:id="@+id/greetingsMessageText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="6dp"
             android:ems="10"
             android:inputType="text"
-            android:maxLines="1" />
+            android:maxWidth="150dp" />
     </TableRow>
 </TableLayout>

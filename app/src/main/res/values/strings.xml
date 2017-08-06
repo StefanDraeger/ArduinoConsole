@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ArduinoConsole</string>
+    <string name="app_name">  ArduinoConsole</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
     <string name="error_title">Error...</string>
@@ -56,6 +56,13 @@
         <item>HC-05</item>
         <item>HC-06</item>
         <item>HM-10</item>
+    </string-array>
+
+    <string-array name="timestamparray">
+        <item>yyyy/MM/dd</item>
+        <item>yyyy/MM/dd HH:mm:ss</item>
+        <item>dd.MM.yyyy</item>
+        <item>dd.MM.yyyy HH:mm:ss</item>
     </string-array>
 
     <string name="title_activity_impressum">ImpressumActivity</string>
@@ -117,8 +124,10 @@
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="generalTabTitle">General</string>
     <string name="connectionTabTitle">Connection</string>
+    <string name="terminalTabTitle">Terminal</string>
     <string name="action_save">Save</string>
     <string name="save_connection">Save successfull connection settings.</string>
+    <string name="save_terminal">Save successfull terminal settings.</string>
     <string name="device">Device</string>
     <string name="deviceConnectionTyp">Connectiontype</string>
     <string name="msg_no_driver_found">No driver with name %1$s not found.</string>
@@ -147,6 +156,11 @@
     <string name="stay_awake_while_connected">Device is aktiv  while connected to arduino.</string>
     <string name="blt_greeting_chkbox">Send greetingmessage</string>
     <string name="blt_greeting_lbl">Greetingmessage</string>
-    <string name="connection_error">Can\\\'t connect to $1%s.</string>
+    <string name="connection_error">Can\'t connect to %s.</string>
+    <string name="msg_no_connection">Not connection found!</string>
+    <string name="MessagesLbl">Messages</string>
+    <string name="displayTimestampLbl">display Timestamp</string>
+    <string name="timestampFormatLbl">Timestampformat</string>
+    <string name="exampleLbl">Example</string>
 
 </resources>

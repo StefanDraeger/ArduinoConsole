@@ -23,6 +23,7 @@ import android.widget.TextView;
 
 import draegerit.de.arduinoconsole.configuration.ConnectionTab;
 import draegerit.de.arduinoconsole.configuration.GeneralTab;
+import draegerit.de.arduinoconsole.configuration.TerminalTab;
 
 public class ConfigurationActivity extends AppCompatActivity {
 
@@ -33,6 +34,8 @@ public class ConfigurationActivity extends AppCompatActivity {
     private GeneralTab generalTab;
 
     private ConnectionTab connectionTab;
+
+    private TerminalTab terminalTab;
 
     /**
      * The {@link ViewPager} that will host the section contents.
@@ -102,6 +105,9 @@ public class ConfigurationActivity extends AppCompatActivity {
             case 1:
                 connectionTab.save();
                 break;
+            case 2:
+                terminalTab.save();
+                break;
         }
     }
 
@@ -125,6 +131,9 @@ public class ConfigurationActivity extends AppCompatActivity {
                 case 1:
                     connectionTab = new ConnectionTab();
                     return connectionTab;
+                case 2:
+                    terminalTab = new TerminalTab();
+                    return terminalTab;
                 default:
                     fragment = null;
             }
@@ -133,7 +142,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
 
         @Override
@@ -143,6 +152,8 @@ public class ConfigurationActivity extends AppCompatActivity {
                     return getString(R.string.generalTabTitle);
                 case 1:
                     return getString(R.string.connectionTabTitle);
+                case 2:
+                    return getString(R.string.terminalTabTitle);
             }
             return null;
         }

@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.PowerManager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -30,18 +29,21 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.io.IOException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.UUID;
 
 import draegerit.de.arduinoconsole.connection.BluetoothConnection;
-import draegerit.de.arduinoconsole.util.BluetoothConfiguration;
-import draegerit.de.arduinoconsole.util.GeneralConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.GeneralConfiguration;
 import draegerit.de.arduinoconsole.util.HtmlUtil;
 import draegerit.de.arduinoconsole.util.Message;
 import draegerit.de.arduinoconsole.util.MessageHandler;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
-import draegerit.de.arduinoconsole.util.USBConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.TerminalConfiguration;
 
 import static android.R.color.holo_green_dark;
 import static android.R.color.holo_red_dark;
@@ -127,7 +129,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
     /**
      * Schaltfläche für das Absenden des eingegebenen Befehls.
      */
-    private Button sendBtn;
+    private ImageButton sendBtn;
 
     /**
      * Auswahlliste für den Verbindungstyp zum Arduino.
@@ -162,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
      */
     private void registerComponents() {
         this.commandTextView = (EditText) findViewById(R.id.commandTextView);
-        this.sendBtn = (Button) findViewById(R.id.sendBtn);
+        this.sendBtn = (ImageButton) findViewById(R.id.sendBtn);
         this.consoleTextView = (TextView) findViewById(R.id.consoleTextView);
         this.consoleScrollView = (ScrollView) findViewById(R.id.consoleScrollView);
         this.autoScrollCheckbox = (CheckBox) findViewById(R.id.autoScrollCheckbox);
@@ -223,6 +225,8 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     @Override
     public synchronized void update(final Observable o, final Object arg) {
+        final TerminalConfiguration terminalConfiguration = PreferencesUtil.getTerminalConfiguration(getApplicationContext());
+        final DateFormat dateFormat = new SimpleDateFormat(terminalConfiguration.getMessageDateFormat());
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -232,6 +236,10 @@ public class MainActivity extends AppCompatActivity implements Observer {
                     long beforeTimestamp = System.currentTimeMillis();
                     if (arg instanceof Message) {
                         Message msg = (Message) arg;
+                        if (terminalConfiguration.isShowTimestampsBeforeMessageText()) {
+                            getConsoleTextView().append(dateFormat.format(new Date(msg.getTimestamp())));
+                            getConsoleTextView().append(" - ");
+                        }
                         getConsoleTextView().append(msg.getValue());
                         if (model.isAutoScroll()) {
                             getConsoleScrollView().fullScroll(ScrollView.FOCUS_DOWN);
@@ -263,15 +271,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
     }
 
     private void updateConnectionStatus(Model model) {
-        getCommandTextView().setEnabled(model.getArduinoConnection().isConnected());
-        getSendBtn().setEnabled(model.getArduinoConnection().isConnected());
-
-        if (model.getArduinoConnection().isConnected()) {
+        boolean isConnected = model.getArduinoConnection().isConnected();
+        if (isConnected) {
             getConnectBtn().setText(getResources().getString(R.string.disconnect));
             getConnectBtn().setBackgroundColor(getResources().getColor(holo_red_dark));
         } else {
-            USBConfiguration usbConfiguration = PreferencesUtil.getUSBConfiguration(getApplicationContext());
-            boolean selectionValid = usbConfiguration.getBaudrate() > 0 && model.getDriver() != null && getDriverSpinner().getSelectedItem() != null;
+            boolean selectionValid = model.getArduinoConnection().settingsValid();
             if (selectionValid) {
                 getConnectBtn().setBackgroundColor(getResources().getColor(holo_green_dark));
             } else {
@@ -379,7 +384,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
      *
      * @return {@link Button}
      */
-    public Button getSendBtn() {
+    public ImageButton getSendBtn() {
         return sendBtn;
     }
 

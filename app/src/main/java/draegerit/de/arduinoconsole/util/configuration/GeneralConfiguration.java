@@ -1,4 +1,4 @@
-package draegerit.de.arduinoconsole.util;
+package draegerit.de.arduinoconsole.util.configuration;
 
 public class GeneralConfiguration {
 

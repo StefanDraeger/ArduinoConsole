@@ -42,6 +42,8 @@ public abstract class AbstractArduinoConnection<T> {
 
     public abstract void refresh();
 
+    public abstract boolean settingsValid();
+
     public boolean isConnected() {
         return connected;
     }

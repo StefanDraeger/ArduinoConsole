@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import draegerit.de.arduinoconsole.R;
@@ -44,6 +45,10 @@ public class ConnectionTab extends Fragment {
      */
     private CheckBox showSearchNewDevicesChkBox;
 
+    private CheckBox sendGreetingsChkBox;
+
+    private EditText greetingsMessageText;
+
     private View view;
 
     private ConnectionTabController connectionTabController;
@@ -69,6 +74,8 @@ public class ConnectionTab extends Fragment {
 
         this.closeBluetoothConnectionCheckbox = (CheckBox) this.view.findViewById(R.id.closeBluetoothConnectionCheckbox);
         this.showSearchNewDevicesChkBox = (CheckBox) this.view.findViewById(R.id.showSearchNewDevicesChkBox);
+        this.sendGreetingsChkBox = (CheckBox) this.view.findViewById(R.id.sendGreetingsChkBox);
+        this.greetingsMessageText = (EditText) this.view.findViewById(R.id.greetingsMessageText);
     }
 
     public void save() {
@@ -125,5 +132,13 @@ public class ConnectionTab extends Fragment {
 
     public void setShowSearchNewDevicesChkBox(CheckBox showSearchNewDevicesChkBox) {
         this.showSearchNewDevicesChkBox = showSearchNewDevicesChkBox;
+    }
+
+    public CheckBox getSendGreetingsChkBox() {
+        return sendGreetingsChkBox;
+    }
+
+    public EditText getGreetingsMessageText() {
+        return greetingsMessageText;
     }
 }

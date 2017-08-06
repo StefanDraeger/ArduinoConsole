@@ -19,10 +19,11 @@ import draegerit.de.arduinoconsole.MainActivity;
 import draegerit.de.arduinoconsole.R;
 import draegerit.de.arduinoconsole.connection.task.CommunicationWriteAsyncTask;
 import draegerit.de.arduinoconsole.connection.thread.ConnectionThread;
-import draegerit.de.arduinoconsole.util.BluetoothConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.DriverAdapter;
 import draegerit.de.arduinoconsole.util.DriverWrapper;
 import draegerit.de.arduinoconsole.util.Message;
+import draegerit.de.arduinoconsole.util.PreferencesUtil;
 
 
 public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConfiguration> {
@@ -195,6 +196,11 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
         model.updateDataAdapter();
     }
 
+    @Override
+    public boolean settingsValid() {
+        return true;
+    }
+
     private List<BluetoothDevice> findBluetoothDevices() {
         this.bluetoothDevices = new ArrayList<>();
         this.bluetoothDevices.addAll(findPairedBluetoothDevices());
@@ -219,13 +225,17 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
         boolean isConnected = socket != null && socket.isConnected();
         setConnected(isConnected);
         if (isConnected) {
-            sendCommand("Hello");
+            BluetoothConfiguration bluetoothConfiguration = PreferencesUtil.getBluetoothConfiguration(getActivity().getApplicationContext());
+            if (bluetoothConfiguration.isSendGreetingsMessage()) {
+                sendCommand(bluetoothConfiguration.getGreetingsMessage());
+            }
 
             this.connectionThread = new ConnectionThread(this.socket);
             this.connectionThread.start();
 
         } else {
-
+            String deviceName = socket.getRemoteDevice().getName().replaceAll("\n", "");
+            getActivity().showConnectionError(deviceName);
         }
     }
 

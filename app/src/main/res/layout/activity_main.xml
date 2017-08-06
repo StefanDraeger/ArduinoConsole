@@ -8,39 +8,32 @@
 
     <TableRow
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent">
 
         <EditText
             android:id="@+id/commandTextView"
-            android:layout_width="252dp"
-            android:layout_height="44dp"
-            android:layout_alignParentTop="true"
-            android:layout_alignStart="@+id/consoleTextView"
-            android:layout_weight="0.66"
-            android:ems="10"
-            android:enabled="false"
-            android:inputType="none"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="15dp" />
-
-        <Button
-            android:id="@+id/sendBtn"
-            style="@style/Widget.AppCompat.Button.Small"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_alignEnd="@+id/consoleTextView"
-            android:layout_alignTop="@+id/commandTextView"
-            android:layout_toEndOf="@+id/commandTextView"
-            android:layout_weight="0.33"
+            android:layout_alignStart="@+id/consoleTextView"
+            android:layout_weight="0.85"
+            android:elevation="1dp"
+            android:inputType="none" />
+
+        <ImageButton
+            android:id="@+id/sendBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:clickable="false"
-            android:text="@string/sendBtnTxt"
-            tools:layout_editor_absoluteX="280dp"
-            tools:layout_editor_absoluteY="16dp" />
+            android:maxHeight="30dp"
+            android:minHeight="30dp"
+            app:srcCompat="@android:drawable/ic_menu_send" />
 
         <ImageButton
             android:id="@+id/clearBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:maxHeight="30dp"
+            android:minHeight="30dp"
             app:srcCompat="@android:drawable/ic_menu_delete" />
 
     </TableRow>
@@ -129,14 +122,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="center_vertical|center_horizontal"
             android:layout_span="3"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/textView21"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:paddingLeft="3dp"
                 android:text="@string/deviceConnectionTyp"
                 android:textColor="@android:color/black" />
@@ -145,6 +139,8 @@
                 android:id="@+id/deviceConnectionTypeSpinner"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:addStatesFromChildren="false"
                 android:entries="@array/connectionarray"
                 android:minWidth="120dp"
                 android:paddingLeft="3dp"

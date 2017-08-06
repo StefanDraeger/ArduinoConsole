@@ -5,7 +5,7 @@ import android.content.Context;
 import android.widget.Toast;
 
 import draegerit.de.arduinoconsole.R;
-import draegerit.de.arduinoconsole.util.GeneralConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.GeneralConfiguration;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
 
 public class GeneralTabController {

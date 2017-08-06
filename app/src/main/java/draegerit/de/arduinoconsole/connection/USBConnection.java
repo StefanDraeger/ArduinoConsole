@@ -28,7 +28,7 @@ import draegerit.de.arduinoconsole.util.DriverWrapper;
 import draegerit.de.arduinoconsole.util.Message;
 import draegerit.de.arduinoconsole.util.MessageHandler;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
-import draegerit.de.arduinoconsole.util.USBConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.USBConfiguration;
 
 import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.EMPTY;
 
@@ -111,7 +111,7 @@ public class USBConnection extends AbstractArduinoConnection<USBConfiguration> {
                     break;
                 }
             }
-            if(!findDriver){
+            if (!findDriver) {
                 MessageHandler.showErrorMessage(getActivity(), getActivity().getResources().getString(R.string.msg_no_driver_found, device.getDeviceName()));
                 setConnected(false);
                 return;
@@ -203,6 +203,12 @@ public class USBConnection extends AbstractArduinoConnection<USBConfiguration> {
     public void refresh() {
         findPorts();
         model.updateDataAdapter();
+    }
+
+    @Override
+    public boolean settingsValid() {
+        USBConfiguration usbConfiguration = PreferencesUtil.getUSBConfiguration(getActivity().getApplicationContext());
+        return usbConfiguration.getBaudrate() > 0 && model.getDriver() != null && getActivity().getDriverSpinner().getSelectedItem() != null;
     }
 
     /**

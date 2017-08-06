@@ -32,7 +32,7 @@ import draegerit.de.arduinoconsole.R;
 import draegerit.de.arduinoconsole.connection.USBConnection;
 import draegerit.de.arduinoconsole.util.Message;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
-import draegerit.de.arduinoconsole.util.USBConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.USBConfiguration;
 
 import static com.itextpdf.text.Element.ALIGN_CENTER;
 import static com.itextpdf.text.Element.ALIGN_LEFT;

@@ -49,6 +49,7 @@ public class ConnectionThread extends Thread {
                     sb.append("\r\n");
                     Log.i(TAG, sb.toString());
                     model.addMessage(Message.Type.FROM, sb.toString());
+                    Log.e("TagA",sb.toString());
                 }
             } catch (Exception e) {
                 setRunThread(false);

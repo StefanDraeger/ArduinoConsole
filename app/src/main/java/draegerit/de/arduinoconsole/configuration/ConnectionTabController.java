@@ -5,17 +5,18 @@ import android.content.Context;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import draegerit.de.arduinoconsole.R;
-import draegerit.de.arduinoconsole.util.BluetoothConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.EParity;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
-import draegerit.de.arduinoconsole.util.USBConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.USBConfiguration;
 
-public class ConnectionTabController {
+public class ConnectionTabController extends AbstractTabController{
 
     private ConnectionTab connectionTab;
 
@@ -87,6 +88,13 @@ public class ConnectionTabController {
 
             }
         });
+
+        this.connectionTab.getSendGreetingsChkBox().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                connectionTab.getGreetingsMessageText().setEnabled(isChecked);
+            }
+        });
     }
 
     public void save(Context ctx) {
@@ -100,8 +108,10 @@ public class ConnectionTabController {
 
         boolean showCloseBluetoothConnectionDialog = this.connectionTab.getCloseBluetoothConnectionCheckbox().isChecked();
         boolean showSearchNewDevicesDialog = this.connectionTab.getShowSearchNewDevicesChkBox().isChecked();
+        boolean sendGreetingsMessage = this.connectionTab.getSendGreetingsChkBox().isChecked();
+        String greetingsMessage = this.connectionTab.getGreetingsMessageText().getText().toString();
 
-        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(showCloseBluetoothConnectionDialog, showSearchNewDevicesDialog);
+        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(showCloseBluetoothConnectionDialog, showSearchNewDevicesDialog, sendGreetingsMessage, greetingsMessage);
         PreferencesUtil.storeBluetoothConfiguration(ctx, bluetoothConfiguration);
 
         Toast.makeText(ctx, ctx.getString(R.string.save_connection), Toast.LENGTH_LONG).show();
@@ -125,12 +135,8 @@ public class ConnectionTabController {
         BluetoothConfiguration bluetoothConfiguration = PreferencesUtil.getBluetoothConfiguration(ctx);
         this.connectionTab.getCloseBluetoothConnectionCheckbox().setChecked(bluetoothConfiguration.isShowCloseConnectionDialog());
         this.connectionTab.getShowSearchNewDevicesChkBox().setChecked(bluetoothConfiguration.isShowSearchNewDevicesDialog());
+        this.connectionTab.getSendGreetingsChkBox().setChecked(bluetoothConfiguration.isSendGreetingsMessage());
+        this.connectionTab.getGreetingsMessageText().setText(bluetoothConfiguration.getGreetingsMessage());
     }
 
-    private int getPositionForValue(Spinner spinner, int value) {
-        ArrayAdapter adapter = (ArrayAdapter) spinner.getAdapter();
-        String valueStr = String.valueOf(value);
-        int spinnerPosition = adapter.getPosition(valueStr);
-        return spinnerPosition;
-    }
 }
