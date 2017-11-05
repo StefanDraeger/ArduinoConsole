@@ -206,6 +206,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
             case R.id.configurationItem:
                 intent = new Intent(this, ConfigurationActivity.class);
                 break;
+            case R.id.hilfeItem:
+                intent = new Intent(this, HilfeActivity.class);
+                break;
+            case R.id.controllerItem:
+                intent = new Intent(this, ControllerActivity.class);
+                break;
             default:
                 throw new IllegalArgumentException("Item with ID [" + item.getItemId() + "] not found!");
         }

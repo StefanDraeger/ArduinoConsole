@@ -7,9 +7,7 @@
     <uses-permission android:name="android.permission.USB_PERMISSION" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -44,7 +42,14 @@
         <activity
             android:name=".ConfigurationActivity"
             android:label="@string/title_activity_configuration"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".HilfeActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ControllerActivity"
+            android:screenOrientation="landscape"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ public class ChartExport extends AbstractExport {
 
     @Override
     public void doExport(Context ctx) {
+        setExportFilename("chart.png");
         startExportIntent(getChartImage(), ctx);
     }
 

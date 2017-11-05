@@ -36,10 +36,8 @@ public class TerminalTabController extends AbstractTabController {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 if (view != null) {
-                    String value = ((TextView) view).getText().toString();
-                    DateFormat dateFormat = new SimpleDateFormat(value);
-                    String actualDate = dateFormat.format(new Date());
-                    terminalTab.getTimestampExampleTextView().setText(actualDate);
+                    String pattern = ((TextView) view).getText().toString();
+                    setExampleTimestampText(pattern);
                 }
             }
 
@@ -67,9 +65,16 @@ public class TerminalTabController extends AbstractTabController {
         boolean isShowTimestamps = terminalConfiguration.isShowTimestampsBeforeMessageText();
         this.terminalTab.getDisplayTimestampCheckBox().setChecked(isShowTimestamps);
         this.terminalTab.getTimestampSpinner().setEnabled(isShowTimestamps);
-
         this.terminalTab.getTimestampSpinner().setSelection(getPositionForValue(this.terminalTab.getTimestampSpinner(), terminalConfiguration.getMessageDateFormat()));
+        setExampleTimestampText(this.terminalTab.getTimestampSpinner().getSelectedItem().toString());
     }
+
+    private void setExampleTimestampText(String pattern) {
+        DateFormat dateFormat = new SimpleDateFormat(pattern);
+        String actualDate = dateFormat.format(new Date());
+        terminalTab.getTimestampExampleTextView().setText(actualDate);
+    }
+
 
 
 }

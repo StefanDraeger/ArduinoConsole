@@ -42,7 +42,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Version 1.13" />
+                    android:text="Version 1.14" />
 
                 <TextView
                     android:id="@+id/buildNumberTextView"
@@ -178,7 +178,6 @@
                         android:text="https://draeger-it.blog"
                         android:textColor="@android:color/holo_blue_light" />
                 </TableRow>
-
             </TableLayout>
 
         </LinearLayout>

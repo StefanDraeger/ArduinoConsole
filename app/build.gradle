@@ -20,7 +20,7 @@ android {
 
 
     compileSdkVersion 24
-    buildToolsVersion "25.0.0"
+    buildToolsVersion '26.0.2'
     defaultConfig {
         applicationId "draegerit.de.arduinoconsole"
         minSdkVersion 18

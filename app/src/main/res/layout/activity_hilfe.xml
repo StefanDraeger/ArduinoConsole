@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="draegerit.de.arduinoconsole.HilfeActivity">
+
+    <LinearLayout
+        android:layout_width="344dp"
+        android:layout_height="495dp"
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="8dp"
+        tools:layout_editor_absoluteY="8dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/helpGermanOnly"
+            android:textColor="@android:color/holo_red_dark" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/hilfeAllgemein"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/overviewTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/hilfeMainOverview"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/hilfeVerbindung"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/serialconnectionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/serielleVerbindung"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/bluetoothconnectionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/bluetoothVerbindung"
+            android:textColor="@color/colorPrimary" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/hilfeGraph"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/createGraphTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/createGraph"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/configureGraphTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/configureGraph"
+            android:textColor="@color/colorPrimary" />
+
+        <TextView
+            android:id="@+id/exportGraphTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/exportGraph"
+            android:textColor="@color/colorPrimary" />
+
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>

@@ -153,7 +153,7 @@
     <string name="bluetooth_turning_off">Bluetoothadapter state is disable</string>
     <string name="not_bounded"> (not bounded)</string>
     <string name="screen">Screen</string>
-    <string name="stay_awake_while_connected">Device is aktiv  while connected to arduino.</string>
+    <string name="stay_awake_while_connected">Device is activ  while connected to arduino.</string>
     <string name="blt_greeting_chkbox">Send greetingmessage</string>
     <string name="blt_greeting_lbl">Greetingmessage</string>
     <string name="connection_error">Can\'t connect to %s.</string>
@@ -162,5 +162,20 @@
     <string name="displayTimestampLbl">display Timestamp</string>
     <string name="timestampFormatLbl">Timestampformat</string>
     <string name="exampleLbl">Example</string>
+    <string name="hilfe">Help</string>
+    <string name="hilfeVerbindung">Connection</string>
+    <string name="serielleVerbindung"><u>serial connection</u></string>
+    <string name="title_activity_hilfe">Help</string>
+    <string name="bluetoothVerbindung"><u>bluetooth connection</u></string>
+    <string name="hilfeReleaseLetter">Release Letter</string>
+    <string name="hilfeGraph">Graph</string>
+    <string name="createGraph"><u>create graph</u></string>
+    <string name="exportGraph"><u>export graph</u></string>
+    <string name="configureGraph"><u>configure graph</u></string>
+    <string name="hilfeAllgemein">Main</string>
+    <string name="hilfeMainOverview"><u>overview</u></string>
+    <string name="helpGermanOnly">The current help page is only in german available.</string>
+    <string name="controller">Controller</string>
+    <string name="action_edit">Edit</string>
 
 </resources>

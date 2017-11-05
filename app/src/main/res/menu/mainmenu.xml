@@ -7,12 +7,21 @@
         android:title="@string/graph"
         app:showAsAction="always" />
     <item
+        android:id="@+id/controllerItem"
+        android:title="@string/controller"
+        app:showAsAction="never" />
+    <item
         android:id="@+id/configurationItem"
-        android:title="@string/configuration"
         android:icon="@android:drawable/ic_menu_preferences"
+        android:title="@string/configuration"
         app:showAsAction="never" />
     <item
         android:id="@+id/impressumItem"
         android:title="@string/impressum"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/hilfeItem"
+        android:title="@string/hilfe"
+        android:icon="@android:drawable/ic_menu_help"
+        app:showAsAction="ifRoom" />
 </menu>
