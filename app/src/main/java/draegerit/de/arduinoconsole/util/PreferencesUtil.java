@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import com.google.gson.Gson;
 
 import draegerit.de.arduinoconsole.R;
+import draegerit.de.arduinoconsole.controller.settings.ControllerSetting;
 import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.GeneralConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.TerminalConfiguration;
@@ -20,11 +21,26 @@ public final class PreferencesUtil {
     private static final String BLUETOOTH_CONFIGURATION_PREF = "bluetoothConfigurationPref";
     private static final String GENERAL_CONFIGURATION_PREF = "generalConfigurationPref";
     private static final String TERMINAL_CONFIGURATION_PREF = "terminalConfigurationPref";
+    private static final String CONTROLLER_SETTINGS_PREF = "controllerSettingsPref";
 
     public static final int ZERO = 0;
 
     private PreferencesUtil() {
 
+    }
+
+    public static ControllerSetting getControllerSettings(Context ctx){
+        String controllerPrefJson = get(ctx, CONTROLLER_SETTINGS_PREF, getDefaultControllerSettings(ctx));
+        if (!isBlank(controllerPrefJson)) {
+            ControllerSetting pref = new Gson().fromJson(controllerPrefJson, ControllerSetting.class);
+            return pref;
+        }
+        return null;
+    }
+
+    public static void storeControllerSettingsPreferences(Context ctx, ControllerSetting controllerSetting) {
+        String json = new Gson().toJson(controllerSetting);
+        store(ctx, json, CONTROLLER_SETTINGS_PREF);
     }
 
     public static void storeChartPreferences(Context ctx, ChartPreferences chartPreferences) {
@@ -125,6 +141,19 @@ public final class PreferencesUtil {
 
     private static boolean isBlank(String value) {
         return value == null || value.trim().length() == ZERO;
+    }
+
+    private static String getDefaultControllerSettings(Context ctx){
+        ControllerSetting setting = new ControllerSetting();
+        setting.setCommandButtonA(ctx.getString(R.string.empty));
+        setting.setCommandButtonB(ctx.getString(R.string.empty));
+        setting.setCommandButtonC(ctx.getString(R.string.empty));
+        setting.setCommandButtonD(ctx.getString(R.string.empty));
+        setting.setCommandButtonUp(ctx.getString(R.string.empty));
+        setting.setCommandButtonDown(ctx.getString(R.string.empty));
+        setting.setCommandButtonLeft(ctx.getString(R.string.empty));
+        setting.setCommandButtonRight(ctx.getString(R.string.empty));
+        return new Gson().toJson(setting);
     }
 
     private static String getDefaultchartPreferences(Context ctx) {

@@ -6,4 +6,14 @@
         android:title="@string/export"
         android:icon="@mipmap/download"
         app:showAsAction="always"/>
+    <item
+        android:id="@+id/graphprefItem"
+        android:title="@string/graphpreferences"
+        android:icon="@android:drawable/ic_menu_preferences"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/graphclearItem"
+        android:title="@string/clear"
+        android:icon="@android:drawable/ic_menu_delete"
+        app:showAsAction="ifRoom"/>
 </menu>

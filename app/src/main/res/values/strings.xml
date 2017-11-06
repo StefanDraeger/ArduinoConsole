@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">  ArduinoConsole</string>
+    <string name="app_name">ArduinoConsole</string>
     <string name="connect">Connect</string>
     <string name="disconnect">Disconnect</string>
     <string name="error_title">Error...</string>
@@ -177,5 +177,30 @@
     <string name="helpGermanOnly">The current help page is only in german available.</string>
     <string name="controller">Controller</string>
     <string name="action_edit">Edit</string>
+    <string name="no_function_for_command">No function for button %s set. Please visit controllersettings to define a command.</string>
+    <string name="buttona">A</string>
+    <string name="buttonb">B</string>
+    <string name="buttonc">C</string>
+    <string name="buttond">D</string>
+    <string name="buttonUp">up</string>
+    <string name="buttonDown">down</string>
+    <string name="buttonLeft">left</string>
+    <string name="buttonRight">right</string>
+
+    <string name="alert">Attention...</string>
+    <string name="action_sensor">Sensors</string>
+    <string name="controllersettings">Controllersettings</string>
+    <string name="graphpreferences">Settings</string>
+    <string name="clear">Clear</string>
+    <string name="text_buttonup">Button up:</string>
+    <string name="text_buttondown">Button down:</string>
+    <string name="text_buttonleft">Button left:</string>
+    <string name="text_buttonright">Button right:</string>
+    <string name="text_buttona">Button A:</string>
+    <string name="commandsTabTitle">Commands</string>
+    <string name="text_buttonb">Button B:</string>
+    <string name="text_buttonc">Button C:</string>
+    <string name="text_buttond">Button D:</string>
+    <string name="empty" />
 
 </resources>

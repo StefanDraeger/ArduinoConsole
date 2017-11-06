@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ContextThemeWrapper;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -57,16 +58,6 @@ public class GraphActivity extends AppCompatActivity implements Observer {
     private static final int QUALITY = 100;
 
     /**
-     * Schaltfläche zum leeren des Diagramms.
-     */
-    private ImageButton graphClearBtn;
-
-    /**
-     * Schaltfläche zum konfigurieren des Diagramms.
-     */
-    private ImageButton prefBtn;
-
-    /**
      * Das Model.
      */
     private Model model = Model.getInstance();
@@ -92,19 +83,12 @@ public class GraphActivity extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_graph);
         setTitle(getResources().getString(R.string.graph));
 
-        createComponents();
-
         this.controller = new GraphController(this);
         this.controller.registerComponents();
 
         generateChart();
 
         this.model.addObserver(this);
-    }
-
-    private void createComponents() {
-        this.graphClearBtn = (ImageButton) findViewById(R.id.graphClearBtn);
-        this.prefBtn = (ImageButton) findViewById(R.id.prefBtn);
     }
 
     @Override
@@ -121,6 +105,12 @@ public class GraphActivity extends AppCompatActivity implements Observer {
             case R.id.exportItem:
                 showExportDialog();
                 break;
+            case R.id.graphprefItem:
+                showChartPreferences();
+                break;
+            case R.id.graphclearItem:
+                clearChartValues();
+                break;
             default:
                 throw new IllegalArgumentException("Item with ID [" + item.getItemId() + "] not found!");
         }
@@ -130,6 +120,10 @@ public class GraphActivity extends AppCompatActivity implements Observer {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void clearChartValues() {
+        getChartView().getDataset().getSeries(0).clear();
     }
 
     void showExportDialog() {
@@ -335,19 +329,5 @@ public class GraphActivity extends AppCompatActivity implements Observer {
         return chartView;
     }
 
-    /**
-     * Liefert die Schaltfläche für das leeren des Diagramms.
-     * @return ImageButton
-     */
-    public ImageButton getGraphClearBtn() {
-        return graphClearBtn;
-    }
 
-    /**
-     * Liefert die Schaltfläche für die konfiguration des Diagramms.
-     * @return ImageButton
-     */
-    public ImageButton getPrefBtn() {
-        return prefBtn;
-    }
 }

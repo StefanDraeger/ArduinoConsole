@@ -5,6 +5,10 @@ import android.content.BroadcastReceiver;
 import draegerit.de.arduinoconsole.MainActivity;
 import draegerit.de.arduinoconsole.Model;
 
+/**
+ * Eine Abstracte Connection.
+ * @param <T>
+ */
 public abstract class AbstractArduinoConnection<T> {
 
     protected T configuration;
@@ -22,9 +26,9 @@ public abstract class AbstractArduinoConnection<T> {
     public AbstractArduinoConnection() {
     }
 
-    public AbstractArduinoConnection(T configuration, MainActivity activity) {
+    public AbstractArduinoConnection(T configuration, MainActivity inActivity) {
         this.configuration = configuration;
-        this.activity = activity;
+        this.activity = inActivity;
         registerDataAdapter();
     }
 
@@ -48,8 +52,8 @@ public abstract class AbstractArduinoConnection<T> {
         return connected;
     }
 
-    public void setConnected(boolean connected) {
-        this.connected = connected;
+    public void setConnected(boolean inConnected) {
+        this.connected = inConnected;
         model.setConnected(connected);
     }
 
@@ -57,7 +61,7 @@ public abstract class AbstractArduinoConnection<T> {
         return broadcastReceiver;
     }
 
-    public void setBroadcastReceiver(BroadcastReceiver broadcastReceiver) {
+    public void setBroadcastReceiver(final BroadcastReceiver broadcastReceiver) {
         this.broadcastReceiver = broadcastReceiver;
     }
 
@@ -65,24 +69,20 @@ public abstract class AbstractArduinoConnection<T> {
         return activity;
     }
 
-    public void setActivity(MainActivity activity) {
-        this.activity = activity;
-    }
-
     public T getConfiguration() {
         return configuration;
     }
 
-    public void setConfiguration(T configuration) {
-        this.configuration = configuration;
+    public void setConfiguration(T inConfiguration) {
+        this.configuration = inConfiguration;
     }
 
     public boolean isReciverIsRegistered() {
         return reciverIsRegistered;
     }
 
-    public void setReciverIsRegistered(boolean reciverIsRegistered) {
-        this.reciverIsRegistered = reciverIsRegistered;
+    public void setReciverIsRegistered(boolean inReciverIsRegistered) {
+        this.reciverIsRegistered = inReciverIsRegistered;
     }
 }
 

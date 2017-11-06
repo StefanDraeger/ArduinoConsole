@@ -7,8 +7,6 @@ import android.widget.Toast;
 
 import java.io.File;
 
-import draegerit.de.arduinoconsole.R;
-
 import static draegerit.de.arduinoconsole.R.string.filenotfoundmessage;
 
 public abstract class AbstractExport {

@@ -10,30 +10,10 @@
     tools:context="draegerit.de.arduinoconsole.GraphActivity">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="right"
-        android:orientation="horizontal"
-        android:padding="4dp">
-
-        <ImageButton
-            android:id="@+id/prefBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            app:srcCompat="@android:drawable/ic_menu_preferences" />
-
-        <ImageButton
-            android:id="@+id/graphClearBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:srcCompat="@android:drawable/ic_menu_delete" />
-    </LinearLayout>
-
-    <LinearLayout
         android:id="@+id/chartContainerLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"></LinearLayout>
+        android:orientation="horizontal"
+        android:padding="15dp"></LinearLayout>
 
 </LinearLayout>
