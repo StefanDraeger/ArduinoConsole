@@ -1,6 +1,5 @@
 package draegerit.de.arduinoconsole.controller.settings;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,8 +8,6 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 
 import draegerit.de.arduinoconsole.R;
-import draegerit.de.arduinoconsole.configuration.GeneralTabController;
-import draegerit.de.arduinoconsole.util.PreferencesUtil;
 
 /**
  * Created by Stefan Draeger on 06.11.2017.
@@ -19,6 +16,7 @@ import draegerit.de.arduinoconsole.util.PreferencesUtil;
 public class CommandsTab extends Fragment {
 
     private View view;
+    private CommandsController controller;
 
     private EditText commandButtonUpEditText;
     private EditText commandButtonLeftEditText;
@@ -32,7 +30,12 @@ public class CommandsTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.controller_tab_commands, container, false);
+        registerComponents();
+        this.controller = new CommandsController(this);
+        return this.view;
+    }
 
+    private void registerComponents() {
         commandButtonUpEditText = (EditText) this.view.findViewById(R.id.commandButtonUpEditText);
         commandButtonLeftEditText = (EditText) this.view.findViewById(R.id.commandButtonLeftEditText);
         commandButtonDownEditText = (EditText) this.view.findViewById(R.id.commandButtonDownEditText);
@@ -41,21 +44,41 @@ public class CommandsTab extends Fragment {
         commandButtonBEditText = (EditText) this.view.findViewById(R.id.commandButtonBEditText);
         commandButtonCEditText = (EditText) this.view.findViewById(R.id.commandButtonCEditText);
         commandButtonDEditText = (EditText) this.view.findViewById(R.id.commandButtonDEditText);
-
-        return this.view;
     }
 
-    public void save() {
-        Context ctx = getActivity().getApplicationContext();
-        ControllerSetting setting = PreferencesUtil.getControllerSettings(ctx);
-        setting.setCommandButtonRight(this.commandButtonRightEditText.getText().toString());
-        setting.setCommandButtonLeft(this.commandButtonLeftEditText.getText().toString());
-        setting.setCommandButtonUp(this.commandButtonUpEditText.getText().toString());
-        setting.setCommandButtonDown(this.commandButtonDownEditText.getText().toString());
-        setting.setCommandButtonA(this.commandButtonAEditText.getText().toString());
-        setting.setCommandButtonB(this.commandButtonBEditText.getText().toString());
-        setting.setCommandButtonC(this.commandButtonCEditText.getText().toString());
-        setting.setCommandButtonD(this.commandButtonDEditText.getText().toString());
-        PreferencesUtil.storeControllerSettingsPreferences(ctx, setting);
+    public EditText getCommandButtonUpEditText() {
+        return commandButtonUpEditText;
+    }
+
+    public EditText getCommandButtonLeftEditText() {
+        return commandButtonLeftEditText;
+    }
+
+    public EditText getCommandButtonDownEditText() {
+        return commandButtonDownEditText;
+    }
+
+    public EditText getCommandButtonRightEditText() {
+        return commandButtonRightEditText;
+    }
+
+    public EditText getCommandButtonAEditText() {
+        return commandButtonAEditText;
+    }
+
+    public EditText getCommandButtonBEditText() {
+        return commandButtonBEditText;
+    }
+
+    public EditText getCommandButtonCEditText() {
+        return commandButtonCEditText;
+    }
+
+    public EditText getCommandButtonDEditText() {
+        return commandButtonDEditText;
+    }
+
+    public CommandsController getController() {
+        return controller;
     }
 }

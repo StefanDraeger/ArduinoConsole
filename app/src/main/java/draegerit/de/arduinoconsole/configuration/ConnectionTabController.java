@@ -6,26 +6,23 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import draegerit.de.arduinoconsole.R;
-import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.EParity;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
+import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.USBConfiguration;
 
-public class ConnectionTabController extends AbstractTabController{
+public class ConnectionTabController extends AbstractTabController<ConnectionTab>{
 
-    private ConnectionTab connectionTab;
-
-    public ConnectionTabController(ConnectionTab connectionTab) {
-        this.connectionTab = connectionTab;
+    public ConnectionTabController(ConnectionTab tab) {
+        super(tab);
     }
 
     public void registerListeners() {
-        this.connectionTab.getDeviceBaudSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.tab.getDeviceBaudSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
@@ -42,7 +39,7 @@ public class ConnectionTabController extends AbstractTabController{
             }
         });
 
-        this.connectionTab.getDatabitSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.tab.getDatabitSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 if (view != null) {
@@ -58,7 +55,7 @@ public class ConnectionTabController extends AbstractTabController{
             }
         });
 
-        this.connectionTab.getStopbitsSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.tab.getStopbitsSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 if (view != null) {
@@ -74,7 +71,7 @@ public class ConnectionTabController extends AbstractTabController{
             }
         });
 
-        this.connectionTab.getParitySpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.tab.getParitySpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 if (view != null) {
@@ -89,27 +86,27 @@ public class ConnectionTabController extends AbstractTabController{
             }
         });
 
-        this.connectionTab.getSendGreetingsChkBox().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        this.tab.getSendGreetingsChkBox().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                connectionTab.getGreetingsMessageText().setEnabled(isChecked);
+                tab.getGreetingsMessageText().setEnabled(isChecked);
             }
         });
     }
 
     public void save(Context ctx) {
-        int baudrate = Integer.parseInt(this.connectionTab.getDeviceBaudSpinner().getSelectedItem().toString());
-        int databits = Integer.parseInt(this.connectionTab.getDatabitSpinner().getSelectedItem().toString());
-        int stopbits = Integer.parseInt(this.connectionTab.getStopbitsSpinner().getSelectedItem().toString());
-        EParity eParity = EParity.getByName(this.connectionTab.getParitySpinner().getSelectedItem().toString());
+        int baudrate = Integer.parseInt(this.tab.getDeviceBaudSpinner().getSelectedItem().toString());
+        int databits = Integer.parseInt(this.tab.getDatabitSpinner().getSelectedItem().toString());
+        int stopbits = Integer.parseInt(this.tab.getStopbitsSpinner().getSelectedItem().toString());
+        EParity eParity = EParity.getByName(this.tab.getParitySpinner().getSelectedItem().toString());
         int parity = eParity.getValue();
         USBConfiguration usbConfiguration = new USBConfiguration(baudrate, databits, stopbits, parity);
         PreferencesUtil.storeUSBConfiguration(ctx, usbConfiguration);
 
-        boolean showCloseBluetoothConnectionDialog = this.connectionTab.getCloseBluetoothConnectionCheckbox().isChecked();
-        boolean showSearchNewDevicesDialog = this.connectionTab.getShowSearchNewDevicesChkBox().isChecked();
-        boolean sendGreetingsMessage = this.connectionTab.getSendGreetingsChkBox().isChecked();
-        String greetingsMessage = this.connectionTab.getGreetingsMessageText().getText().toString();
+        boolean showCloseBluetoothConnectionDialog = this.tab.getCloseBluetoothConnectionCheckbox().isChecked();
+        boolean showSearchNewDevicesDialog = this.tab.getShowSearchNewDevicesChkBox().isChecked();
+        boolean sendGreetingsMessage = this.tab.getSendGreetingsChkBox().isChecked();
+        String greetingsMessage = this.tab.getGreetingsMessageText().getText().toString();
 
         BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(showCloseBluetoothConnectionDialog, showSearchNewDevicesDialog, sendGreetingsMessage, greetingsMessage);
         PreferencesUtil.storeBluetoothConfiguration(ctx, bluetoothConfiguration);
@@ -123,20 +120,20 @@ public class ConnectionTabController extends AbstractTabController{
     public void setDefaultValues(Context ctx) {
         USBConfiguration usbConfiguration = PreferencesUtil.getUSBConfiguration(ctx);
 
-        this.connectionTab.getDeviceBaudSpinner().setSelection(getPositionForValue(this.connectionTab.getDeviceBaudSpinner(), usbConfiguration.getBaudrate()));
-        this.connectionTab.getDatabitSpinner().setSelection(getPositionForValue(this.connectionTab.getDatabitSpinner(), usbConfiguration.getDataBits()));
-        this.connectionTab.getStopbitsSpinner().setSelection(getPositionForValue(this.connectionTab.getStopbitsSpinner(), usbConfiguration.getStopbits()));
+        this.tab.getDeviceBaudSpinner().setSelection(getPositionForValue(this.tab.getDeviceBaudSpinner(), usbConfiguration.getBaudrate()));
+        this.tab.getDatabitSpinner().setSelection(getPositionForValue(this.tab.getDatabitSpinner(), usbConfiguration.getDataBits()));
+        this.tab.getStopbitsSpinner().setSelection(getPositionForValue(this.tab.getStopbitsSpinner(), usbConfiguration.getStopbits()));
 
-        ArrayAdapter adapter = (ArrayAdapter) this.connectionTab.getParitySpinner().getAdapter();
+        ArrayAdapter adapter = (ArrayAdapter) this.tab.getParitySpinner().getAdapter();
         EParity parity = EParity.getByValue(usbConfiguration.getParity());
         int spinnerPosition = adapter.getPosition(parity.name());
-        this.connectionTab.getParitySpinner().setSelection(spinnerPosition);
+        this.tab.getParitySpinner().setSelection(spinnerPosition);
 
         BluetoothConfiguration bluetoothConfiguration = PreferencesUtil.getBluetoothConfiguration(ctx);
-        this.connectionTab.getCloseBluetoothConnectionCheckbox().setChecked(bluetoothConfiguration.isShowCloseConnectionDialog());
-        this.connectionTab.getShowSearchNewDevicesChkBox().setChecked(bluetoothConfiguration.isShowSearchNewDevicesDialog());
-        this.connectionTab.getSendGreetingsChkBox().setChecked(bluetoothConfiguration.isSendGreetingsMessage());
-        this.connectionTab.getGreetingsMessageText().setText(bluetoothConfiguration.getGreetingsMessage());
+        this.tab.getCloseBluetoothConnectionCheckbox().setChecked(bluetoothConfiguration.isShowCloseConnectionDialog());
+        this.tab.getShowSearchNewDevicesChkBox().setChecked(bluetoothConfiguration.isShowSearchNewDevicesDialog());
+        this.tab.getSendGreetingsChkBox().setChecked(bluetoothConfiguration.isSendGreetingsMessage());
+        this.tab.getGreetingsMessageText().setText(bluetoothConfiguration.getGreetingsMessage());
     }
 
 }

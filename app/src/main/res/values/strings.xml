@@ -202,5 +202,7 @@
     <string name="text_buttonc">Button C:</string>
     <string name="text_buttond">Button D:</string>
     <string name="empty" />
+    <string name="txt_button_start">START</string>
+    <string name="txt_button_select">SELECT</string>
 
 </resources>

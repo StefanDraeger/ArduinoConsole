@@ -1,19 +1,15 @@
 package draegerit.de.arduinoconsole;
 
+import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuInflater;
+import android.view.MenuItem;
 
-import draegerit.de.arduinoconsole.configuration.ConnectionTab;
-import draegerit.de.arduinoconsole.configuration.GeneralTab;
-import draegerit.de.arduinoconsole.configuration.TerminalTab;
 import draegerit.de.arduinoconsole.controller.settings.CommandsTab;
 
 public class ControllerSettingsActivity extends AppCompatActivity {
@@ -68,16 +64,20 @@ public class ControllerSettingsActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onCreateOptionsMenu(final Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu_configuration, menu);
-        return true;
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int itemId = item.getItemId();
+        switch (itemId) {
+            case R.id.action_save:
+                save();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void save() {
         switch (selectedItemId) {
             case 0:
-                commandsTab.save();
+                commandsTab.getController().save();
                 break;
         }
     }

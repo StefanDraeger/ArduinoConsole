@@ -3,4 +3,19 @@
     <color name="colorPrimary">#3f51b5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+    <!-- Buttons -->
+    <color name="button_arrow_color_up">#996dad</color>
+    <color name="button_arrow_color_down">#bf88d7</color>
+    <color name="button_function_color_up">#996dad</color>
+    <color name="button_function_color_down">#bf88d7</color>
+    <color name="button_a_color_up">@android:color/holo_green_dark</color>
+    <color name="button_a_color_down">@android:color/holo_green_light</color>
+    <color name="button_b_color_up">@android:color/holo_blue_dark</color>
+    <color name="button_b_color_down">@android:color/holo_blue_light</color>
+    <color name="button_c_color_up">@android:color/holo_orange_dark</color>
+    <color name="button_c_color_down">@android:color/holo_orange_light</color>
+    <color name="button_d_color_up">@android:color/holo_red_dark</color>
+    <color name="button_d_color_down">@android:color/holo_red_light</color>
+    <color name="button_color_disabled"> @android:color/darker_gray</color>
+    <color name="button_border_color">@android:color/black</color>
 </resources>

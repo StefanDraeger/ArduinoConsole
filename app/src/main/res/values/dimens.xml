@@ -4,4 +4,13 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="appbar_padding_top">8dp</dimen>
+    <!-- Buttons-->
+    <dimen name="button_border_width">1dp</dimen>
+    <dimen name="button_border_radius">30dp</dimen>
+    <dimen name="button_arrow_border_radius">10dp</dimen>
+    <dimen name="button_padding">5dp</dimen>
+    <dimen name="button_width">60dp</dimen>
+    <dimen name="button_height">60dp</dimen>
+    <dimen name="button_function_width">70dp</dimen>
+    <dimen name="button_function_height">35dp</dimen>
 </resources>

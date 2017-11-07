@@ -16,23 +16,21 @@ import draegerit.de.arduinoconsole.R;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
 import draegerit.de.arduinoconsole.util.configuration.TerminalConfiguration;
 
-public class TerminalTabController extends AbstractTabController {
+public class TerminalTabController extends AbstractTabController<TerminalTab> {
 
-    private TerminalTab terminalTab;
-
-    public TerminalTabController(TerminalTab terminalTab) {
-        this.terminalTab = terminalTab;
+    public TerminalTabController(TerminalTab tab) {
+        super(tab);
     }
 
     public void registerListeners() {
-        this.terminalTab.getDisplayTimestampCheckBox().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        this.tab.getDisplayTimestampCheckBox().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                terminalTab.getTimestampSpinner().setEnabled(isChecked);
+                tab.getTimestampSpinner().setEnabled(isChecked);
             }
         });
 
-        this.terminalTab.getTimestampSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        this.tab.getTimestampSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
                 if (view != null) {
@@ -50,8 +48,8 @@ public class TerminalTabController extends AbstractTabController {
 
     public void save(Context ctx) {
         TerminalConfiguration terminalConfiguration = PreferencesUtil.getTerminalConfiguration(ctx);
-        terminalConfiguration.setShowTimestampsBeforeMessageText(this.terminalTab.getDisplayTimestampCheckBox().isChecked());
-        terminalConfiguration.setMessageDateFormat(this.terminalTab.getTimestampSpinner().getSelectedItem().toString());
+        terminalConfiguration.setShowTimestampsBeforeMessageText(this.tab.getDisplayTimestampCheckBox().isChecked());
+        terminalConfiguration.setMessageDateFormat(this.tab.getTimestampSpinner().getSelectedItem().toString());
 
         PreferencesUtil.storeTerminalConfiguration(ctx, terminalConfiguration);
         Toast.makeText(ctx, ctx.getString(R.string.save_terminal), Toast.LENGTH_LONG).show();
@@ -63,16 +61,16 @@ public class TerminalTabController extends AbstractTabController {
     public void setDefaultValues(Context ctx) {
         TerminalConfiguration terminalConfiguration = PreferencesUtil.getTerminalConfiguration(ctx);
         boolean isShowTimestamps = terminalConfiguration.isShowTimestampsBeforeMessageText();
-        this.terminalTab.getDisplayTimestampCheckBox().setChecked(isShowTimestamps);
-        this.terminalTab.getTimestampSpinner().setEnabled(isShowTimestamps);
-        this.terminalTab.getTimestampSpinner().setSelection(getPositionForValue(this.terminalTab.getTimestampSpinner(), terminalConfiguration.getMessageDateFormat()));
-        setExampleTimestampText(this.terminalTab.getTimestampSpinner().getSelectedItem().toString());
+        this.tab.getDisplayTimestampCheckBox().setChecked(isShowTimestamps);
+        this.tab.getTimestampSpinner().setEnabled(isShowTimestamps);
+        this.tab.getTimestampSpinner().setSelection(getPositionForValue(this.tab.getTimestampSpinner(), terminalConfiguration.getMessageDateFormat()));
+        setExampleTimestampText(this.tab.getTimestampSpinner().getSelectedItem().toString());
     }
 
     private void setExampleTimestampText(String pattern) {
         DateFormat dateFormat = new SimpleDateFormat(pattern);
         String actualDate = dateFormat.format(new Date());
-        terminalTab.getTimestampExampleTextView().setText(actualDate);
+        tab.getTimestampExampleTextView().setText(actualDate);
     }
 
 

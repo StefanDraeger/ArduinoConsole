@@ -1,167 +1,193 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_margin="5dp"
+    android:layout_height="match_parent">
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
-
-    <TableRow
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="4dp">
+        android:layout_margin="5dp"
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView34"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:labelFor="@+id/commandButtonUpEditText"
-            android:text="@string/text_buttonup"
-            android:textAlignment="textEnd" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp"
+            android:layout_marginTop="4dp">
 
-        <EditText
-            android:id="@+id/commandButtonUpEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:inputType="text|textEmailAddress|textShortMessage|textPersonName" />
+            <TextView
+                android:id="@+id/textView34"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:labelFor="@+id/commandButtonUpEditText"
+                android:text="@string/text_buttonup"
+                android:textAlignment="textEnd" />
 
-        <TextView
-            android:id="@+id/textView35"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:labelFor="@+id/commandButtonDownEditText"
-            android:text="@string/text_buttondown"
-            android:textAlignment="textEnd" />
+            <EditText
+                android:id="@+id/commandButtonUpEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:inputType="text|textEmailAddress|textShortMessage|textPersonName" />
+        </TableRow>
 
-        <EditText
-            android:id="@+id/commandButtonDownEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:inputType="textShortMessage|textPersonName" />
-    </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="5dp">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/textView35"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:labelFor="@+id/commandButtonDownEditText"
+                android:text="@string/text_buttondown"
+                android:textAlignment="textEnd" />
 
-        <TextView
-            android:id="@+id/textView36"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:labelFor="@+id/commandButtonLeftEditText"
-            android:text="@string/text_buttonleft"
-            android:textAlignment="textEnd" />
+            <EditText
+                android:id="@+id/commandButtonDownEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:inputType="textShortMessage|textPersonName" />
+        </TableRow>
 
-        <EditText
-            android:id="@+id/commandButtonLeftEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:inputType="textShortMessage|textPersonName" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView37"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:labelFor="@+id/commandButtonRightEditText"
-            android:text="@string/text_buttonright"
-            android:textAlignment="textEnd" />
+            <TextView
+                android:id="@+id/textView36"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:labelFor="@+id/commandButtonLeftEditText"
+                android:text="@string/text_buttonleft"
+                android:textAlignment="textEnd" />
 
-        <EditText
-            android:id="@+id/commandButtonRightEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:inputType="textShortMessage|textPersonName" />
-    </TableRow>
+            <EditText
+                android:id="@+id/commandButtonLeftEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:inputType="textShortMessage|textPersonName" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/textView37"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:labelFor="@+id/commandButtonRightEditText"
+                android:text="@string/text_buttonright"
+                android:textAlignment="textEnd" />
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="10dp">
+            <EditText
+                android:id="@+id/commandButtonRightEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:inputType="textShortMessage|textPersonName" />
+        </TableRow>
 
-        <TextView
-            android:id="@+id/textView38"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:labelFor="@+id/commandButtonAEditText"
-            android:text="@string/text_buttona"
-            android:textAlignment="textEnd" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="5dp">
 
-        <EditText
-            android:id="@+id/commandButtonAEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:inputType="textShortMessage|textPersonName" />
+            <TextView
+                android:id="@+id/textView38"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:labelFor="@+id/commandButtonAEditText"
+                android:text="@string/text_buttona"
+                android:textAlignment="textEnd" />
 
-        <TextView
-            android:id="@+id/textView39"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:labelFor="@+id/commandButtonBEditText"
-            android:text="@string/text_buttonb"
-            android:textAlignment="textEnd" />
+            <EditText
+                android:id="@+id/commandButtonAEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:inputType="textShortMessage|textPersonName" />
+        </TableRow>
 
-        <EditText
-            android:id="@+id/commandButtonBEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:inputType="textShortMessage|textPersonName" />
-    </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/textView39"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:labelFor="@+id/commandButtonBEditText"
+                android:text="@string/text_buttonb"
+                android:textAlignment="textEnd" />
 
-        <TextView
-            android:id="@+id/textView40"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:labelFor="@+id/commandButtonCEditText"
-            android:text="@string/text_buttonc"
-            android:textAlignment="textEnd" />
+            <EditText
+                android:id="@+id/commandButtonBEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:inputType="textShortMessage|textPersonName" />
+        </TableRow>
 
-        <EditText
-            android:id="@+id/commandButtonCEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:inputType="textShortMessage|textPersonName" />
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView41"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="5dp"
-            android:labelFor="@+id/commandButtonDEditText"
-            android:text="@string/text_buttond"
-            android:textAlignment="textEnd" />
+            <TextView
+                android:id="@+id/textView40"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:labelFor="@+id/commandButtonCEditText"
+                android:text="@string/text_buttonc"
+                android:textAlignment="textEnd" />
 
-        <EditText
-            android:id="@+id/commandButtonDEditText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ems="8"
-            android:inputType="textShortMessage|textPersonName" />
-    </TableRow>
-</TableLayout>
+            <EditText
+                android:id="@+id/commandButtonCEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:inputType="textShortMessage|textPersonName" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/textView41"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:labelFor="@+id/commandButtonDEditText"
+                android:text="@string/text_buttond"
+                android:textAlignment="textEnd" />
+
+            <EditText
+                android:id="@+id/commandButtonDEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:inputType="textShortMessage|textPersonName" />
+        </TableRow>
+    </TableLayout>
+</LinearLayout>
+</ScrollView>
