@@ -13,6 +13,10 @@ public class ControllerSetting {
     private String commandButtonC;
     private String commandButtonD;
 
+    private String commandButtonStart;
+    private String commandButtonSelect;
+
+
     public String getCommandButtonUp() {
         return commandButtonUp;
     }
@@ -75,5 +79,21 @@ public class ControllerSetting {
 
     public void setCommandButtonD(String commandButtonD) {
         this.commandButtonD = commandButtonD;
+    }
+
+    public String getCommandButtonStart() {
+        return commandButtonStart;
+    }
+
+    public void setCommandButtonStart(String commandButtonStart) {
+        this.commandButtonStart = commandButtonStart;
+    }
+
+    public String getCommandButtonSelect() {
+        return commandButtonSelect;
+    }
+
+    public void setCommandButtonSelect(String commandButtonSelect) {
+        this.commandButtonSelect = commandButtonSelect;
     }
 }

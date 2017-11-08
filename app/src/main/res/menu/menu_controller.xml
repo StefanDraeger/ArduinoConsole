@@ -4,9 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="draegerit.de.arduinoconsole.ControllerActivity">
     <item
+        android:id="@+id/hilfeItem"
+        android:icon="@android:drawable/ic_menu_help"
+        android:title="@string/hilfe"
+        app:showAsAction="ifRoom" />
+    <item
         android:id="@+id/action_edit"
+        android:icon="@android:drawable/ic_menu_edit"
         android:orderInCategory="100"
         android:title="@string/action_edit"
-        android:icon="@android:drawable/ic_menu_edit"
         app:showAsAction="always" />
 </menu>

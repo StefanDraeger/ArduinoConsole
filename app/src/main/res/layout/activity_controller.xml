@@ -10,6 +10,7 @@
         android:id="@+id/appbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
         android:paddingTop="@dimen/appbar_padding_top"
         android:theme="@style/AppTheme.AppBarOverlay">
 
@@ -36,7 +37,7 @@
         app:srcCompat="@drawable/controllerarrowbutton" />
 
     <ImageView
-        android:id="@+id/imageView7"
+        android:id="@+id/buttonDown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignStart="@+id/imageView6"
@@ -47,34 +48,33 @@
         app:srcCompat="@drawable/arrowdown" />
 
     <ImageView
-        android:id="@+id/imageView8"
+        android:id="@+id/buttonUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/imageView6"
         android:layout_alignStart="@+id/imageView6"
-        android:layout_marginBottom="17dp"
+        android:layout_below="@+id/appbar"
         android:background="@drawable/buttonarrow"
         android:clickable="true"
         android:rotation="180"
         app:srcCompat="@drawable/arrowdown" />
 
     <ImageView
-        android:id="@+id/imageView9"
+        android:id="@+id/buttonRight"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView8"
+        android:layout_below="@+id/buttonUp"
         android:layout_marginEnd="15dp"
-        android:layout_toStartOf="@+id/imageView8"
+        android:layout_toStartOf="@+id/buttonUp"
         android:background="@drawable/buttonarrow"
         android:clickable="true"
         android:rotation="90"
         app:srcCompat="@drawable/arrowdown" />
 
     <ImageView
-        android:id="@+id/imageView10"
+        android:id="@+id/buttonLeft"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView8"
+        android:layout_below="@+id/buttonUp"
         android:layout_marginStart="17dp"
         android:layout_toEndOf="@+id/imageView6"
         android:background="@drawable/buttonarrow"
@@ -87,18 +87,18 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_alignTop="@+id/imageView10"
+        android:layout_alignTop="@+id/buttonLeft"
         android:layout_marginEnd="109dp"
         android:background="@drawable/controllerarrowbutton"
         android:text="TextView"
         android:visibility="invisible" />
 
     <TextView
-        android:id="@+id/textView30"
+        android:id="@+id/buttonB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView29"
-        android:layout_alignStart="@+id/textView32"
+        android:layout_alignStart="@+id/buttonC"
         android:background="@drawable/buttonb"
         android:clickable="true"
         android:enabled="true"
@@ -111,12 +111,12 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView31"
+        android:id="@+id/buttonA"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/textView29"
         android:layout_marginStart="42dp"
-        android:layout_toEndOf="@+id/textView30"
+        android:layout_toEndOf="@+id/buttonB"
         android:background="@drawable/buttona"
         android:clickable="true"
         android:paddingLeft="4dp"
@@ -128,7 +128,7 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView32"
+        android:id="@+id/buttonC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignEnd="@+id/textView29"
@@ -145,10 +145,10 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView33"
+        android:id="@+id/buttonD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@+id/textView31"
+        android:layout_alignStart="@+id/buttonA"
         android:layout_below="@+id/textView29"
         android:background="@drawable/buttond"
         android:clickable="true"
@@ -165,8 +165,8 @@
         android:id="@+id/alertBtnUp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView30"
-        android:layout_toEndOf="@+id/imageView8"
+        android:layout_alignTop="@+id/buttonB"
+        android:layout_toEndOf="@+id/buttonUp"
         app:srcCompat="@drawable/alert" />
 
     <ImageView
@@ -174,7 +174,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/imageView10"
+        android:layout_toEndOf="@+id/buttonLeft"
         app:srcCompat="@drawable/alert" />
 
     <ImageView
@@ -183,23 +183,23 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/alertBtnLeft"
         android:layout_marginEnd="52dp"
-        android:layout_toStartOf="@+id/imageView10"
+        android:layout_toStartOf="@+id/buttonLeft"
         app:srcCompat="@drawable/alert" />
 
     <ImageView
         android:id="@+id/alertBtnDown"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/textView32"
-        android:layout_toEndOf="@+id/imageView7"
+        android:layout_alignBottom="@+id/buttonC"
+        android:layout_toEndOf="@+id/buttonDown"
         app:srcCompat="@drawable/alert" />
 
     <ImageView
         android:id="@+id/alertBtnB"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/imageView8"
-        android:layout_toEndOf="@+id/textView30"
+        android:layout_alignBottom="@+id/buttonUp"
+        android:layout_toEndOf="@+id/buttonB"
         app:srcCompat="@drawable/alert" />
 
     <ImageView
@@ -214,8 +214,8 @@
         android:id="@+id/alertBtnC"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/imageView7"
-        android:layout_toEndOf="@+id/textView30"
+        android:layout_alignTop="@+id/buttonDown"
+        android:layout_toEndOf="@+id/buttonB"
         app:srcCompat="@drawable/alert" />
 
     <ImageView
@@ -223,16 +223,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/alertBtnC"
-        android:layout_toEndOf="@+id/textView33"
+        android:layout_toEndOf="@+id/buttonD"
         app:srcCompat="@drawable/alert" />
 
     <TextView
-        android:id="@+id/textView42"
+        android:id="@+id/buttonStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/imageView7"
+        android:layout_below="@+id/buttonDown"
         android:layout_marginTop="10dp"
-        android:layout_toEndOf="@+id/imageView7"
+        android:layout_toEndOf="@+id/buttonDown"
         android:background="@drawable/buttonfunction"
         android:clickable="true"
         android:enabled="true"
@@ -243,12 +243,12 @@
         android:textStyle="bold" />
 
     <TextView
-        android:id="@+id/textView43"
+        android:id="@+id/buttonSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView42"
-        android:layout_alignBottom="@+id/textView42"
-        android:layout_toStartOf="@+id/textView32"
+        android:layout_alignBaseline="@+id/buttonStart"
+        android:layout_alignBottom="@+id/buttonStart"
+        android:layout_toStartOf="@+id/buttonC"
         android:background="@drawable/buttonfunction"
         android:clickable="true"
         android:enabled="true"
@@ -259,19 +259,19 @@
         android:textStyle="bold" />
 
     <ImageView
-        android:id="@+id/imageView3"
+        android:id="@+id/alertBtnStart"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView42"
-        android:layout_toEndOf="@+id/textView42"
+        android:layout_alignTop="@+id/buttonStart"
+        android:layout_toEndOf="@+id/buttonStart"
         app:srcCompat="@drawable/alert" />
 
     <ImageView
-        android:id="@+id/imageView4"
+        android:id="@+id/alertBtnSelect"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/textView43"
-        android:layout_toEndOf="@+id/textView43"
+        android:layout_alignTop="@+id/buttonSelect"
+        android:layout_toEndOf="@+id/buttonSelect"
         app:srcCompat="@drawable/alert" />
 
 </RelativeLayout>
