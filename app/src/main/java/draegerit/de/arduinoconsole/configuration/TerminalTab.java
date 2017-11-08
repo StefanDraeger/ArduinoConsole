@@ -10,7 +10,6 @@ import android.widget.CheckBox;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-
 import draegerit.de.arduinoconsole.R;
 
 
@@ -31,7 +30,6 @@ public class TerminalTab extends Fragment {
         this.view = inflater.inflate(R.layout.configuration_tab_terminal, container, false);
         registerComponents();
         this.controller = new TerminalTabController(this);
-        this.controller.registerListeners();
         this.controller.setDefaultValues(getContext());
         return this.view;
     }

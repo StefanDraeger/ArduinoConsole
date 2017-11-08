@@ -17,6 +17,7 @@ import draegerit.de.arduinoconsole.util.configuration.USBConfiguration;
 
 public class ConnectionTabController extends AbstractTabController<ConnectionTab>{
 
+
     public ConnectionTabController(ConnectionTab tab) {
         super(tab);
     }

@@ -56,9 +56,8 @@ public class ConnectionTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.configuration_tab_connection, container, false);
-        this.connectionTabController = new ConnectionTabController(this);
         registerComponents();
-        this.connectionTabController.registerListeners();
+        this.connectionTabController = new ConnectionTabController(this);
         this.connectionTabController.setDefaultValues(getContext());
         return this.view;
     }

@@ -22,8 +22,8 @@ public class GeneralTab extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.configuration_tab_general, container, false);
-        this.generalTabController = new GeneralTabController(this);
         registerComponents();
+        this.generalTabController = new GeneralTabController(this);
         this.generalTabController.setDefaultValues(getContext());
         return this.view;
     }
