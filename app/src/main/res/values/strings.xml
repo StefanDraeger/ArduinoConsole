@@ -204,5 +204,13 @@
     <string name="empty" />
     <string name="txt_button_start">START</string>
     <string name="txt_button_select">SELECT</string>
+    <string name="hilfeController">Controller</string>
+    <string name="hilfeControllerConfig">configuration</string>
+    <string name="hilfeConfiguration">Configuration</string>
+    <string name="hilfeconfigConnection">connection</string>
+    <string name="hilfeconfigGeneral">general</string>
+    <string name="hilfeconfigTerminal">terminal</string>
+    <string name="text_button_start">Button Start:</string>
+    <string name="text_button_select">Button Select:</string>
 
 </resources>

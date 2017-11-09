@@ -100,7 +100,6 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         int alertBtnStartVisible = StringUtils.isBlank(setting.getCommandButtonStart())?View.VISIBLE:View.INVISIBLE;
         int alertBtnSelectVisible = StringUtils.isBlank(setting.getCommandButtonSelect())?View.VISIBLE:View.INVISIBLE;
 
-
         alertBtnUp.setVisibility(alertBtnUpVisible);
         alertBtnDown.setVisibility(alertBtnDownVisible);
         alertBtnLeft.setVisibility(alertBtnLeftVisible);
@@ -132,6 +131,12 @@ public class ControllerActivity extends AppCompatActivity implements View.OnClic
         ImageView imgView = (ImageView) findViewById(id);
         imgView.setOnClickListener(this);
         return imgView;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setValues();
     }
 
     @Override

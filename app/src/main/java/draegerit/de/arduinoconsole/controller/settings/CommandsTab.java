@@ -26,6 +26,8 @@ public class CommandsTab extends Fragment {
     private EditText commandButtonBEditText;
     private EditText commandButtonCEditText;
     private EditText commandButtonDEditText;
+    private EditText commandButtonStartEditText;
+    private EditText commandButtonSelectEditText;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +46,8 @@ public class CommandsTab extends Fragment {
         commandButtonBEditText = (EditText) this.view.findViewById(R.id.commandButtonBEditText);
         commandButtonCEditText = (EditText) this.view.findViewById(R.id.commandButtonCEditText);
         commandButtonDEditText = (EditText) this.view.findViewById(R.id.commandButtonDEditText);
+        commandButtonStartEditText = (EditText) this.view.findViewById(R.id.commandButtonStartEditText);
+        commandButtonSelectEditText = (EditText) this.view.findViewById(R.id.commandButtonSelectEditText);
     }
 
     public EditText getCommandButtonUpEditText() {
@@ -80,5 +84,13 @@ public class CommandsTab extends Fragment {
 
     public CommandsController getController() {
         return controller;
+    }
+
+    public EditText getCommandButtonStartEditText() {
+        return commandButtonStartEditText;
+    }
+
+    public EditText getCommandButtonSelectEditText() {
+        return commandButtonSelectEditText;
     }
 }

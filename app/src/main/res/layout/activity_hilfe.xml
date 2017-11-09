@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -62,6 +61,7 @@
             android:layout_marginTop="10dp"
             android:text="@string/bluetoothVerbindung"
             android:textColor="@color/colorPrimary" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -71,12 +71,12 @@
             android:textSize="18sp" />
 
         <TextView
-            android:id="@+id/createGraphTextView"
+            android:id="@+id/exportGraphTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:text="@string/createGraph"
+            android:text="@string/exportGraph"
             android:textColor="@color/colorPrimary" />
 
         <TextView
@@ -89,13 +89,60 @@
             android:textColor="@color/colorPrimary" />
 
         <TextView
-            android:id="@+id/exportGraphTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/hilfeController"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/hilfeControllerOverviewTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:text="@string/exportGraph"
+            android:text="@string/hilfeMainOverview"
+            android:textColor="@color/colorPrimary" />
+        <TextView
+            android:id="@+id/hilfeControllerConfigTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/hilfeControllerConfig"
             android:textColor="@color/colorPrimary" />
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:text="@string/hilfeConfiguration"
+            android:textColor="@android:color/background_dark"
+            android:textSize="18sp" />
+        <TextView
+            android:id="@+id/hilfeConfigGeneralTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/hilfeconfigGeneral"
+            android:textColor="@color/colorPrimary" />
+        <TextView
+            android:id="@+id/hilfeConfigConnectionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/hilfeconfigConnection"
+            android:textColor="@color/colorPrimary" />
+        <TextView
+            android:id="@+id/hilfeConfigTerminalTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/hilfeconfigTerminal"
+            android:textColor="@color/colorPrimary" />
     </LinearLayout>
 </android.support.constraint.ConstraintLayout>

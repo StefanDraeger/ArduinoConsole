@@ -23,6 +23,10 @@ public class CommandsController extends AbstractTabController<CommandsTab> {
         this.tab.getCommandButtonDownEditText().setText(setting.getCommandButtonDown());
         this.tab.getCommandButtonLeftEditText().setText(setting.getCommandButtonLeft());
         this.tab.getCommandButtonRightEditText().setText(setting.getCommandButtonRight());
+
+        this.tab.getCommandButtonSelectEditText().setText(setting.getCommandButtonSelect());
+        this.tab.getCommandButtonStartEditText().setText(setting.getCommandButtonStart());
+
     }
 
     @Override
@@ -38,6 +42,9 @@ public class CommandsController extends AbstractTabController<CommandsTab> {
         setting.setCommandButtonB(this.tab.getCommandButtonBEditText().getText().toString());
         setting.setCommandButtonC(this.tab.getCommandButtonCEditText().getText().toString());
         setting.setCommandButtonD(this.tab.getCommandButtonDEditText().getText().toString());
+
+        setting.setCommandButtonStart(this.tab.getCommandButtonStartEditText().getText().toString());
+        setting.setCommandButtonSelect(this.tab.getCommandButtonSelectEditText().getText().toString());
         PreferencesUtil.storeControllerSettingsPreferences(ctx, setting);
     }
 

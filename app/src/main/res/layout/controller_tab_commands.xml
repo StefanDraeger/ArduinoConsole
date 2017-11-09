@@ -188,6 +188,44 @@
                 android:ems="8"
                 android:inputType="textShortMessage|textPersonName" />
         </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:labelFor="@+id/commandButtonStartEditText"
+                android:text="@string/text_button_start"
+                android:textAlignment="textEnd" />
+
+            <EditText
+                android:id="@+id/commandButtonStartEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:inputType="textShortMessage|textPersonName" />
+        </TableRow>
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="5dp"
+                android:labelFor="@+id/commandButtonSelectEditText"
+                android:text="@string/text_button_select"
+                android:textAlignment="textEnd" />
+
+            <EditText
+                android:id="@+id/commandButtonSelectEditText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="8"
+                android:inputType="textShortMessage|textPersonName" />
+        </TableRow>
     </TableLayout>
 </LinearLayout>
 </ScrollView>
