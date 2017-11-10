@@ -12,18 +12,19 @@ import android.widget.TextView;
 
 import draegerit.de.arduinoconsole.connection.BluetoothConnection;
 import draegerit.de.arduinoconsole.connection.USBConnection;
-import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.DriverWrapper;
 import draegerit.de.arduinoconsole.util.MessageHandler;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
+import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.TerminalConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.USBConfiguration;
 
 import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.HTTP_ADRESS;
 
 class MainController extends AbstractController {
 
+    public static final String EMPTY = "";
     private static final String TAG = "ArduinoConsole";
-
     private Model model = Model.getInstance();
 
     private MainActivity mainActivity;
@@ -88,7 +89,7 @@ class MainController extends AbstractController {
             @Override
             public void onClick(final View v) {
                 model.getMessages().clear();
-                mainActivity.getConsoleTextView().setText("");
+                mainActivity.getConsoleTextView().setText(EMPTY);
             }
         });
 
@@ -131,16 +132,16 @@ class MainController extends AbstractController {
             @Override
             public void onClick(final View v) {
                 String command = mainActivity.getCommandTextView().getText().toString();
-                if(model.getArduinoConnection().isConnected()){
-                    if (command.trim().length() > 0) {
-                        model.getArduinoConnection().sendCommand(command);
-                    } else {
+                if (model.getArduinoConnection() != null && model.getArduinoConnection().isConnected()) {
+                    TerminalConfiguration terminalConfiguration = PreferencesUtil.getTerminalConfiguration(getActivity().getApplicationContext());
+                    if (!terminalConfiguration.isAllowSendEmptyMessages() && command.trim().length() == 0) {
                         MessageHandler.showErrorMessage(mainActivity, mainActivity.getResources().getString(R.string.msg_emptycommands));
+                    } else {
+                        model.getArduinoConnection().sendCommand(command);
                     }
                 } else {
                     MessageHandler.showErrorMessage(mainActivity, mainActivity.getResources().getString(R.string.msg_no_connection));
                 }
-
             }
         });
 

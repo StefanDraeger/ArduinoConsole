@@ -212,5 +212,8 @@
     <string name="hilfeconfigTerminal">terminal</string>
     <string name="text_button_start">Button Start:</string>
     <string name="text_button_select">Button Select:</string>
+    <string name="appendLineBreakAfterCommand">append line break \\r\\n after command</string>
+    <string name="sendMessagesLbl">Send Message</string>
+    <string name="allowEmptyMessagesText">allow send empty messages</string>
 
 </resources>

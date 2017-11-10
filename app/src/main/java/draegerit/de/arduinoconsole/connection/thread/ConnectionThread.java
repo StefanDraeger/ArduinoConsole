@@ -11,8 +11,6 @@ import java.io.InputStreamReader;
 import draegerit.de.arduinoconsole.Model;
 import draegerit.de.arduinoconsole.util.Message;
 
-import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.EMPTY;
-
 
 public class ConnectionThread extends Thread {
 
@@ -42,20 +40,21 @@ public class ConnectionThread extends Thread {
                 InputStreamReader inputStreamReader = new InputStreamReader(this.connectedBluetoothSocket.getInputStream());
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
 
-                final StringBuilder sb = new StringBuilder();
                 String line = null;
-                while (!(line = bufferedReader.readLine()).equalsIgnoreCase(EMPTY)) {
+                while ((line = bufferedReader.readLine())!=null) {
+                    StringBuilder sb = new StringBuilder();
+                    sb.append("<- ");
                     sb.append(line);
                     sb.append("\r\n");
-                    Log.i(TAG, sb.toString());
                     model.addMessage(Message.Type.FROM, sb.toString());
-                    Log.e("TagA",sb.toString());
                 }
             } catch (Exception e) {
                 setRunThread(false);
                 Log.e(TAG, e.getMessage());
             }
         }
+
+        Log.i(TAG, "Thread die!");
     }
 
     private void setConnectedInputStream(InputStream connectedInputStream) {

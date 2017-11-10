@@ -45,6 +45,8 @@ public class ConnectionTab extends Fragment {
      */
     private CheckBox showSearchNewDevicesChkBox;
 
+    private CheckBox sendLineBreaksChkBox;
+
     private CheckBox sendGreetingsChkBox;
 
     private EditText greetingsMessageText;
@@ -71,6 +73,7 @@ public class ConnectionTab extends Fragment {
         this.stopbitsSpinner = (Spinner) this.view.findViewById(R.id.stopbitsSpinner);
         this.paritySpinner = (Spinner) this.view.findViewById(R.id.paritySpinner);
 
+        this.sendLineBreaksChkBox = (CheckBox) this.view.findViewById(R.id.sendLineBreaksChkBox);
         this.closeBluetoothConnectionCheckbox = (CheckBox) this.view.findViewById(R.id.closeBluetoothConnectionCheckbox);
         this.showSearchNewDevicesChkBox = (CheckBox) this.view.findViewById(R.id.showSearchNewDevicesChkBox);
         this.sendGreetingsChkBox = (CheckBox) this.view.findViewById(R.id.sendGreetingsChkBox);
@@ -139,5 +142,9 @@ public class ConnectionTab extends Fragment {
 
     public EditText getGreetingsMessageText() {
         return greetingsMessageText;
+    }
+
+    public CheckBox getSendLineBreaksChkBox() {
+        return sendLineBreaksChkBox;
     }
 }

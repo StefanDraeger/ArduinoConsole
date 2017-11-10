@@ -14,16 +14,14 @@ import draegerit.de.arduinoconsole.util.configuration.USBConfiguration;
 
 public final class PreferencesUtil {
 
+    public static final int ZERO = 0;
     private static final String PREFS_NAME = "arduinoConsole";
-
     private static final String CHART_PREF = "chartPref";
     private static final String USB_CONFIGURATION_PREF = "usbConfigurationPref";
     private static final String BLUETOOTH_CONFIGURATION_PREF = "bluetoothConfigurationPref";
     private static final String GENERAL_CONFIGURATION_PREF = "generalConfigurationPref";
     private static final String TERMINAL_CONFIGURATION_PREF = "terminalConfigurationPref";
     private static final String CONTROLLER_SETTINGS_PREF = "controllerSettingsPref";
-
-    public static final int ZERO = 0;
 
     private PreferencesUtil() {
 
@@ -166,7 +164,7 @@ public final class PreferencesUtil {
     }
 
     private static String getDefaultBluetoothConfiguration() {
-        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(true, true, true, "Hello Arduino!");
+        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(true, true, true,false, "Hello from Android!");
         return new Gson().toJson(bluetoothConfiguration);
     }
 
@@ -179,6 +177,7 @@ public final class PreferencesUtil {
         TerminalConfiguration terminalConfiguration = new TerminalConfiguration();
         terminalConfiguration.setShowTimestampsBeforeMessageText(false);
         terminalConfiguration.setMessageDateFormat("yyyy/MM/dd");
+        terminalConfiguration.setAllowSendEmptyMessages(false);
         return new Gson().toJson(terminalConfiguration);
     }
 

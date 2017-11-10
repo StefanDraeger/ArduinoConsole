@@ -3,7 +3,6 @@ package draegerit.de.arduinoconsole.util;
 import android.bluetooth.BluetoothClass;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
-import android.media.Image;
 import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.support.annotation.NonNull;
@@ -21,6 +20,8 @@ import java.util.List;
 import draegerit.de.arduinoconsole.R;
 
 public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
+
+    private static final String EMPTY = "";
 
     private List<DriverWrapper> devices;
 
@@ -43,7 +44,8 @@ public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
         TextView adressTextView = (TextView) layout.findViewById(R.id.adressTextView);
 
         DriverWrapper device = devices.get(position);
-        String name = "";
+
+        String name = EMPTY;
         switch (device.getType()) {
             case USB:
                 name = ((UsbSerialDriver) device.getDriver()).getDevice().getDeviceName();
@@ -58,15 +60,16 @@ public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
 
         setDeviceTypeImage(device, deviceTypeImage);
 
+        if (name == null) {
+            name = "";
+        }
+
         if (!device.isBonded()) {
             name = name.concat(context.getString(R.string.not_bounded));
             deviceName.setTextColor(context.getResources().getColor(android.R.color.darker_gray));
         }
 
-        name = clearName(name);
-
-        deviceName.setText(name);
-
+        deviceName.setText(clearName(name));
 
         return layout;
     }

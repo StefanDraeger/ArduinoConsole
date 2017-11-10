@@ -5,6 +5,8 @@ public class TerminalConfiguration{
 
     private boolean showTimestampsBeforeMessageText;
 
+    private boolean allowSendEmptyMessages;
+
     private String messageDateFormat;
 
     public boolean isShowTimestampsBeforeMessageText() {
@@ -21,5 +23,13 @@ public class TerminalConfiguration{
 
     public void setMessageDateFormat(String messageDateFormat) {
         this.messageDateFormat = messageDateFormat;
+    }
+
+    public boolean isAllowSendEmptyMessages() {
+        return allowSendEmptyMessages;
+    }
+
+    public void setAllowSendEmptyMessages(boolean allowSendEmptyMessages) {
+        this.allowSendEmptyMessages = allowSendEmptyMessages;
     }
 }

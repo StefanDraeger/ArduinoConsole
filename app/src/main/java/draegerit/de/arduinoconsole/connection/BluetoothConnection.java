@@ -19,11 +19,11 @@ import draegerit.de.arduinoconsole.MainActivity;
 import draegerit.de.arduinoconsole.R;
 import draegerit.de.arduinoconsole.connection.task.CommunicationWriteAsyncTask;
 import draegerit.de.arduinoconsole.connection.thread.ConnectionThread;
-import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.DriverAdapter;
 import draegerit.de.arduinoconsole.util.DriverWrapper;
 import draegerit.de.arduinoconsole.util.Message;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
+import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 
 
 public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConfiguration> {
@@ -67,7 +67,9 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
         for (BluetoothDevice device : findBluetoothDevices()) {
             this.drivers.add(new DriverWrapper(device, DriverWrapper.DriverType.BLUETOOTH));
         }
-        updateDataAdapter(null);
+
+        DriverAdapter driverAdapter = new DriverAdapter(this.getActivity(), R.layout.devicespinnerlayout, R.id.deviceName, this.drivers);
+        this.getActivity().getDriverSpinner().setAdapter(driverAdapter);
     }
 
     @Override
@@ -92,7 +94,12 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
 
     @Override
     public void sendCommand(String command) {
-        command = command.concat("\r\n");
+        BluetoothConfiguration config = PreferencesUtil.getBluetoothConfiguration(getActivity().getApplicationContext());
+        boolean appendLineBreak = config.isAppendLineBreaks();
+        if (appendLineBreak) {
+            command = command.concat("\r\n");
+        }
+
         try {
             Boolean sendWithoutException = new CommunicationWriteAsyncTask(socket).execute(command.getBytes()).get();
             if (sendWithoutException == null || !sendWithoutException) {
@@ -100,7 +107,7 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
             } else {
 //                successfullTransferd = true;
             }
-            model.addMessage(Message.Type.TO, command);
+            model.addMessage(Message.Type.TO, "-> " + command + (appendLineBreak ? "" : "\r\n"));
         } catch (Exception e) {
             Log.e(TAG, e.getMessage());
             e.printStackTrace();
@@ -172,22 +179,21 @@ public class BluetoothConnection extends AbstractArduinoConnection<BluetoothConf
     }
 
     private void updateDataAdapter(DriverWrapper unpairedDevice) {
-        List<DriverWrapper> driver = new ArrayList<>();
-        driver.addAll(this.drivers);
+        boolean isDuplicate = false;
         if (unpairedDevice != null) {
-            boolean isDuplicate = false;
-            for (DriverWrapper wrapper : driver) {
+            for (DriverWrapper wrapper : this.drivers) {
                 if (((BluetoothDevice) wrapper.getDriver()).getAddress().equalsIgnoreCase(((BluetoothDevice) unpairedDevice.getDriver()).getAddress())) {
                     isDuplicate = true;
                     Log.d(TAG, "Find duplicate Bluetoothdevice. ---->" + ((BluetoothDevice) unpairedDevice.getDriver()).getName());
+                    break;
                 }
             }
-            if (!isDuplicate) {
-                driver.add(unpairedDevice);
-            }
         }
-        DriverAdapter driverAdapter = new DriverAdapter(this.getActivity(), R.layout.devicespinnerlayout, R.id.deviceName, driver);
-        this.getActivity().getDriverSpinner().setAdapter(driverAdapter);
+        if (!isDuplicate && unpairedDevice != null) {
+            this.drivers.add(unpairedDevice);
+        }
+        DriverAdapter driverAdapter = (DriverAdapter) this.getActivity().getDriverSpinner().getAdapter();
+        driverAdapter.notifyDataSetChanged();
     }
 
     @Override

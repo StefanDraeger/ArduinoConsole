@@ -10,12 +10,15 @@ public class BluetoothConfiguration {
 
     private boolean sendGreetingsMessage;
 
+    private boolean appendLineBreaks;
+
     private String greetingsMessage;
 
-    public BluetoothConfiguration(boolean showCloseConnectionDialog, boolean showSearchNewDevicesDialog,boolean sendGreetingsMessage,String greetingsMessage) {
+    public BluetoothConfiguration(boolean showCloseConnectionDialog, boolean showSearchNewDevicesDialog,boolean sendGreetingsMessage,boolean appendLineBreaks, String greetingsMessage) {
         this.showCloseConnectionDialog = showCloseConnectionDialog;
         this.showSearchNewDevicesDialog = showSearchNewDevicesDialog;
         this.sendGreetingsMessage = sendGreetingsMessage;
+        this.appendLineBreaks = appendLineBreaks;
         this.greetingsMessage = greetingsMessage;
     }
 
@@ -49,5 +52,13 @@ public class BluetoothConfiguration {
 
     public void setGreetingsMessage(String greetingsMessage) {
         this.greetingsMessage = greetingsMessage;
+    }
+
+    public boolean isAppendLineBreaks() {
+        return appendLineBreaks;
+    }
+
+    public void setAppendLineBreaks(boolean appendLineBreaks) {
+        this.appendLineBreaks = appendLineBreaks;
     }
 }

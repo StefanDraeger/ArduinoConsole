@@ -12,6 +12,7 @@
 
     <application
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@mipmap/logodraeger"
         android:label="@string/app_name"
         android:largeHeap="true"

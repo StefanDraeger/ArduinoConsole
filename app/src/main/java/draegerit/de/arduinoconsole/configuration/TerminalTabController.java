@@ -50,6 +50,7 @@ public class TerminalTabController extends AbstractTabController<TerminalTab> {
         TerminalConfiguration terminalConfiguration = PreferencesUtil.getTerminalConfiguration(ctx);
         terminalConfiguration.setShowTimestampsBeforeMessageText(this.tab.getDisplayTimestampCheckBox().isChecked());
         terminalConfiguration.setMessageDateFormat(this.tab.getTimestampSpinner().getSelectedItem().toString());
+        terminalConfiguration.setAllowSendEmptyMessages(this.tab.getAllowEmptyMessagesCheckBox().isChecked());
 
         PreferencesUtil.storeTerminalConfiguration(ctx, terminalConfiguration);
         Toast.makeText(ctx, ctx.getString(R.string.save_terminal), Toast.LENGTH_LONG).show();
@@ -62,6 +63,8 @@ public class TerminalTabController extends AbstractTabController<TerminalTab> {
         TerminalConfiguration terminalConfiguration = PreferencesUtil.getTerminalConfiguration(ctx);
         boolean isShowTimestamps = terminalConfiguration.isShowTimestampsBeforeMessageText();
         this.tab.getDisplayTimestampCheckBox().setChecked(isShowTimestamps);
+        boolean isAllowSendEmptyMessages = terminalConfiguration.isAllowSendEmptyMessages();
+        this.tab.getAllowEmptyMessagesCheckBox().setChecked(isAllowSendEmptyMessages);
         this.tab.getTimestampSpinner().setEnabled(isShowTimestamps);
         this.tab.getTimestampSpinner().setSelection(getPositionForValue(this.tab.getTimestampSpinner(), terminalConfiguration.getMessageDateFormat()));
         setExampleTimestampText(this.tab.getTimestampSpinner().getSelectedItem().toString());

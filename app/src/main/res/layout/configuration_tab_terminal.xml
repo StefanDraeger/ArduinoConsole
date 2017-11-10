@@ -11,6 +11,42 @@
         android:layout_marginTop="4dp">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_span="2"
+            android:layout_weight="0.10"
+            android:gravity="center_vertical"
+            android:paddingLeft="3dp"
+            android:text="@string/sendMessagesLbl"
+            android:textColor="@android:color/black"
+            android:textSize="18sp" />
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="4dp"
+        android:layout_marginTop="3dp"
+        android:padding="6dp">
+
+        <CheckBox
+            android:id="@+id/allowEmptyMessagesCheckBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_span="2"
+            android:text="@string/allowEmptyMessagesText" />
+
+
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="5dp"
+        android:layout_marginTop="4dp">
+
+        <TextView
             android:id="@+id/textView25"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -37,7 +73,6 @@
             android:layout_height="wrap_content"
             android:layout_span="2"
             android:text="@string/displayTimestampLbl" />
-
 
     </TableRow>
 
@@ -88,9 +123,10 @@
             android:text="TextView"
             android:textColor="@android:color/black" />
     </TableRow>
+
     <TableRow
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="4dp"
-        android:layout_marginTop="3dp"/>
+        android:layout_marginTop="3dp" />
 </TableLayout>

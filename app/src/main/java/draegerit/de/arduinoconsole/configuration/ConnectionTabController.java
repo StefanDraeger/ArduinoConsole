@@ -15,7 +15,7 @@ import draegerit.de.arduinoconsole.util.PreferencesUtil;
 import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.USBConfiguration;
 
-public class ConnectionTabController extends AbstractTabController<ConnectionTab>{
+public class ConnectionTabController extends AbstractTabController<ConnectionTab> {
 
 
     public ConnectionTabController(ConnectionTab tab) {
@@ -104,12 +104,13 @@ public class ConnectionTabController extends AbstractTabController<ConnectionTab
         USBConfiguration usbConfiguration = new USBConfiguration(baudrate, databits, stopbits, parity);
         PreferencesUtil.storeUSBConfiguration(ctx, usbConfiguration);
 
+        boolean appendLineBreaks = this.tab.getSendLineBreaksChkBox().isChecked();
         boolean showCloseBluetoothConnectionDialog = this.tab.getCloseBluetoothConnectionCheckbox().isChecked();
         boolean showSearchNewDevicesDialog = this.tab.getShowSearchNewDevicesChkBox().isChecked();
         boolean sendGreetingsMessage = this.tab.getSendGreetingsChkBox().isChecked();
         String greetingsMessage = this.tab.getGreetingsMessageText().getText().toString();
 
-        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(showCloseBluetoothConnectionDialog, showSearchNewDevicesDialog, sendGreetingsMessage, greetingsMessage);
+        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(showCloseBluetoothConnectionDialog, showSearchNewDevicesDialog, sendGreetingsMessage, appendLineBreaks, greetingsMessage);
         PreferencesUtil.storeBluetoothConfiguration(ctx, bluetoothConfiguration);
 
         Toast.makeText(ctx, ctx.getString(R.string.save_connection), Toast.LENGTH_LONG).show();
@@ -135,6 +136,7 @@ public class ConnectionTabController extends AbstractTabController<ConnectionTab
         this.tab.getShowSearchNewDevicesChkBox().setChecked(bluetoothConfiguration.isShowSearchNewDevicesDialog());
         this.tab.getSendGreetingsChkBox().setChecked(bluetoothConfiguration.isSendGreetingsMessage());
         this.tab.getGreetingsMessageText().setText(bluetoothConfiguration.getGreetingsMessage());
+        this.tab.getSendLineBreaksChkBox().setChecked(bluetoothConfiguration.isAppendLineBreaks());
     }
 
 }

@@ -19,6 +19,8 @@ public class TerminalTab extends Fragment {
 
     private TerminalTabController controller;
 
+    private CheckBox allowEmptyMessagesCheckBox;
+
     private CheckBox displayTimestampCheckBox;
 
     private Spinner timestampSpinner;
@@ -42,6 +44,7 @@ public class TerminalTab extends Fragment {
      * Erzeugt die Komponenten der View.
      */
     private void registerComponents() {
+        this.allowEmptyMessagesCheckBox = (CheckBox) this.view.findViewById(R.id.allowEmptyMessagesCheckBox);
         this.displayTimestampCheckBox = (CheckBox) this.view.findViewById(R.id.displayTimestampCheckBox);
         this.timestampSpinner = (Spinner) this.view.findViewById(R.id.timestampSpinner);
         this.timestampExampleTextView = (TextView) this.view.findViewById(R.id.timestampExampleTextView);
@@ -51,23 +54,16 @@ public class TerminalTab extends Fragment {
         return displayTimestampCheckBox;
     }
 
-    public void setDisplayTimestampCheckBox(CheckBox displayTimestampCheckBox) {
-        this.displayTimestampCheckBox = displayTimestampCheckBox;
-    }
-
     public Spinner getTimestampSpinner() {
         return timestampSpinner;
     }
 
-    public void setTimestampSpinner(Spinner timestampSpinner) {
-        this.timestampSpinner = timestampSpinner;
-    }
 
     public TextView getTimestampExampleTextView() {
         return timestampExampleTextView;
     }
 
-    public void setTimestampExampleTextView(TextView timestampExampleTextView) {
-        this.timestampExampleTextView = timestampExampleTextView;
+    public CheckBox getAllowEmptyMessagesCheckBox() {
+        return allowEmptyMessagesCheckBox;
     }
 }
