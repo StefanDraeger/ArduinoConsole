@@ -47,10 +47,12 @@
     <string-array name="connectionarray">
         <item>USB Serial Connection</item>
         <item>Bluetooth Connection</item>
+        <item>HTTP Connection</item>
     </string-array>
 
     <string name="usb_serial_connection">USB Serial Connection</string>
     <string name="bluetooth_connection">Bluetooth Connection</string>
+    <string name="http_connection">HTTP Connection</string>
 
     <string-array name="bluetoothtypearray">
         <item>HC-05</item>
@@ -215,5 +217,12 @@
     <string name="appendLineBreakAfterCommand">append line break \\r\\n after command</string>
     <string name="sendMessagesLbl">Send Message</string>
     <string name="allowEmptyMessagesText">allow send empty messages</string>
+    <string name="info_title">Information...</string>
+    <string name="comming_soon">Comming soon!</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="clickplusminustoexpand">Click plus / minus to expand / collapse region.</string>
+    <string name="http_profile_lbl">Profile</string>
 
 </resources>

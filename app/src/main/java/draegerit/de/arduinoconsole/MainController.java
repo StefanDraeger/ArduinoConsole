@@ -177,6 +177,8 @@ class MainController extends AbstractController {
                         if (bluetoothConfiguration.isShowSearchNewDevicesDialog()) {
                             mainActivity.searchNewDevices();
                         }
+                    } else if (value.equalsIgnoreCase(mainActivity.getResources().getString(R.string.http_connection))) {
+                        MessageHandler.showCommingSoonMsg(mainActivity);
                     }
                     model.updateDataAdapter();
                 }

@@ -6,8 +6,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
-import android.widget.TextView;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
+
+import java.util.Arrays;
+import java.util.List;
 
 import draegerit.de.arduinoconsole.R;
 import draegerit.de.arduinoconsole.util.EParity;
@@ -17,82 +21,140 @@ import draegerit.de.arduinoconsole.util.configuration.USBConfiguration;
 
 public class ConnectionTabController extends AbstractTabController<ConnectionTab> {
 
+    private boolean serialRowsVisible = true;
+    private boolean btRowsVisible = true;
+    private boolean httpRowsVisible = true;
 
     public ConnectionTabController(ConnectionTab tab) {
         super(tab);
     }
 
     public void registerListeners() {
-        this.tab.getDeviceBaudSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                if (view != null) {
-                    String value = ((TextView) view).getText().toString();
-                    int baudrate = Integer.parseInt(value);
-                    //model.setBaudrate(baudrate);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> parent) {
-
-            }
-        });
-
-        this.tab.getDatabitSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                if (view != null) {
-                    String value = ((TextView) view).getText().toString();
-                    int databits = Integer.parseInt(value);
-                    //model.setDatabits(databits);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> parent) {
-
-            }
-        });
-
-        this.tab.getStopbitsSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                if (view != null) {
-                    String value = ((TextView) view).getText().toString();
-                    int stopbits = Integer.parseInt(value);
-                    //model.setStopbits(stopbits);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> parent) {
-
-            }
-        });
-
-        this.tab.getParitySpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
-                if (view != null) {
-                    String value = ((TextView) view).getText().toString();
-                    //model.setParity(EParity.getByName(value));
-                }
-            }
-
-            @Override
-            public void onNothingSelected(final AdapterView<?> parent) {
-
-            }
-        });
-
         this.tab.getSendGreetingsChkBox().setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 tab.getGreetingsMessageText().setEnabled(isChecked);
             }
         });
+
+        this.tab.getSerialToggleImage().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleSerialRows();
+            }
+        });
+
+        this.tab.getSerialTitelText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleSerialRows();
+            }
+        });
+
+        this.tab.getBtToggleImage().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleBtRows();
+            }
+        });
+
+        this.tab.getBtTitelText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleBtRows();
+            }
+        });
+
+        this.tab.getHttpToggleImage().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleHttpRows();
+            }
+        });
+
+        this.tab.getHttpTitelText().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                toggleHttpRows();
+            }
+        });
+
+        this.tab.getHttpProfileSpinner().setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(final AdapterView<?> parent, final View view, final int position, final long id) {
+                checkHttpProfileSpinner();
+            }
+
+            @Override
+            public void onNothingSelected(final AdapterView<?> parent) {
+
+            }
+        });
+
+        this.tab.getAddProfileBtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        this.tab.getRemoveProfileBtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+        this.tab.getEditProfileBtn().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+
+    }
+
+    private void toggleHttpRows() {
+        httpRowsVisible = !httpRowsVisible;
+        toggleRows(httpRowsVisible, this.tab.getHttpToggleImage(), this.tab.getHttpRows());
+        checkHttpProfileSpinner();
+    }
+
+    private void checkHttpProfileSpinner() {
+        Object o = this.tab.getHttpProfileSpinner().getSelectedItem();
+        boolean enabledEditBtns = false;
+        if (o != null) {
+            String value = o.toString();
+            enabledEditBtns = value != null && !value.isEmpty();
+        }
+        tab.getEditProfileBtn().setEnabled(enabledEditBtns);
+        tab.getRemoveProfileBtn().setEnabled(enabledEditBtns);
+    }
+
+    private void toggleBtRows() {
+        btRowsVisible = !btRowsVisible;
+        toggleRows(btRowsVisible, this.tab.getBtToggleImage(), this.tab.getBtRows());
+    }
+
+    private void toggleSerialRows() {
+        serialRowsVisible = !serialRowsVisible;
+        toggleRows(serialRowsVisible, this.tab.getSerialToggleImage(), this.tab.getSerialRows());
+    }
+
+    private void toggleRows(boolean state, ImageView toggleImage, LinearLayout[] rows) {
+        int visible = View.GONE;
+        int drawableResId = R.drawable.plus;
+        if (state) {
+            visible = View.VISIBLE;
+            drawableResId = R.drawable.minus;
+        }
+        toggleImage.setImageResource(drawableResId);
+
+        List<LinearLayout> rs = Arrays.asList(rows);
+        for (LinearLayout row : rs) {
+            row.setVisibility(visible);
+        }
     }
 
     public void save(Context ctx) {
@@ -137,6 +199,10 @@ public class ConnectionTabController extends AbstractTabController<ConnectionTab
         this.tab.getSendGreetingsChkBox().setChecked(bluetoothConfiguration.isSendGreetingsMessage());
         this.tab.getGreetingsMessageText().setText(bluetoothConfiguration.getGreetingsMessage());
         this.tab.getSendLineBreaksChkBox().setChecked(bluetoothConfiguration.isAppendLineBreaks());
+
+        toggleSerialRows();
+        toggleBtRows();
+        toggleHttpRows();
     }
 
 }

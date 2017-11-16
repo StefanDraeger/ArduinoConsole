@@ -21,4 +21,17 @@ public class MessageHandler {
                     }).show();
         }
     }
+
+    public static void showCommingSoonMsg(MainActivity activity) {
+        new AlertDialog.Builder(activity)
+                .setTitle(activity.getResources().getString(R.string.info_title))
+                .setMessage(activity.getResources().getString(R.string.comming_soon))
+                .setCancelable(false)
+                .setPositiveButton(activity.getResources().getString(R.string.ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).show();
+    }
 }

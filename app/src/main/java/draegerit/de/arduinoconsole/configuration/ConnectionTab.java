@@ -8,7 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import draegerit.de.arduinoconsole.R;
 
@@ -55,6 +59,23 @@ public class ConnectionTab extends Fragment {
 
     private ConnectionTabController connectionTabController;
 
+    private ImageView serialToggleImage;
+    private TextView serialTitelText;
+    private LinearLayout[] serialRows;
+
+    private ImageView btToggleImage;
+    private TextView btTitelText;
+    private LinearLayout[] btRows;
+
+    private ImageView httpToggleImage;
+    private TextView httpTitelText;
+    private LinearLayout[] httpRows;
+
+    private Spinner httpProfileSpinner;
+    private ImageButton addProfileBtn;
+    private ImageButton removeProfileBtn;
+    private ImageButton editProfileBtn;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         this.view = inflater.inflate(R.layout.configuration_tab_connection, container, false);
@@ -78,6 +99,32 @@ public class ConnectionTab extends Fragment {
         this.showSearchNewDevicesChkBox = (CheckBox) this.view.findViewById(R.id.showSearchNewDevicesChkBox);
         this.sendGreetingsChkBox = (CheckBox) this.view.findViewById(R.id.sendGreetingsChkBox);
         this.greetingsMessageText = (EditText) this.view.findViewById(R.id.greetingsMessageText);
+
+        this.serialToggleImage = (ImageView) this.view.findViewById(R.id.serialToggleImage);
+        this.serialTitelText = (TextView) this.view.findViewById(R.id.serialTitelText);
+        LinearLayout serialRow1 = (LinearLayout) this.view.findViewById(R.id.serialRow1);
+        LinearLayout serialRow2 = (LinearLayout) this.view.findViewById(R.id.serialRow2);
+        LinearLayout serialRow3 = (LinearLayout) this.view.findViewById(R.id.serialRow3);
+        LinearLayout serialRow4 = (LinearLayout) this.view.findViewById(R.id.serialRow4);
+        this.serialRows = new LinearLayout[]{serialRow1, serialRow2, serialRow3, serialRow4};
+
+        this.btToggleImage = (ImageView) this.view.findViewById(R.id.btToggleImage);
+        this.btTitelText = (TextView) this.view.findViewById(R.id.btTitelText);
+        LinearLayout btRow1 = (LinearLayout) this.view.findViewById(R.id.btRow1);
+        LinearLayout btRow2 = (LinearLayout) this.view.findViewById(R.id.btRow2);
+        this.btRows = new LinearLayout[]{btRow1, btRow2};
+
+
+        this.httpToggleImage = (ImageView) this.view.findViewById(R.id.httpToggleImage);
+        this.httpTitelText = (TextView) this.view.findViewById(R.id.httpTitelText);
+        LinearLayout httpRow1 = (LinearLayout) this.view.findViewById(R.id.httpRow1);
+        LinearLayout httpRow2 = (LinearLayout) this.view.findViewById(R.id.httpRow2);
+        this.httpRows = new LinearLayout[]{httpRow1, httpRow2};
+        this.httpProfileSpinner = (Spinner) this.view.findViewById(R.id.httpProfileSpinner);
+
+        this.addProfileBtn = (ImageButton) this.view.findViewById(R.id.addProfileBtn);
+        this.removeProfileBtn = (ImageButton) this.view.findViewById(R.id.removeProfileBtn);
+        this.editProfileBtn = (ImageButton) this.view.findViewById(R.id.editProfileBtn);
     }
 
     public void save() {
@@ -146,5 +193,57 @@ public class ConnectionTab extends Fragment {
 
     public CheckBox getSendLineBreaksChkBox() {
         return sendLineBreaksChkBox;
+    }
+
+    public ImageView getSerialToggleImage() {
+        return serialToggleImage;
+    }
+
+    public TextView getSerialTitelText() {
+        return serialTitelText;
+    }
+
+    public ImageView getBtToggleImage() {
+        return btToggleImage;
+    }
+
+    public LinearLayout[] getSerialRows() {
+        return serialRows;
+    }
+
+    public TextView getBtTitelText() {
+        return btTitelText;
+    }
+
+    public LinearLayout[] getBtRows() {
+        return btRows;
+    }
+
+    public ImageView getHttpToggleImage() {
+        return httpToggleImage;
+    }
+
+    public TextView getHttpTitelText() {
+        return httpTitelText;
+    }
+
+    public LinearLayout[] getHttpRows() {
+        return httpRows;
+    }
+
+    public Spinner getHttpProfileSpinner() {
+        return httpProfileSpinner;
+    }
+
+    public ImageButton getAddProfileBtn() {
+        return addProfileBtn;
+    }
+
+    public ImageButton getRemoveProfileBtn() {
+        return removeProfileBtn;
+    }
+
+    public ImageButton getEditProfileBtn() {
+        return editProfileBtn;
     }
 }
