@@ -4,8 +4,14 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 
 import draegerit.de.arduinoconsole.R;
+import draegerit.de.arduinoconsole.configuration.httpconnection.HttpConnectionProfile;
 import draegerit.de.arduinoconsole.controller.settings.ControllerSetting;
 import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.GeneralConfiguration;
@@ -22,18 +28,43 @@ public final class PreferencesUtil {
     private static final String GENERAL_CONFIGURATION_PREF = "generalConfigurationPref";
     private static final String TERMINAL_CONFIGURATION_PREF = "terminalConfigurationPref";
     private static final String CONTROLLER_SETTINGS_PREF = "controllerSettingsPref";
+    private static final String HTTP_CONNECTION_PROF_PREF = "httpConnectionProfilesPref";
 
     private PreferencesUtil() {
 
     }
 
-    public static ControllerSetting getControllerSettings(Context ctx){
+    public static ControllerSetting getControllerSettings(Context ctx) {
         String controllerPrefJson = get(ctx, CONTROLLER_SETTINGS_PREF, getDefaultControllerSettings(ctx));
         if (!isBlank(controllerPrefJson)) {
             ControllerSetting pref = new Gson().fromJson(controllerPrefJson, ControllerSetting.class);
             return pref;
         }
         return null;
+    }
+
+    public static void storeHttpConnectionProfile(Context ctx, HttpConnectionProfile profile) {
+        List<HttpConnectionProfile> profiles = getHttpConnectionProfiles(ctx);
+        profiles.add(profile);
+        storeHttpConnectionProfiles(ctx, profiles);
+    }
+
+    public static List<HttpConnectionProfile> getHttpConnectionProfiles(Context ctx) {
+        List<HttpConnectionProfile> result = new ArrayList<>();
+        SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
+        String json = settings.getString(HTTP_CONNECTION_PROF_PREF, "");
+        if (!json.isEmpty()) {
+            Type token = new TypeToken<List<HttpConnectionProfile>>() {
+            }.getType();
+            Gson gson = new Gson();
+            result = gson.fromJson(json, token);
+        }
+        return result;
+    }
+
+    private static void storeHttpConnectionProfiles(Context ctx, List<HttpConnectionProfile> profiles) {
+        String json = new Gson().toJson(profiles);
+        store(ctx, json, HTTP_CONNECTION_PROF_PREF);
     }
 
     public static void storeControllerSettingsPreferences(Context ctx, ControllerSetting controllerSetting) {
@@ -126,8 +157,6 @@ public final class PreferencesUtil {
         return null;
     }
 
-
-
     private static String getDefaultUSBConnection() {
         USBConfiguration usbConfiguration = new USBConfiguration();
         usbConfiguration.setBaudrate(9600);
@@ -141,7 +170,7 @@ public final class PreferencesUtil {
         return value == null || value.trim().length() == ZERO;
     }
 
-    private static String getDefaultControllerSettings(Context ctx){
+    private static String getDefaultControllerSettings(Context ctx) {
         ControllerSetting setting = new ControllerSetting();
         setting.setCommandButtonA(ctx.getString(R.string.empty));
         setting.setCommandButtonB(ctx.getString(R.string.empty));
@@ -164,7 +193,7 @@ public final class PreferencesUtil {
     }
 
     private static String getDefaultBluetoothConfiguration() {
-        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(true, true, true,false, "Hello from Android!");
+        BluetoothConfiguration bluetoothConfiguration = new BluetoothConfiguration(true, true, true, false, "Hello from Android!");
         return new Gson().toJson(bluetoothConfiguration);
     }
 

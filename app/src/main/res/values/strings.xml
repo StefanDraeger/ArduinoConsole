@@ -224,5 +224,15 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="clickplusminustoexpand">Click plus / minus to expand / collapse region.</string>
     <string name="http_profile_lbl">Profile</string>
+    <string name="msg_addHttpProfile">Add HttpConnectionProfile</string>
+    <string name="msg_editHttpProfile">Edit HttpConnectionProfile</string>
+    <string name="profilename_txt">Profilename:</string>
+    <string name="shema_txt">Shema:</string>
+    <string name="serveradress_txt">Serveradress:</string>
+    <string name="https_txt">HTTPS</string>
+    <string name="http_txt">HTTP</string>
+    <string name="testconnection_txt">Test</string>
+    <string name="testconnection_msg_txt">Server at %1$s is %2$s available</string>
+    <string name="not_txt">NOT</string>
 
 </resources>

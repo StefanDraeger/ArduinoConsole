@@ -14,6 +14,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import draegerit.de.arduinoconsole.R;
+import draegerit.de.arduinoconsole.configuration.httpconnection.HttpConnectionEditProfileDialog;
+import draegerit.de.arduinoconsole.configuration.httpconnection.HttpConnectionProfile;
+import draegerit.de.arduinoconsole.configuration.httpconnection.HttpConnectionProfileArrayAdapter;
 import draegerit.de.arduinoconsole.util.EParity;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
 import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
@@ -95,7 +98,7 @@ public class ConnectionTabController extends AbstractTabController<ConnectionTab
         this.tab.getAddProfileBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showEditProfileDialog(null);
             }
         });
 
@@ -109,10 +112,17 @@ public class ConnectionTabController extends AbstractTabController<ConnectionTab
         this.tab.getEditProfileBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                HttpConnectionProfile profile = null;
+                showEditProfileDialog(profile);
             }
         });
 
+    }
+
+    private void showEditProfileDialog(HttpConnectionProfile httpConnectionProfile) {
+        Context ctx = this.tab.getActivity().getWindow().getContext();
+        HttpConnectionEditProfileDialog dialog = new HttpConnectionEditProfileDialog(ctx, httpConnectionProfile);
+        dialog.show();
     }
 
     private void toggleHttpRows() {
@@ -199,6 +209,12 @@ public class ConnectionTabController extends AbstractTabController<ConnectionTab
         this.tab.getSendGreetingsChkBox().setChecked(bluetoothConfiguration.isSendGreetingsMessage());
         this.tab.getGreetingsMessageText().setText(bluetoothConfiguration.getGreetingsMessage());
         this.tab.getSendLineBreaksChkBox().setChecked(bluetoothConfiguration.isAppendLineBreaks());
+
+        List<HttpConnectionProfile> httpConnectionProfiles = PreferencesUtil.getHttpConnectionProfiles(this.tab.getActivity().getApplicationContext());
+        if (!httpConnectionProfiles.isEmpty()) {
+            HttpConnectionProfileArrayAdapter httpConnectionProfileArrayAdapter = new HttpConnectionProfileArrayAdapter(this.tab.getActivity().getApplicationContext(), httpConnectionProfiles);
+            this.tab.getHttpProfileSpinner().setAdapter(httpConnectionProfileArrayAdapter);
+        }
 
         toggleSerialRows();
         toggleBtRows();
