@@ -18,6 +18,7 @@ import com.hoho.android.usbserial.driver.UsbSerialDriver;
 import java.util.List;
 
 import draegerit.de.arduinoconsole.R;
+import draegerit.de.arduinoconsole.configuration.httpconnection.HttpConnectionProfile;
 
 public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
 
@@ -55,6 +56,11 @@ public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
                 BluetoothDevice bluetoothDevice = (BluetoothDevice) device.getDriver();
                 name = bluetoothDevice.getName();
                 adressTextView.setText(bluetoothDevice.getAddress());
+                break;
+            case WIFI:
+                HttpConnectionProfile httpConnectionProfile = (HttpConnectionProfile) device.getDriver();
+                name = httpConnectionProfile.getProfileName();
+                adressTextView.setText(httpConnectionProfile.getServerAddress());
                 break;
         }
 
@@ -95,6 +101,9 @@ public class DriverAdapter extends ArrayAdapter<DriverWrapper> {
                         imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.chip));
                     }
                 }
+                break;
+            case WIFI:
+                imageView.setImageDrawable(context.getResources().getDrawable(R.drawable.chip));
                 break;
         }
     }

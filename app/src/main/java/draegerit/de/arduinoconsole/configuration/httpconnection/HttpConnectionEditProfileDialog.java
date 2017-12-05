@@ -41,11 +41,6 @@ public class HttpConnectionEditProfileDialog extends Dialog implements View.OnCl
 
     private void init() {
         this.setContentView(R.layout.edit_http_profile_dialog);
-        String titel = getContext().getResources().getString(R.string.msg_addHttpProfile);
-        if (this.profile != null) {
-            getContext().getResources().getString(R.string.msg_editHttpProfile);
-        }
-        this.setTitle(titel);
 
         initBtnAction(R.id.testHttpConnectionBtn);
         initBtnAction(R.id.saveHttpConnectionBtn);
@@ -56,7 +51,22 @@ public class HttpConnectionEditProfileDialog extends Dialog implements View.OnCl
         this.httpsRadioButton = (RadioButton) findViewById(R.id.httpsRadioButton);
         this.serveradressEditText = (EditText) findViewById(R.id.serveradressEditText);
         this.testConnectionMsgTextView = (TextView) findViewById(R.id.testConnectionMsgTextView);
+
+        String titel = getContext().getResources().getString(R.string.msg_addHttpProfile);
+        if (this.profile != null) {
+            titel = getContext().getResources().getString(R.string.msg_editHttpProfile);
+            loadContent();
+        }
+        this.setTitle(titel);
     }
+
+    private void loadContent() {
+        this.profileNameEditText.setText(this.profile.getProfileName());
+        this.httpRadioButton.setSelected(this.profile.getShema().equalsIgnoreCase(this.getContext().getResources().getString(R.string.http_txt)));
+        this.httpsRadioButton.setSelected(this.profile.getShema().equalsIgnoreCase(this.getContext().getResources().getString(R.string.https_txt)));
+        this.serveradressEditText.setText(this.profile.getServerAddress());
+    }
+
 
     private void initBtnAction(int resId) {
         Button btn = (Button) findViewById(resId);
@@ -88,7 +98,7 @@ public class HttpConnectionEditProfileDialog extends Dialog implements View.OnCl
         profile.setShema(getShemaText());
         PreferencesUtil.storeHttpConnectionProfile(getContext(), profile);
         dismiss();
-        Toast.makeText(getContext(),"Test",Toast.LENGTH_LONG).show();
+        Toast.makeText(getContext(),getContext().getResources().getString(R.string.save_succesfull),Toast.LENGTH_LONG).show();
     }
 
     private void testHttpConnection() {

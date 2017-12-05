@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 
+import java.util.Locale;
+
 public class HilfeActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String BASE_URL = "http://draeger-it.blog/android-app-arduinoconsole/";
@@ -19,7 +21,7 @@ public class HilfeActivity extends AppCompatActivity implements View.OnClickList
     private static final String GRAPH_EXPORT_URL = "#exportieren";
 
     private static final String CONTROLLER_OVERVIEW_URL = "#Uebersicht-2";
-    private static final String CONTROLLER_CONFIGURATION_URL ="#Konfiguration-2";
+    private static final String CONTROLLER_CONFIGURATION_URL = "#Konfiguration-2";
 
     private static final String CONFIG_TAB_GENERAL_URL = "#Tab_8211_General";
     private static final String CONFIG_TAB_CONNECTION_URL = "#Tab_8211_Connection";
@@ -45,6 +47,14 @@ public class HilfeActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_hilfe);
         setTitle(getResources().getString(R.string.hilfe));
+
+        Locale current = getResources().getConfiguration().locale;
+        TextView attentionHelpTextView = (TextView) findViewById(R.id.attentionHelpTextView);
+        int attentionVisible = View.GONE;
+        if (!current.getLanguage().equalsIgnoreCase("de")) {
+            attentionVisible = View.VISIBLE;
+        }
+        attentionHelpTextView.setVisibility(attentionVisible);
 
         overviewTextView = initLinkTextView(R.id.overviewTextView);
 
@@ -87,15 +97,15 @@ public class HilfeActivity extends AppCompatActivity implements View.OnClickList
             openUrl(GRAPH_EXPORT_URL);
         } else if (view.equals(this.overviewTextView)) {
             openUrl(OVERVIEW_URL);
-        }else if (view.equals(this.hilfeConfigGeneralTextView)) {
+        } else if (view.equals(this.hilfeConfigGeneralTextView)) {
             openUrl(CONFIG_TAB_GENERAL_URL);
-        }else if (view.equals(this.hilfeConfigConnectionTextView)) {
+        } else if (view.equals(this.hilfeConfigConnectionTextView)) {
             openUrl(CONFIG_TAB_CONNECTION_URL);
-        }else if (view.equals(this.hilfeConfigTerminalTextView)) {
+        } else if (view.equals(this.hilfeConfigTerminalTextView)) {
             openUrl(CONFIG_TAB_TERMINAL_URL);
-        }else if (view.equals(this.hilfeControllerOverviewTextView)) {
+        } else if (view.equals(this.hilfeControllerOverviewTextView)) {
             openUrl(CONTROLLER_OVERVIEW_URL);
-        }else if (view.equals(this.hilfeControllerConfigTextView)) {
+        } else if (view.equals(this.hilfeControllerConfigTextView)) {
             openUrl(CONTROLLER_CONFIGURATION_URL);
         }
     }

@@ -159,7 +159,7 @@
     <string name="blt_greeting_chkbox">Send greetingmessage</string>
     <string name="blt_greeting_lbl">Greetingmessage</string>
     <string name="connection_error">Can\'t connect to %s.</string>
-    <string name="msg_no_connection">Not connection found!</string>
+    <string name="msg_no_connection">No connection found!</string>
     <string name="MessagesLbl">Messages</string>
     <string name="displayTimestampLbl">display Timestamp</string>
     <string name="timestampFormatLbl">Timestampformat</string>
@@ -232,7 +232,8 @@
     <string name="https_txt">HTTPS</string>
     <string name="http_txt">HTTP</string>
     <string name="testconnection_txt">Test</string>
-    <string name="testconnection_msg_txt">Server at %1$s is %2$s available</string>
-    <string name="not_txt">NOT</string>
+    <string name="testconnection_msg_txt">Server at %1$s is %2$savailable</string>
+    <string name="not_txt">NOT </string>
+    <string name="save_succesfull">Save succesfull!</string>
 
 </resources>

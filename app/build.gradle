@@ -44,6 +44,11 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+
+    dexOptions {
+        preDexLibraries true
+        javaMaxHeapSize "4G"
+    }
 }
 
 def getDate() {

@@ -1,7 +1,9 @@
 package draegerit.de.arduinoconsole.controller.settings;
 
 import android.content.Context;
+import android.widget.Toast;
 
+import draegerit.de.arduinoconsole.R;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
 
 public class CommandsController extends AbstractTabController<CommandsTab> {
@@ -46,6 +48,8 @@ public class CommandsController extends AbstractTabController<CommandsTab> {
         setting.setCommandButtonStart(this.tab.getCommandButtonStartEditText().getText().toString());
         setting.setCommandButtonSelect(this.tab.getCommandButtonSelectEditText().getText().toString());
         PreferencesUtil.storeControllerSettingsPreferences(ctx, setting);
+
+        Toast.makeText(this.tab.getContext(),this.tab.getResources().getString(R.string.save_succesfull),Toast.LENGTH_LONG).show();
     }
 
 }

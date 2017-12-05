@@ -12,12 +12,14 @@ import android.widget.TextView;
 
 import draegerit.de.arduinoconsole.connection.BluetoothConnection;
 import draegerit.de.arduinoconsole.connection.USBConnection;
+import draegerit.de.arduinoconsole.connection.WifiConnection;
 import draegerit.de.arduinoconsole.util.DriverWrapper;
 import draegerit.de.arduinoconsole.util.MessageHandler;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
 import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.TerminalConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.USBConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.WifiConfiguration;
 
 import static draegerit.de.arduinoconsole.ArduinoConsoleStatics.HTTP_ADRESS;
 
@@ -178,7 +180,9 @@ class MainController extends AbstractController {
                             mainActivity.searchNewDevices();
                         }
                     } else if (value.equalsIgnoreCase(mainActivity.getResources().getString(R.string.http_connection))) {
-                        MessageHandler.showCommingSoonMsg(mainActivity);
+                        WifiConfiguration wifiConfiguration = PreferencesUtil.getWifiConfiguration(mainActivity.getApplicationContext());
+                        model.setArduinoConnection(new WifiConnection(wifiConfiguration,mainActivity));
+                       mainActivity.updateConnectionStatus(model);
                     }
                     model.updateDataAdapter();
                 }

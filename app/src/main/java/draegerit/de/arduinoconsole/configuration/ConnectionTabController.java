@@ -112,7 +112,7 @@ public class ConnectionTabController extends AbstractTabController<ConnectionTab
         this.tab.getEditProfileBtn().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                HttpConnectionProfile profile = null;
+                HttpConnectionProfile profile = (HttpConnectionProfile) tab.getHttpProfileSpinner().getSelectedItem();
                 showEditProfileDialog(profile);
             }
         });

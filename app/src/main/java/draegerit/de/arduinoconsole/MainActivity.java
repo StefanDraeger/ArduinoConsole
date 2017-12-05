@@ -37,12 +37,12 @@ import java.util.Observer;
 import java.util.UUID;
 
 import draegerit.de.arduinoconsole.connection.BluetoothConnection;
-import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
-import draegerit.de.arduinoconsole.util.configuration.GeneralConfiguration;
 import draegerit.de.arduinoconsole.util.HtmlUtil;
 import draegerit.de.arduinoconsole.util.Message;
 import draegerit.de.arduinoconsole.util.MessageHandler;
 import draegerit.de.arduinoconsole.util.PreferencesUtil;
+import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.GeneralConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.TerminalConfiguration;
 
 import static android.R.color.holo_green_dark;
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity implements Observer {
         });
     }
 
-    private void updateConnectionStatus(Model model) {
+    protected void updateConnectionStatus(Model model) {
         boolean isConnected = model.getArduinoConnection().isConnected();
         if (isConnected) {
             getConnectBtn().setText(getResources().getString(R.string.disconnect));
@@ -514,17 +514,41 @@ public class MainActivity extends AppCompatActivity implements Observer {
         MessageHandler.showErrorMessage(this, getResources().getString(R.string.connection_error, name));
     }
 
+    public void setWakeLock() {
+        GeneralConfiguration generalConfiguration = PreferencesUtil.getGeneralConfiguration(getApplicationContext());
+        if (generalConfiguration.isStayAwakeWhileConnected()) {
+            final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+            this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, TAG);
+            this.mWakeLock.acquire();
+        } else {
+            releaseWakeLock();
+        }
+    }
+
+    public void releaseWakeLock() {
+        try {
+            if (this.mWakeLock != null) {
+                this.mWakeLock.release();
+            }
+        } catch (RuntimeException ex) {
+            Log.e(TAG, ex.getMessage());
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        releaseWakeLock();
+        super.onDestroy();
+    }
+
     private class ConnectionAsyncTask extends AsyncTask<Void, Void, BluetoothSocket> {
 
         //Die eindeutige ID darf nicht geändert werden.
         //TODO: Warum?
         public static final String DEFAULT_UUID = "00001101-0000-1000-8000-00805F9B34FB";
-
-        private ProgressDialog progressDialog;
-
-        private BluetoothSocket bluetoothSocket;
         private final BluetoothDevice bluetoothDevice;
-
+        private ProgressDialog progressDialog;
+        private BluetoothSocket bluetoothSocket;
         private Model model = Model.getInstance();
 
 
@@ -563,32 +587,5 @@ public class MainActivity extends AppCompatActivity implements Observer {
             progressDialog.dismiss();
             ((BluetoothConnection) model.getArduinoConnection()).setSocket(bluetoothSocket);
         }
-    }
-
-    public void setWakeLock() {
-        GeneralConfiguration generalConfiguration = PreferencesUtil.getGeneralConfiguration(getApplicationContext());
-        if (generalConfiguration.isStayAwakeWhileConnected()) {
-            final PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-            this.mWakeLock = pm.newWakeLock(PowerManager.SCREEN_DIM_WAKE_LOCK, TAG);
-            this.mWakeLock.acquire();
-        } else {
-            releaseWakeLock();
-        }
-    }
-
-    public void releaseWakeLock() {
-        try {
-            if (this.mWakeLock != null) {
-                this.mWakeLock.release();
-            }
-        } catch (RuntimeException ex) {
-            Log.e(TAG, ex.getMessage());
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        releaseWakeLock();
-        super.onDestroy();
     }
 }

@@ -17,6 +17,7 @@ import draegerit.de.arduinoconsole.util.configuration.BluetoothConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.GeneralConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.TerminalConfiguration;
 import draegerit.de.arduinoconsole.util.configuration.USBConfiguration;
+import draegerit.de.arduinoconsole.util.configuration.WifiConfiguration;
 
 public final class PreferencesUtil {
 
@@ -25,6 +26,7 @@ public final class PreferencesUtil {
     private static final String CHART_PREF = "chartPref";
     private static final String USB_CONFIGURATION_PREF = "usbConfigurationPref";
     private static final String BLUETOOTH_CONFIGURATION_PREF = "bluetoothConfigurationPref";
+    private static final String WIFI_CONFIGURATION_PREF = "wifiConfigurationPref";
     private static final String GENERAL_CONFIGURATION_PREF = "generalConfigurationPref";
     private static final String TERMINAL_CONFIGURATION_PREF = "terminalConfigurationPref";
     private static final String CONTROLLER_SETTINGS_PREF = "controllerSettingsPref";
@@ -101,6 +103,14 @@ public final class PreferencesUtil {
             Gson gson = new Gson();
             USBConfiguration usbConfiguration = gson.fromJson(usbConnectionJSON, USBConfiguration.class);
             return usbConfiguration;
+        }
+        return null;
+    }
+
+    public static WifiConfiguration getWifiConfiguration(Context ctx) {
+        List<HttpConnectionProfile> httpConnectionProfiles = getHttpConnectionProfiles(ctx);
+        if (!httpConnectionProfiles.isEmpty()) {
+            return new WifiConfiguration(httpConnectionProfiles);
         }
         return null;
     }
@@ -221,5 +231,4 @@ public final class PreferencesUtil {
         SharedPreferences settings = ctx.getSharedPreferences(PREFS_NAME, ZERO);
         return settings.getString(key, defaultJson);
     }
-
 }
