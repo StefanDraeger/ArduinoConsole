@@ -99,7 +99,7 @@ public class ControllerController implements View.OnClickListener {
         if (!command.equalsIgnoreCase(UNDEFINED) && !model.getArduinoConnection().isConnected()) {
             Toast.makeText(this.activity.getApplicationContext(), this.activity.getResources().getString(R.string.msg_no_connection), Toast.LENGTH_LONG).show();
         } else if (!command.equalsIgnoreCase(UNDEFINED) && model.getArduinoConnection().isConnected()) {
-
+            model.getArduinoConnection().sendCommand(command);
         }
     }
 
